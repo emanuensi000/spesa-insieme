@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "store_group": "Casal Bertone - Fonte Nuova - Guidonia - Viterbo",
+  "discovered_at": "2026-11-11T22:21:34.813130+00:00",
+  "imported_at": null,
+  "completeness": "partial",
+  "reviewed_pages": [],
+  "flyers": [
+    {
+      "id": "946",
+      "title": "Sconti fino al 50%",
+      "store_group": "Casal Bertone - Fonte Nuova - Guidonia - Viterbo",
+      "url": "https://www.ipertriscount.it/volantini/946-sconti-fino-al-51",
+      "pdf_url": "https://www.ipertriscount.it/index.php?option=com_myegojwt&view=flyer&id=946&pdf=1&Itemid=0",
+      "pages": [
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_01.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_02.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_03.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_04.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_05.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_06.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_07.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_08.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_09.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_10.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_11.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_12.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_13.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_14.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_15.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_16.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_17.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_18.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_19.jpg",
+        "https://www.ipertriscount.it/media/com_myegojwt/contents/flyers/946/20261102090207-page_20.jpg"
+      ]
+    }
+  ],
+  "offers": []
+}

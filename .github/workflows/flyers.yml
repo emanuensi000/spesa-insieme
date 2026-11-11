@@ -1,0 +1,23 @@
+name: Controlla nuovo volantino
+on:
+  schedule:
+    - cron: '25 6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/offers.py discover
+      - uses: actions/upload-artifact@v4
+        with:
+          name: volantino-da-revisionare
+          path: public/data/offers.json
+          retention-days: 30
+      - name: Istruzioni
+        run: echo 'Il catalogo rilevato è disponibile negli artifact. Scaricarlo, trascrivere le offerte nel CSV e importarle prima di pubblicare. Nessuna API a pagamento.' >> "$GITHUB_STEP_SUMMARY"

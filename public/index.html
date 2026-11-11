@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#245b45">
+  <meta name="description" content="La lista della spesa da condividere, con le offerte del tuo supermercato.">
+  <meta name="referrer" content="no-referrer">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Spesa insieme</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar"><a class="brand" href="./"><span class="brand-icon" aria-hidden="true">✳</span> spesa<span>insieme</span></a><button id="install" class="text-button" hidden>Installa app</button></header>
+    <main>
+      <section class="intro"><span class="eyebrow">MENO PENSIERI, PIÙ COSE BUONE</span><h1>La spesa è più semplice.<br><span>Quando la facciamo insieme.</span></h1><p>Una lista per tutti. Dal primo appunto all’ultimo prodotto nel carrello.</p></section>
+      <div id="notice" class="notice" role="status" hidden></div>
+      <section id="welcome" class="welcome card" hidden>
+        <div><span class="eyebrow">PARTIAMO DA QUI</span><h2>La vostra prossima spesa</h2><p>Crea una lista e condividi il link con chi fa la spesa con te.</p></div>
+        <form id="create-form"><label for="list-name">Nome della lista</label><input id="list-name" maxlength="80" value="La spesa di casa" required><button class="primary" type="submit">Crea la lista <span aria-hidden="true">↗</span></button></form>
+      </section>
+      <section id="workspace" hidden>
+        <div class="list-heading"><div><span class="eyebrow">IL VOSTRO CARRELLO, IN COMUNE</span><h2 id="list-title"></h2><p id="sync-status" aria-live="polite"></p></div><button id="share" class="secondary">Condividi link ↗</button></div>
+        <nav class="tabs" aria-label="Sezioni"><button data-tab="list" class="selected" aria-pressed="true">La lista <span id="list-count">0</span></button><button data-tab="offers" aria-pressed="false">Offerte Ipertriscount</button></nav>
+        <section id="list-panel">
+          <form id="add-form" class="add-form card"><label class="sr-only" for="product-name">Prodotto</label><input id="product-name" placeholder="Cosa manca in frigo?" maxlength="160" required autocomplete="off"><label class="sr-only" for="quantity">Quantità</label><input id="quantity" placeholder="Qtà" aria-label="Quantità" maxlength="40"><button class="primary" type="submit" aria-label="Aggiungi prodotto">+</button></form>
+          <div class="section-heading"><h3>Da mettere nel carrello</h3><span id="remaining"></span></div>
+          <ul id="items" class="items" aria-label="Prodotti da acquistare"></ul>
+          <div id="empty" class="empty card"><span aria-hidden="true">✳</span><h3>Facciamo spazio alle cose buone.</h3><p>Aggiungi il primo prodotto oppure scegli tra le offerte.</p></div>
+          <details id="done-section"><summary>Già nel carrello <span id="done-count">0</span></summary><ul id="done-items" class="items" aria-label="Prodotti acquistati"></ul><button id="clear-done" class="text-button">Rimuovi gli acquistati</button></details>
+        </section>
+        <section id="offers-panel" hidden>
+          <div class="offer-banner"><div><span class="eyebrow">SOLO IL TUO VOLANTINO</span><h3>Le offerte, a portata di lista.</h3><p>Casal Bertone · Fonte Nuova · Guidonia · Viterbo</p></div><a href="https://www.ipertriscount.it/volantini" target="_blank" rel="noopener noreferrer">Sito ufficiale ↗</a></div>
+          <div id="catalog-status" class="notice"></div>
+          <div class="offer-filters"><label class="sr-only" for="offer-search">Cerca offerte</label><input id="offer-search" type="search" placeholder="Cerca un prodotto in offerta…"><label class="sr-only" for="offer-category">Reparto</label><select id="offer-category"><option value="">Tutti i reparti</option></select></div>
+          <div id="offers" class="offers"></div><p id="no-offers" class="empty" hidden>Nessuna offerta corrispondente. Puoi comunque consultare le pagine del volantino qui sotto.</p>
+          <div class="section-heading"><h3>Il volantino originale</h3><a id="flyer-link" target="_blank" rel="noopener noreferrer" hidden>Apri sul sito ↗</a></div><p id="flyer-note" class="muted">Caricamento del volantino…</p><div id="flyer-pages" class="flyer-pages"></div>
+        </section>
+      </section>
+      <footer><span>Fatta per la spesa di tutti i giorni.</span><button id="help" class="text-button">Come funziona</button></footer>
+    </main>
+  </div>
+  <dialog id="info-dialog"><button class="close" aria-label="Chiudi">×</button><span class="eyebrow">SPESA INSIEME</span><h2>Un link, una lista.</h2><p>Chi possiede il link privato può vedere e modificare la lista. Invialo solo alle persone con cui vuoi condividerla.</p><p>Le modifiche restano sul telefono quando manca la connessione e vengono inviate al ritorno online. Gli aggiornamenti degli altri arrivano ogni pochi secondi mentre l’app è aperta.</p><p>Per installare l’app su iPhone: Safari → Condividi → Aggiungi alla schermata Home. Su Android usa il menu del browser → Installa app.</p><p>Le offerte sono trascritte manualmente: verifica prezzi, scadenze e condizioni sulla pagina originale del volantino.</p></dialog>
+  <dialog id="share-dialog"><button class="close" aria-label="Chiudi">×</button><h2>La spesa si condivide.</h2><p>Chi riceve questo link può modificare la lista.</p><label for="share-url">Link privato</label><input id="share-url" readonly><button id="copy-link" class="primary">Copia link</button><button id="native-share" class="secondary" hidden>Invia…</button></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
