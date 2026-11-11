@@ -8,7 +8,9 @@ const output = new URL('../dist/', import.meta.url);
 await mkdir(output, { recursive: true });
 await cp(new URL('../public/', import.meta.url), output, { recursive: true });
 let config = {};
-try { config = JSON.parse(await readFile(new URL('../config.local.json', import.meta.url), 'utf8')); }
+try { config = JSON.parse(await readFile(new URL('../config.public.json', import.meta.url), 'utf8')); }
+catch (error) { if (error.code !== 'ENOENT') throw error; }
+try { config = { ...config, ...JSON.parse(await readFile(new URL('../config.local.json', import.meta.url), 'utf8')) }; }
 catch (error) { if (error.code !== 'ENOENT') throw error; }
 config = { supabaseUrl: process.env.SUPABASE_URL || config.supabaseUrl || '', supabasePublishableKey: process.env.SUPABASE_PUBLISHABLE_KEY || config.supabasePublishableKey || '' };
 if (Boolean(config.supabaseUrl) !== Boolean(config.supabasePublishableKey)) throw new Error('Fornisci sia SUPABASE_URL sia SUPABASE_PUBLISHABLE_KEY.');
@@ -49,6 +51,10 @@ for (const size of [192,512]) await writeFile(new URL(`icons/icon-${size}.png`,o
 const inputs = await Promise.all(['app.js','core.js','styles.css','index.html','config.js','data/offers.json'].map(name => readFile(new URL(name, output))));
 const digest = createHash('sha256').update(Buffer.concat(inputs)).digest('hex').slice(0,12);
 const worker = await readFile(new URL('sw.js',output),'utf8');
-await writeFile(new URL('sw.js',output),worker.replace('__BUILD_ID__',digest));
+const catalog = JSON.parse(await readFile(new URL('data/offers.json', output),'utf8'));
+const offlineAssets = (catalog.flyers || []).flatMap(flyer => [...(flyer.local_pages || []), ...(flyer.local_pdf ? [flyer.local_pdf] : [])]);
+if (offlineAssets.some(path => !/^\.\/flyers\/[a-z0-9-]+\/(?:page-\d{2}\.jpg|volantino\.pdf)$/.test(path))) throw new Error('Percorso del volantino locale non valido.');
+await Promise.all(offlineAssets.map(path => readFile(new URL(path,output))));
+await writeFile(new URL('sw.js',output),worker.replace('__BUILD_ID__',digest).replace('__FLYER_ASSETS__',JSON.stringify(offlineAssets)));
 await writeFile(new URL('.nojekyll',output),'');
 console.log(`Build pronta: ${root}dist${config.supabaseUrl ? ' · condivisione configurata' : ' · modalità locale'}`);

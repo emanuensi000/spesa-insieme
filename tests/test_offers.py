@@ -48,5 +48,26 @@ class OffersTests(unittest.TestCase):
         with self.assertRaises(ValueError): offers.parse_pages('1-5',4)
         with self.assertRaises(ValueError): offers.parse_pages('4-1',4)
 
+    def test_discount_without_invented_price(self):
+        flyer = {'url': URL, 'pages': ['https://www.ipertriscount.it/page1.jpg']}
+        row = dict(zip(offers.COLUMNS, [URL, offers.GROUP, '1', 'Pollo rurale', '', '', '', '', 'Carne', '2026-11-04', '2026-11-12', 'Sconto alle casse']))
+        parsed = offers.validate_row({**row,'discount_percent':'10'},flyer,2)
+        self.assertIsNone(parsed['price'])
+        self.assertEqual(parsed['discount_percent'],10)
+        with self.assertRaises(ValueError): offers.validate_row(row,flyer,2)
+
+    def test_same_edition_preserves_transcription_and_local_snapshot(self):
+        listing = f'<div><a href="/volantini/946-offerte">Offerte</a><div>{offers.GROUP}</div></div>'
+        detail = f'<h1>Offerte</h1><div>{offers.GROUP}</div><img src="/media/com_myegojwt/contents/flyers/946/test-page_01.jpg?mcb=1">'
+        with tempfile.TemporaryDirectory() as directory:
+            folder=Path(directory); page=folder/'listing.html'; child=folder/'detail.html'; catalog=folder/'offers.json'
+            page.write_text(listing,encoding='utf-8');child.write_text(detail,encoding='utf-8')
+            flyer=offers.parse_flyer(detail,URL);flyer['local_pages']=['./flyers/946/page-01.jpg']
+            offers.write_catalog({'flyers':[flyer],'offers':[{'id':'preserved'}],'completeness':'reviewed'},catalog)
+            offers.discover(Namespace(listing_html=page,detail_html=child,output=catalog))
+            result=offers.read_catalog(catalog)
+            self.assertEqual(result['offers'],[{'id':'preserved'}])
+            self.assertEqual(result['flyers'][0]['local_pages'],flyer['local_pages'])
+
 
 if __name__ == '__main__': unittest.main()

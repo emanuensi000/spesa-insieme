@@ -156,9 +156,17 @@ def discover(args):
         raise ValueError("Il file dettaglio locale richiede esattamente un volantino.")
     flyers = [parse_flyer(Path(args.detail_html).read_text(encoding="utf-8") if args.detail_html else fetch(url), url) for url in links]
     catalog = read_catalog(args.output)
-    if catalog.get("flyers") != flyers:
+    source_fields = ["id", "store_group", "url", "pdf_url", "pages"]
+    signature = lambda values: [{key: flyer.get(key) for key in source_fields} for flyer in values]
+    if signature(catalog.get("flyers", [])) != signature(flyers):
         # Conserva gli import solo quando l'intera fonte, comprese le immagini, è invariata.
-        catalog.update(offers=[], completeness="partial", reviewed_pages=[], imported_at=None)
+        catalog.update(offers=[], completeness="partial", reviewed_pages=[], imported_at=None, promotions=[], analysis=None)
+    else:
+        previous = {flyer["url"]: flyer for flyer in catalog.get("flyers", [])}
+        for flyer in flyers:
+            for key in ["local_pages", "local_pdf", "valid_from", "valid_until"]:
+                if key in previous[flyer["url"]]:
+                    flyer[key] = previous[flyer["url"]][key]
     catalog.update(schema_version=1, store_group=GROUP, discovered_at=now(), flyers=flyers)
     write_catalog(catalog, args.output)
     print(f"Scoperti {len(flyers)} volantini, {sum(len(f['pages']) for f in flyers)} pagine. Sede: {GROUP}")
@@ -194,18 +202,24 @@ def validate_row(row, flyer, line):
         raise ValueError(f"Riga {line}: nome/reparto mancanti o troppo lunghi.")
     if any(len(value) > 500 for value in row.values()):
         raise ValueError(f"Riga {line}: campo troppo lungo.")
+    discount = row.get("discount_percent", "")
+    if discount and (not discount.isdigit() or not 1 <= int(discount) <= 100):
+        raise ValueError(f"Riga {line}: sconto percentuale non valido.")
     try:
-        price = Decimal(row["price"].replace(",", "."))
+        price = Decimal(row["price"].replace(",", ".")) if row["price"] else None
     except InvalidOperation as error:
         raise ValueError(f"Riga {line}: prezzo non valido.") from error
-    if not price.is_finite() or not Decimal("0") < price <= Decimal("10000") or price.as_tuple().exponent < -2:
+    if price is None and not discount:
+        raise ValueError(f"Riga {line}: indicare prezzo o sconto percentuale.")
+    if price is not None and (not price.is_finite() or not Decimal("0") < price <= Decimal("10000") or price.as_tuple().exponent < -2):
         raise ValueError(f"Riga {line}: prezzo fuori intervallo o con più di due decimali.")
     start, end = date.fromisoformat(row["valid_from"]), date.fromisoformat(row["valid_until"])
     if start > end or (end - start).days > 366:
         raise ValueError(f"Riga {line}: intervallo di validità non coerente.")
     identity = "|".join(row[key] for key in ["flyer_url", "page", "name", "brand", "size", "valid_from", "valid_until", "conditions", "price"])
     return {"id": hashlib.sha256(identity.encode()).hexdigest()[:24], "source_url": flyer["pages"][page - 1], "flyer_url": flyer["url"], "store_group": GROUP, "page": page,
-            **{key: row[key] for key in ["name", "brand", "size", "unit_price", "category", "valid_from", "valid_until", "conditions"]}, "price": float(price)}
+            **{key: row[key] for key in ["name", "brand", "size", "unit_price", "category", "valid_from", "valid_until", "conditions"]}, "price": float(price) if price is not None else None,
+            "discount_percent": int(discount) if discount else None}
 
 
 def import_csv(args):
@@ -217,7 +231,7 @@ def import_csv(args):
     offers, seen = [], set()
     with args.csv.open(encoding="utf-8-sig", newline="") as file:
         reader = csv.DictReader(file)
-        if reader.fieldnames != COLUMNS:
+        if reader.fieldnames not in [COLUMNS, COLUMNS + ["discount_percent"]]:
             raise ValueError("Intestazioni CSV non valide: usa data/offers.template.csv (separatore virgola).")
         for line, raw in enumerate(reader, 2):
             if None in raw or any(value is None for value in raw.values()):

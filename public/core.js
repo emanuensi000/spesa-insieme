@@ -34,6 +34,21 @@ export function activeOffers(offers, today = romeDate()) {
   return offers.filter(offer => offer.valid_from <= today && offer.valid_until >= today);
 }
 
+export function availableOffers(offers, mode = 'available', today = romeDate()) {
+  if (mode === 'all') return offers;
+  if (mode === 'today') return activeOffers(offers, today);
+  return offers.filter(offer => offer.valid_until >= today);
+}
+
+export function safeLocalFlyer(value) {
+  return typeof value === 'string' && /^\.\/flyers\/[a-z0-9-]+\/(?:page-\d{2}\.jpg|volantino\.pdf)$/.test(value) ? value : null;
+}
+
+export function offerPrice(offer) {
+  if (offer.price === null || offer.price === undefined) return offer.discount_percent ? `−${offer.discount_percent}%` : 'Prezzo non indicato';
+  return `${money(offer.price)}${offer.size === 'al kg' ? ' / kg' : offer.size === '100 g' ? ' / 100 g' : ''}`;
+}
+
 export function money(value) { return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(value); }
 
 export function safeSourceUrl(value) {

@@ -2,17 +2,19 @@
 
 PWA in italiano per una lista della spesa condivisa tramite link privato, con catalogo delle offerte Ipertriscount esclusivamente del gruppo **Casal Bertone - Fonte Nuova - Guidonia - Viterbo**.
 
-Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Database Supabase con funzioni PostgreSQL. Importazione offerte manuale da CSV, senza API a pagamento.
+Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Database Supabase con funzioni PostgreSQL. Volantino scaricato e trascritto con supporto OCR locale, senza API a pagamento.
 
 ## Stato della prima versione
 
 - Lista: creazione, quantità, spunta, rimozione e condivisione del link.
 - Sincronizzazione: ogni 4 secondi quando la pagina è visibile, con operazioni idempotenti e coda offline.
 - PWA: manifest, icone PNG, service worker e installazione Android/iOS.
-- Volantino: scoperta del gruppo esatto e collegamenti a tutte le pagine originali. Acquisita un'edizione da 20 pagine l'11 novembre 2026; la validità va verificata sulla copertina.
-- Catalogo: filtro per prodotto e reparto, date di validità, riferimento alla pagina originale e aggiunta alla lista.
-- **Il catalogo prodotti non è ancora trascritto.** Le immagini del volantino non equivalgono a prodotti importati. Non vengono mostrati prezzi inventati o prodotti dimostrativi.
-- Senza configurazione Supabase è disponibile soltanto la modalità locale; il pulsante di condivisione resta disabilitato.
+- Volantino: PDF e 20 immagini scaricati in `public/flyers/946-20261102/`, con provenienza e checksum. Validità verificata sulla copertina: **4–12 novembre 2026**.
+- Catalogo: **577 offerte trascritte** dalle 19 pagine di prodotti; pagina 20 contiene iniziative e condizioni. Le varianti della stessa offerta sono raggruppate; le ripetizioni in copertina conservano la propria origine.
+- Filtri per testo, reparto, pagina e validità; selezione multipla e aggiunta di tutti i selezionati alla lista. Ogni pagina si apre in un visualizzatore con i suoi prodotti selezionabili.
+- Distinzione fra offerte in corso, future e scadute. Le quattro offerte del 12 novembre indicano Fidelity Card e limiti di pezzi; la promozione Pollo Rurale senza prezzo espone solo lo sconto 10%.
+- Supabase configurato nel file pubblico `config.public.json` e verificato con chiamate reali. Il file contiene solo URL e chiave pubblica, mai credenziali amministrative.
+- Shell, catalogo, immagini e PDF sono disponibili offline dopo il primo caricamento completo del service worker.
 
 ## Avvio locale
 
@@ -32,7 +34,7 @@ L'output è in `dist/`. Il sito funziona anche sotto il percorso di un repositor
 
 ## Collegare Supabase
 
-Accedere a Supabase con ChatGPT autentica l'utente sul servizio: non concede automaticamente a questa app o a Codex accesso al database.
+Il progetto Supabase dell'utente è già configurato in `config.public.json`; lo schema è presente e le operazioni sono state verificate. Le istruzioni seguenti servono per collegare un altro progetto.
 
 1. Creare un progetto Supabase e aspettare che sia pronto.
 2. Nel **SQL Editor** eseguire interamente [supabase/schema.sql](supabase/schema.sql).
@@ -46,7 +48,7 @@ Accedere a Supabase con ChatGPT autentica l'utente sul servizio: non concede aut
 }
 ```
 
-5. Riavviare `npm.cmd run dev`, creare una nuova lista e condividerne il link. Le liste create in modalità locale restano locali; non vengono caricate automaticamente.
+5. Riavviare `npm.cmd run dev`, creare una nuova lista e condividerne il link. Le liste create in modalità locale restano locali; non vengono caricate automaticamente. Ordine delle configurazioni: variabili di ambiente → `config.local.json` ignorato da Git → `config.public.json` tracciato nel repository.
 
 La chiave pubblica viene inclusa nella build. **Non inserire mai service_role, sb_secret, password database o token personali.** La build rifiuta chiavi amministrative riconoscibili. Non servono utenti registrati: il possesso del link è l'autorizzazione.
 
@@ -62,14 +64,26 @@ git push -u origin main
 Nel repository GitHub:
 
 1. In **Settings → Pages → Build and deployment**, scegliere **GitHub Actions**.
-2. In **Settings → Secrets and variables → Actions → Variables**, aggiungere `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` con i valori pubblici del progetto.
+2. Il progetto usa già la configurazione pubblica tracciata. Per sostituirla senza modificare file, in **Settings → Secrets and variables → Actions → Variables**, aggiungere `SUPABASE_URL` e `SUPABASE_PUBLISHABLE_KEY` con i valori pubblici del nuovo progetto.
 3. Eseguire **Actions → Verifica e pubblica PWA → Run workflow**, oppure fare push su `main`.
 
-Il workflow esegue i test, genera le icone, costruisce il sito e lo pubblica su Pages. Nessun segreto amministrativo viene usato dal workflow. Se mancano le due variabili, la build rimane una versione locale senza condivisione.
+Il workflow esegue i test, genera le icone, costruisce il sito e lo pubblica su Pages. Nessun segreto amministrativo viene usato dal workflow. Se non è presente alcuna configurazione, la build rimane una versione locale senza condivisione.
 
 GitHub Pages ospita la PWA; Supabase conserva la lista. Il repository e i file del catalogo sono distinti dai dati privati delle liste. Consultare i piani dei servizi per limiti e disponibilità: il progetto non attiva acquisti o servizi a pagamento.
 
 ## Importare le offerte senza API a pagamento
+
+### Catalogo già pronto
+
+La trascrizione verificata è in [data/catalogo-946.txt](data/catalogo-946.txt), con CSV corrispondente in [data/catalogo-946.csv](data/catalogo-946.csv). Per ricompilare l'edizione corrente, aggiungere i collegamenti alle copie locali e aggiornare i checksum:
+
+```powershell
+python scripts/compile_catalog.py
+```
+
+Questo comando riguarda **esclusivamente** l'edizione 946 del 4–12 novembre 2026; non applica la trascrizione a nuovi volantini. Richiede soltanto Python standard. Il primo esame delle pagine ha usato Tesseract italiano disponibile sul computer come supporto alla lettura visiva; l'app e la build non richiedono OCR.
+
+Il modello CSV supporta anche una colonna finale facoltativa `discount_percent`: quando il volantino indica solo una percentuale si lascia il prezzo vuoto. Non si inventa un prezzo di 0 €.
 
 ### 1. Individuare il volantino corretto
 
@@ -127,7 +141,7 @@ Il workflow **Controlla nuovo volantino** controlla la fonte ogni giorno alle 06
 - Sulla stessa spunta, l'ultima operazione ricevuta dal server prevale. Le modifiche offline vengono applicate quando la connessione torna: non c'è un ordinamento globale per orario del dispositivo.
 - Il telefono conserva token, lista e coda in `localStorage`, necessari al funzionamento offline. Chi ha accesso al browser può accedere alla lista. Cancellare i dati del sito elimina anche le modifiche non sincronizzate.
 - Ogni telefono può lavorare normalmente; sullo stesso browser usare una sola scheda per evitare scritture concorrenti della memoria locale.
-- Il service worker memorizza la shell e il catalogo, non le risposte Supabase. Le immagini esterne del volantino richiedono la connessione.
+- Il service worker memorizza shell, catalogo e copie locali di immagini/PDF, non le risposte Supabase. La prima installazione completa scarica circa 9 MB di materiale del volantino.
 - Chi ha il link può modificare la lista. La prima versione non include revoca/rotazione del link, account, recupero accesso o protezioni contro abusi massivi della creazione di liste. È pensata per un piccolo gruppo fidato.
 - Limite: 500 operazioni offline in attesa e 5.000 identificativi di prodotto per lista, compresi i rimossi; raggiunto il limite creare una nuova lista.
 
@@ -139,6 +153,6 @@ python -m unittest discover -s tests -p 'test_*.py'
 npm.cmd run build
 ```
 
-I test coprono parsing del link, ricostruzione della coda offline, idempotenza degli inserimenti, eliminazioni, fuso orario, selezione esatta della sede, pagine mancanti, validazione CSV e conservazione del catalogo in caso d'errore. Il funzionamento sul progetto Supabase reale richiede la configurazione descritta sopra.
+I test coprono parsing del link, coda offline, idempotenza, eliminazioni, fuso orario, offerte future, sconti senza prezzo, selezione esatta della sede, pagine mancanti, validazione CSV, checksum delle copie scaricate e copertura delle pagine. Il collegamento al progetto Supabase reale è stato verificato; vedere [VERIFICA.md](VERIFICA.md).
 
 Documentazione: [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages/), [funzioni Supabase](https://supabase.com/docs/guides/database/functions), [volantini ufficiali](https://www.ipertriscount.it/volantini).

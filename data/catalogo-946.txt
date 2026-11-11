@@ -1,0 +1,580 @@
+# Trascrizione verificata sulle immagini locali. Campi separati da |:
+# pagina | marca | prodotto | formato | prezzo EUR | reparto | condizioni (facoltativo)
+# Validità standard 2026-11-04 / 2026-11-12. Le righe con SOLO12 valgono solo il 12/11.
+1|Garofalo|Pasta di semola, formati normali|500 g|0.74|Alimentari
+1|San Giorgio|Olio extravergine di oliva|1 l|4.49|Alimentari
+1|Arborea|Mozzarella fiordilatte|3 x 100 g|1.99|Freschi
+1||Cozze Nieddittas|al kg|3.99|Pescheria
+1|Pomì|Passata di pomodoro|700 g|0.79|Alimentari
+1|Nicky|Carta igienica Elite|4 rotoli|1.49|Casa
+1|Peroni|Birra|66 cl|0.99|Bevande
+1||Spuntature di suino nazionale|al kg|4.99|Carne
+1|Findus|Bastoncini 24+6 omaggio|750 g|4.99|Surgelati|SOLO12; Fidelity Card; massimo 2 pezzi; salvo esaurimento scorte; non cumulabile
+1||Peperoni misti Italia|rete 1 kg|1.49|Ortofrutta|SOLO12; Fidelity Card; salvo esaurimento scorte; non cumulabile
+1|Pavesi|Gocciole al cioccolato|500 g|1.99|Alimentari|SOLO12; Fidelity Card; massimo 3 pezzi; salvo esaurimento scorte; non cumulabile
+1|Rio Mare|Tonno in olio di oliva|7 x 65 g|6.99|Alimentari|SOLO12; Fidelity Card; massimo 3 pezzi; salvo esaurimento scorte; non cumulabile
+2|Garofalo|Strapasta: spaghetti, mista, fusilli, mezze maniche|500 g|1.09|Alimentari
+2|Liguori|Pasta di Gragnano IGP, formati speciali|500 g|0.99|Alimentari
+2|De Cecco|Pasta specialità: calamarata, paccheri, lumaconi, rigati, strangozzi|500 g|1.39|Alimentari
+2|Felicia|Pasta integrale, vari formati|340 g|1.79|Alimentari
+2|Scotti|Pasta Venere, vari formati|400 g|0.99|Alimentari
+2|De Cecco|Pasta High Protein, vari formati|400 g|1.95|Alimentari
+2|Sgambaro|Pastasole High Protein, fusilli o penne|500 g|1.84|Alimentari
+2|Origin Earth|Konjac: mezze maniche, riso o spaghetti|250 g|2.29|Alimentari
+2|Suzi-Wan|Noodles Udon|2 x 150 g|2.99|Alimentari
+2|Mosconi|Pasta all'uovo, vari tipi|500 g|1.99|Alimentari
+2|De Cecco|Lasagne|500 g|1.49|Alimentari
+2|Rummo|Gnocchi di patate|500 g|0.99|Alimentari
+2|Scotti|Riso Carnaroli|1 kg|2.29|Alimentari
+2|Granoro|Cous cous|1 kg|1.59|Alimentari
+2|Riso Scotti|Risotti, vari tipi|210 g|1.09|Alimentari
+2|Knorr|Cup Noodles: manzo, pollo o verdure|63/65 g|0.95|Alimentari
+2|Valsugana|Polenta pronta|1.2 kg|1.99|Alimentari
+2|Caputo|Farina tipo 00 pizzeria|1 kg|1.49|Alimentari
+2|Caputo|Farina tipo 00 pasticceria|1 kg|1.49|Alimentari
+2|Molino Spadoni|Farina tipo 1 Lazio|1 kg|1.29|Alimentari
+2|Grandi Molini Italiani|Farina tipo 00 decorticata a pietra|1 kg|0.79|Alimentari
+2|Molino Rossetto|Farina di ceci senza glutine|500 g|1.99|Alimentari
+2|Molino Rossetto|Farina di riso senza glutine|500 g|1.49|Alimentari
+2|Clemente|Olio extravergine di oliva bio IGP di Puglia|75 cl|4.99|Alimentari
+2|Sagra|Olio di semi di arachide|1 l|2.79|Alimentari
+2|Due Vittorie|Aceto balsamico di Modena IGP|250 ml|5.99|Alimentari
+2|La Molisana|Passata di pomodoro|340 g|0.69|Alimentari
+2|Mutti|Polpa di pomodoro rustica|690 g|1.39|Alimentari
+2|Mutti|Polpa di datterini|3 x 300 g|2.29|Alimentari
+2|Mutti|Pomodorini ciliegini|400 g, sgocciolato 240 g|0.89|Alimentari
+2|Cirio|Ragù carne o vegetale ai datterini|190 g|1.19|Alimentari
+2|Knorr|Brodo granulare, vari tipi|150 g|1.69|Alimentari
+2|Le Conserve della Nonna|Crema di carciofi, patè di olive, nere o peperoni grigliati, tritato di pomodori secchi|190 g|1.59|Alimentari
+2|Polli|Pesto calabrese, genovese, senza aglio o pomodori secchi|2 x 90 g|1.99|Alimentari
+2|Nostromo|Tonno all'olio di oliva, scorta famiglia|8 x 60 g|4.79|Alimentari
+2|Nostromo|Tonno al naturale zero grassi pro+|3 x 65 g|1.99|Alimentari
+2|Rio Mare|Tonno al naturale|80 g x 2+1|2.99|Alimentari
+2|Sapori di Mare|Filetti di tonno all'olio di oliva|200 g|3.49|Alimentari
+2|Consorcio|Tonno in olio di oliva|195 g, sgocciolato 132 g|3.99|Alimentari
+3|Delicius|Filetti di sgombro all'olio di oliva o al naturale|125 g|1.79|Alimentari
+3|Delicius|Filetti di alici del Canale di Sicilia|58 g|2.19|Alimentari
+3|Consorcio|Alici del Cantabrico classiche o piccanti|65 g|2.99|Alimentari
+3|Saclà|Olive Morate snocciolate o intere|330/360 g|0.99|Alimentari
+3|Cirio|Legumi: ceci, fagioli borlotti o cannellini|370 g, sgocciolato 240 g|0.99|Alimentari
+3|Del Monte|Mais dolce|3 x 140 g|1.99|Alimentari
+3|Saclà|Pomodori secchi sottolio|280 g|1.59|Alimentari
+3|Calvé|Maionese classica|225 ml|0.99|Alimentari
+3|Heinz|Ketchup Zero|425 g|2.39|Alimentari
+3|Heinz|Maionese Light Squeezy|400 ml|2.79|Alimentari
+3|Orco|Maionese|150 g|0.95|Alimentari
+3|Suzi-Wan|Salsa di soia classica|143 ml|2.99|Alimentari
+3|Mighty Sesame|Salsa Tahini|454 g|4.99|Alimentari
+3|Consilia|Pan Bauletto grano duro o multicereali|400 g|0.79|Alimentari
+3|Morato|Spuntinelle soffici cubo classico, 7 cereali, grano duro o riso nero|400 g|1.19|Alimentari
+3|Interpan|Filone integrale|400 g|1.99|Alimentari
+3|Nutri Free|Granrustico di farina integrale|250 g|2.99|Alimentari
+3|Céréal|Pain d'épices|300 g|1.69|Alimentari
+3|Roberto|Triplo Burger con sesamo|240 g|0.95|Alimentari
+3|Mulino Bianco|Piadelle sfogliate|330 g|1.79|Alimentari
+3|Riso Scotti|Risette, riso oppure riso e mais|150 g|0.99|Alimentari
+3|Mulino Bianco|Crackers Fiori d'Acqua|250 g|1.19|Alimentari
+3|Galbusera|Crackers Riso su Riso|380 g|1.49|Alimentari
+3|Doria|Cracker Doriano salati o integrali|700 g|1.89|Alimentari
+3|Panealba|Grissini corti spaccatini o 3 semi|250 g|0.99|Alimentari
+3|Amica Chips|Patatine La Bianca|160 g|0.79|Alimentari
+3|Amica Chips|Eldorada classica, grigliata o barbecue|130 g|0.89|Alimentari
+3|El Sabor|Tortilla Nachos, vari tipi|180 g|0.99|Alimentari
+3|Popz|Pop corn microonde, cheese o paprika|270 g|1.69|Alimentari
+3|Pata|Brezel e sticks|300 g|1.69|Alimentari
+3|Pata Sfizzy|Mini cracker multipack|200 g|1.69|Alimentari
+3|Gentilini|Fette biscottate dolci o tostate|185 g|1.29|Alimentari
+3|Gentilini|Fette biscottate integrali o 5 cereali|175/185 g|1.39|Alimentari
+3|Mulino Bianco|Fette biscottate dorate, pacco doppio|1.26 kg|2.99|Alimentari
+3|Kellogg's|Oaties avena e cioccolato|360 g|1.99|Alimentari
+3|Kellogg's|Corn Flakes|375 g|2.09|Alimentari
+3|Kellogg's|Choco Krave|600 g|2.89|Alimentari
+3|Nestlé Fitness|Cereali formato convenienza|625 g|2.99|Alimentari
+3|Mulino Bianco|Biscotti Abbracci, Pan di Stelle, Batticuori o Nascondini|350/330 g|1.85|Alimentari
+3|Balocco|Biscotti bastoncini, cruschelle, pastesfrolle, zuppole o risofrolle|700 g|1.79|Alimentari
+3|Tre Marie|Biscotti morbidi: mirtilli rossi e mandorle, nocciole e cioccolato, cacao e cioccolato|300 g|1.89|Alimentari
+3|Tre Marie|Biscotti Krumiri: cacao e nocciole, pezzi di cioccolato o caramello|315/360 g|1.79|Alimentari
+4|Campiello|Biscotti frollini con yogurt greco|600 g|1.29|Alimentari
+4|Campiello|Biscotti Mattinale integrale|330 g|0.99|Alimentari
+4|Campiello|Biscotti Digestive|380 g|0.89|Alimentari
+4|Colussi|Biscotti Il Gran Turchese|1.2 kg|2.49|Alimentari
+4|Saiwa Oro|Biscotti Gran Fondente senza zucchero, cioccolato, integrale o crusca|300/400 g|2.09|Alimentari
+4|Vicenzi|Ciambelle rustiche cioccolato o agrumi e mandorle|200 g|0.99|Alimentari
+4|Bahlsen|Biscotti Hit cacao|220 g|0.99|Alimentari
+4|Guttiau|Biscotteddu sardo|350 g|2.39|Alimentari
+4|Kosè by Kimbo|Caffè armonioso rosso|4 x 250 g|9.99|Alimentari
+4|Hag|Caffè classico|250 g|3.89|Alimentari
+4|Hag|Caffè espresso|250 g|4.19|Alimentari
+4|Lavazza|Caffè Crema e Gusto in grani|1 kg|17.99|Alimentari
+4|Illy|Caffè espresso|250 g|6.99|Alimentari
+4|Kosè by Kimbo|Caffè deciso, 150 cialde|150 cialde|15.99|Alimentari
+4|Caffè Trombetta|100 capsule compatibili Espresso, arabica o crema|100 capsule|19.99|Alimentari
+4|Caffè Trombetta|100 capsule compatibili e compostabili, pregiato o intenso|100 capsule|22.90|Alimentari
+4|Nescafé Dolce Gusto|16 capsule, vari tipi|16 capsule|4.39|Alimentari
+4|Nescafé Dolce Gusto|16 capsule espresso Napoli o espresso Palermo|16 capsule|4.19|Alimentari
+4|Lavazza|36 capsule A Modo Mio, rossa o crema e gusto classico o decaffeinato|36 capsule|9.99|Alimentari
+4|Lavazza|36 capsule A Modo Mio, crema e gusto dolce o forte|36 capsule|10.59|Alimentari
+4|Nescafé|Ginseng da zuccherare|60 g|2.99|Alimentari
+4|Star Tea|Tè classico|25 filtri|1.19|Alimentari
+4|Star Tea|Tè verde|25 filtri|1.29|Alimentari
+4|Everton|Tè classico, deteinato, arancia e zenzero, mora e salvia|40 filtri|1.99|Alimentari
+4|Twinings|Sensation, vari tipi|20 filtri|3.19|Alimentari
+4|Everton|Infuso bio finocchio|20 filtri|1.79|Alimentari
+4|Bonomelli|Tisane rilassante, ventre sgonfio|16 filtri|2.29|Alimentari
+4|Eridania|Zefiro zucchero|1 kg|1.19|Alimentari
+4|Santa Rosa|Confettura Zero fragola, albicocca, fichi o frutti di bosco|350 g|1.99|Alimentari
+4|Novi|Crema spalmabile|200 g|3.39|Alimentari
+4|Mulino Bianco|Crema Pan di Stelle|580 g|2.99|Alimentari
+4|Mulino Bianco|Flauti cioccolato, latte o stracciatella|280 g|1.49|Alimentari
+4|Bauli|Croissant farciti, vari tipi|300/250 g|1.55|Alimentari
+4|Brioche Pasquier|Briochette|320 g|1.19|Alimentari
+4|Kinder|Délice|390 g|2.65|Alimentari
+4|Origin Earth|Edamame Sea Salt|85 g|1.59|Alimentari
+4|Fatina|Mandorle sgusciate|150 g|1.99|Alimentari
+4|Fruit's Better|Semi di girasole tostati salati|250 g|0.99|Alimentari
+4|Ventura|Anacardi sgusciati tostati salati|150 g|2.69|Alimentari
+4|Ventura|Anacardi sgusciati|150 g|2.69|Alimentari
+4|Ventura|Semi di zucca salati|250 g|2.29|Alimentari
+4|Colfiorito|Fagioli borlotti Italia|400 g|1.89|Alimentari
+5|Nature Valley|Crunchy barrette ai fiocchi d'avena, vari tipi|5 x 42 g|3.19|Alimentari
+5|Nature Valley|Crunchy cioccolato al latte o caramello salato|160 g|4.19|Alimentari
+5|Nature Valley|Crunchy Almond|210 g|2.99|Alimentari
+5|Enervit|The Protein Deal barretta, vari tipi|55 g|1.85|Alimentari
+5|Hero|Barrette Light nocciola, frutti rossi o cioccolato|120 g|1.99|Alimentari
+5|Nestlé Fitness|Barrette cacao protein, miele e fibre|180 g|1.69|Alimentari
+5|7 Porte|Nursine pasticceria al farro, vari tipi|130/150 g|1.39|Alimentari
+5|Ciardi|Ciambelline tipiche al vino bianco o rosso|250 g|2.79|Alimentari
+5|Loacker|Break3|4 x 19 g|1.49|Alimentari
+5|Kinder|Cards|128 g|1.85|Alimentari
+5|Pavesini|Classici o cacao|200 g|1.69|Alimentari
+5|Tre Marie|Wafer gianduia, nocciolato o stracciatella|175/140 g|0.99|Alimentari
+5|Kit Kat|Family|166 g|2.19|Alimentari
+5|Pavesi Ringo|Biscioc al latte|162 g|1.99|Alimentari
+5|Milka|Biscotti, vari tipi|150/184 g|2.09|Alimentari
+5|Milka|Tavolette NoccioLatte: nocciolato, mandorlato, nocciole extra cacao|100 g|1.49|Alimentari
+5|Milka|Tavolette di cioccolato, vari tipi|87/100 g|1.39|Alimentari
+5|Lindt Lindor|Cioccolatini, vari tipi|200 g|5.99|Alimentari
+5|Kit Kat|Tris|3 x 41.5 g|1.99|Alimentari
+5|Novi|Cioccolatini, vari tipi|130/160 g|2.99|Alimentari
+5|Novi|Novibloc fondente|150 g|2.29|Alimentari
+5|Perugina|Gran Blocco fondente|500 g|4.79|Alimentari
+5|Ferrero|Rocher|200 g|4.79|Alimentari
+5|M&M's|Choco, cookie, crispy, peanut o minis|176/200 g|2.29|Alimentari
+5|Perugina|Gocce fondenti|200 g|3.49|Alimentari
+5|Perugina|Cacao amaro|75 g|1.59|Alimentari
+5|Elah|Creme da tavola o preparato per crema pasticcera|70/75/80/95 g|0.69|Alimentari
+5|Novi|Preparato per cioccolata calda|125 g|1.89|Alimentari
+5|Saila|Caramelle, vari tipi|75/100 g|0.99|Alimentari
+5|Golia|Caramelle classiche, bianche o gommose|160 g|1.59|Alimentari
+5|Golia|Caramelle Activ, vari tipi|70/90 g|1.59|Alimentari
+5|Hipp|Pastina chioccioline o stelline|320 g|2.69|Infanzia
+5|Plasmon|Omogeneizzati di carne, vari tipi|3 x 80 g|2.79|Infanzia
+5|Plasmon|Omogeneizzati di frutta, vari tipi|3 x 80 g|1.69|Infanzia
+5|Plasmon|Il Biscotto dei bambini|720 g|4.99|Infanzia
+5|Plasmon|Merenda latte e biscotto|2 x 120 g|1.79|Infanzia
+5|Aptamil|Latte in polvere 2|830 g|17.99|Infanzia
+5|Aptamil|Latte in polvere 3/4|830 g|11.99|Infanzia
+5|Humana|Latte crescita 3 Junior Drink|470 ml|1.49|Infanzia
+5|Mio|Pouch mela e banana o mela e pera|90 g|0.89|Infanzia
+6|Fabia|Acqua naturale|6 x 1.5 l|1.29|Bevande
+6|San Benedetto|Acqua naturale, leggermente frizzante o frizzante|6 x 1.5 l|1.84|Bevande
+6|Egeria|Acqua effervescente naturale|6 x 1.5 l|1.63|Bevande
+6|Sangemini|Acqua naturale|1.5 l|0.69|Bevande
+6|Lete|Acqua effervescente naturale|6 x 50 cl|1.39|Bevande
+6|San Benedetto|Acqua Libera|6 x 50 cl|1.89|Bevande
+6|San Benedetto|Aquavitamin frutti rossi, limone o arancia|40 cl|0.69|Bevande
+6|Valfrutta|Vitalità collagen, cuore, difese o veggie|1 l|1.59|Bevande
+6|Skipper|Succo di frutta senza zuccheri, vari gusti|1 l|1.59|Bevande
+6|Pfanner|Succo bio melagrana 60% o mirtillo 40%|500 ml|2.99|Bevande
+6|Zuegg|Fruttini mela cotogna o mirtillo|6 x 25 g|1.99|Alimentari
+6|Yoga|Succhi di frutta, vari tipi|6 x 200 ml|1.99|Bevande
+6|Pepsi|Bibita, vari tipi|1.5 l|1.19|Bevande
+6|San Pellegrino|Aranciata, aranciata amara, chinotto o cocktail|1.2 l|0.99|Bevande
+6|San Benedetto|Bibite Zero, vari tipi|75 cl|0.39|Bevande
+6|Coca-Cola / Fanta / Sprite|Bibite, vari tipi|6 x 33 cl|4.29|Bevande
+6|Lurisia|Chinotto|4 x 33 cl|3.49|Bevande
+6|Schweppes|Tonica o limone|4 x 25 cl|2.59|Bevande
+6|Leffe|Birra ambrée, blonde o rouge|75 cl|3.49|Bevande
+6|Leffe|Birra blonde o rouge|33 cl|1.49|Bevande
+6|Peroni Nastro Azzurro|Birra Capri|33 cl|0.99|Bevande
+6|Ceres|Birra Strong Ale|50 cl|1.59|Bevande
+6|Castello|Birra Lager|33 cl|0.49|Bevande
+6|Stella Artois|Birra|3 x 33 cl|2.29|Bevande
+6|Moretti|Birra filtrata a freddo|3 x 33 cl|1.99|Bevande
+6|Vistoso|Vino bianco, rosso o rosato|75 cl|1.49|Bevande
+6|Botte Buona|Vino IGT sangiovese o trebbiano|75 cl|1.74|Bevande
+6|Borgo Cipressi|Vino bianco o rosso|75 cl|1.99|Bevande
+6|La Cacciatora|Vino Montepulciano|75 cl|1.99|Bevande
+6|Rubentino|Vino Sangiovese Toscana IGT|75 cl|1.99|Bevande
+6|La Cacciatora|Vino Müller Thurgau Garganega|75 cl|1.99|Bevande
+7|Sensi|Parimento vino Chianti DOCG|75 cl|2.49|Bevande
+7|I Mastri Vernacoli|Vino Chardonnay Trentino DOC|75 cl|2.99|Bevande
+7|Messere Tommaso|Vino Vermentino Toscana IGT|75 cl|2.99|Bevande
+7|Mastri Vernacoli|Vino DOC pinot grigio, teroldego o rotaliano|75 cl|3.49|Bevande
+7|Villa Dorè|Vino amabile, frizzante bianco o rosato, rosso|1.5 l|3.49|Bevande
+7|San Patrime|Vino IGP primitivo Salento, negroamaro rosso o nero di Troia|75 cl|3.49|Bevande
+7|Bigi Vipra|Vino IGT bianco o rosso|75 cl|3.49|Bevande
+7|Bigi Vipra|Spumante Brut|75 cl|3.49|Bevande
+7|Mottura|Vino IGT negroamaro o nero di Troia|75 cl|3.49|Bevande
+7|Rapitalà|Vino Maioliche, vari tipi|75 cl|3.99|Bevande
+7|Feudo Monaci|Vino IGT La Sirena o Il Pescatore|75 cl|3.99|Bevande
+7|Messere Tommaso|Vino Morellino di Scansano DOCG|75 cl|3.99|Bevande
+7|Concilio|Vino Chardonnay IGT|75 cl|3.99|Bevande
+7|Mantellassi|Vino Vermentino Maremma Toscana DOC|75 cl|4.49|Bevande
+7|Duchessa Lia|Vino Chardonnay Piemonte DOC|75 cl|4.59|Bevande
+7|Bolla|Vino Sauvignon IGT o ribolla gialla IGT|75 cl|4.99|Bevande
+7|Banfi|Vino Chianti DOCG|75 cl|5.49|Bevande
+7|Sartori|Valpolicella Superiore DOC|75 cl|5.49|Bevande
+7|Tavernello|Vino bianco o rosso|5 l|5.99|Bevande
+7|Fattoria 6 Gigli|Vino Chardonnay, merlot, pinot grigio, ribolla, sauvignon o traminer|3 l|7.89|Bevande
+7|Rocca Rossa|Cuvée Oro|75 cl|1.99|Bevande
+7|Aragosta|Spumante Brut o Rosé|75 cl|3.79|Bevande
+7|Ca' Val|Scudo Argento Prosecco DOC Extra Dry|75 cl|3.99|Bevande
+7|Villa Folini|Spago ribolla gialla o prosecco DOC|75 cl|4.99|Bevande
+7|Cal de Costa|Prosecco DOCG|75 cl|4.99|Bevande
+7|Giacobazzi|Prosecco Intrigante DOC classico o rosé|75 cl|6.99|Bevande
+7|Italcoral|Grappa Rialto|70 cl|6.49|Bevande
+7|Eristoff|Vodka|70 cl|6.99|Bevande
+7|Bosford|Gin|70 cl|6.99|Bevande
+7|Caffo|Vecchio Amaro del Capo|70 cl|9.49|Bevande
+7|J&B|Whisky|70 cl|9.99|Bevande
+7|Vecchia Romagna|Brandy classico|70 cl|10.99|Bevande
+8||Seppie pulite decongelate|al kg|10.99|Pescheria
+8||Mazzancolle tropicali crude decongelate|al kg|7.99|Pescheria
+8||Filetti di platessa esteri|al kg|12.99|Pescheria
+8||Spigole 300/600 Italia|al kg|12.99|Pescheria
+8||Cozze Nieddittas|al kg|3.99|Pescheria
+8||Calamari freschi 100/300 esteri|al kg|12.99|Pescheria
+8||Trote salmonate Italia|al kg|6.99|Pescheria
+9||Patate Armonia gialle Italia, prima categoria|1.5 kg|1.79|Ortofrutta
+9|Selenella|Cipolle dorate Italia, prima categoria|750 g|0.99|Ortofrutta
+9||Broccoletti siciliani Italia, prima categoria|al kg|1.99|Ortofrutta
+9||Zucchine verdi Italia, prima categoria|al kg|1.49|Ortofrutta
+9||Melanzane tonde Italia, prima categoria|al kg|1.49|Ortofrutta
+9||Finocchi Italia, prima categoria|al kg|1.49|Ortofrutta
+9||Limoni di Messina IGP Italia, prima categoria|500 g|1.99|Ortofrutta
+9||Cachi maturi Italia, prima categoria|800 g|1.99|Ortofrutta
+9||Mele Golden Delicious 75-80 Italia, prima categoria|al kg|1.49|Ortofrutta
+9|Melinda|Mele Dolcevita 75-80 Italia, prima categoria|al kg|1.99|Ortofrutta
+9||Mango Ready to Eat, prima categoria|380 g|1.29|Ortofrutta
+9|Bonduelle|Rucola IGP|60 g|0.89|Ortofrutta
+9|Bonduelle|Gran Mix rucola IGP|100 g|0.99|Ortofrutta
+9|Bonduelle|Ricetta Saporita|200 g|1.19|Ortofrutta
+9|Vicini a Te|Bieta o spinaci|500 g|1.79|Ortofrutta
+9|Ortopronto|Lattuga Iceberg|350 g|1.49|Ortofrutta
+9|Ortopronto|Insalata mista|500 g|1.39|Ortofrutta
+9|Bonduelle|Le Regionali italiana, trentina, pugliese o lombarda|130 g|2.19|Ortofrutta
+9|Bonduelle|Risoallegre funghi e pomodoro, mozzarella, zafferano e zucchine|230 g|3.49|Ortofrutta
+9|Zerbinati|Zuppe crema zucca e carote, verza e lenticchie|310 g|1.59|Ortofrutta
+9|DimmidiSì|Le Zuppe Thai, Japan o Vichyssoise|350 g|2.49|Ortofrutta
+9|Melinda|Pro Mousse, vari tipi|100 g|0.79|Ortofrutta
+9|Ficacci|Olive denocciolate mix greche o dolci|170 g|1.49|Ortofrutta
+9|Madama Oliva|Olive nere denocciolate condite|200 g|1.99|Ortofrutta
+10||Fettine di spalla di bovino adulto|al kg|14.95|Carne|Prezzo finale dopo sconto 12% alle casse, da 16.99 €/kg
+10||Fracosta senza osso di bovino adulto|al kg|14.95|Carne|Prezzo finale dopo sconto 12% alle casse, da 16.99 €/kg
+10||Bocconcini di manzo|al kg|11.99|Carne
+10||Bollito senza osso di vitella allevata in Italia|al kg|11.99|Carne
+10||Rollè di vitello farcito allevato in Italia|al kg|11.99|Carne
+10||Fettine di coscio di scottona, tutti i tagli|al kg|17.99|Carne|Prezzo finale dopo sconto 10% alle casse, da 19.99 €/kg
+10||Hamburger di scottona|320 g al pezzo|4.99|Carne
+10||Salsiccia di prosciutto fresco di suino nazionale|al kg|4.99|Carne
+10||Arista intera di suino|al kg|4.99|Carne
+11||Hamburger mediterraneo, misto bovino adulto o pollo, pacco famiglia|340 g al pezzo|3.59|Carne
+11|Nursia|Pollo Rurale Nazionale a crescita lenta e alimentazione 100% vegetale||SCONTO10|Carne|Sconto 10% alle casse; prezzo base non indicato
+11||Alette di pollo|al kg|3.99|Carne
+11||Cosce di pollo divise pacco famiglia|al kg|2.99|Carne
+11|Presto Pronto|Petto di pollo alla milanese|al kg|8.99|Carne|Prezzo finale dopo sconto 10% alle casse, da 9.99 €/kg
+11|Presto Pronto|Polpette alla romana|al kg|8.99|Carne|Prezzo finale dopo sconto 10% alle casse, da 9.99 €/kg
+11|Presto Pronto|Rollè di pollo|al kg|8.99|Carne|Prezzo finale dopo sconto 10% alle casse, da 9.99 €/kg
+11|Presto Pronto|Spiedini di pollo marinati al rosmarino|al kg|8.99|Carne|Prezzo finale dopo sconto 10% alle casse, da 9.99 €/kg
+11|Presto Pronto|Fettine di prosciutto panate di suino|al kg|7.91|Carne|Prezzo finale dopo sconto 12% alle casse, da 8.99 €/kg
+11|Aia|Hamburger di tacchino|200 g|1.99|Carne
+11|Fileni Bio|Bocconcini di petto di pollo|220 g|3.59|Carne
+11|Martini|Cotoletta di pollo classica o spinaci|500 g|2.99|Carne
+11|Amadori|Birbe Spicy|300 g|1.99|Carne
+12|Rovagnati|Gran Biscotto Deli|100 g|1.99|Gastronomia
+12|Beretta|Prosciutto cotto Gran Bontà alta qualità|100 g|0.99|Gastronomia
+12|S.A.NO.|Guanciale amatriciano|100 g|1.69|Gastronomia
+12|Senfter|Porchetta di montagna|100 g|0.99|Gastronomia
+12||Prosciutto crudo di Norcia IGP|200 g|3.50|Gastronomia
+12||Capocollo stagionato|100 g|1.79|Gastronomia
+12|Fiorucci|Salamino Norcinetto|100 g|1.59|Gastronomia
+12|Clai|Salame 100% italiano Milano o ungherese|100 g|1.49|Gastronomia
+12|Golfera|Golfetta|100 g|1.99|Gastronomia
+12|Fiorucci|Mortadella Suprema|100 g|0.75|Gastronomia
+12|Aia Aequilibrium|Petto di pollo al forno|100 g|0.99|Gastronomia
+12|Fiorucci|Rostello alle erbe|100 g|1.09|Gastronomia
+12||Petto di tacchino al forno 100% Italia|100 g|1.79|Gastronomia
+12|Rigamonti|Carpaccio di bresaola|100 g|2.69|Gastronomia
+12|Auricchio|Provolone dolce|100 g|1.29|Gastronomia
+12|Plac|Provolone piccante sigillo rosso|100 g|1.29|Gastronomia
+12|Andriese|Scamorza bianca o affumicata|100 g|1.49|Gastronomia
+12|Maiullari|Cacio affumicato|100 g|0.99|Gastronomia
+12|Caprone Reale|Formaggio di pura capra|100 g|1.99|Gastronomia
+12|Latterie Vicentine|Bastardo del Montegrappa|100 g|1.49|Gastronomia
+12|Central|Formaggio pecorino Bonsardo|100 g|1.69|Gastronomia
+12|Martarelli|Pecorino Nero di Grotta|100 g|1.99|Gastronomia
+12|Cao|Formaggio Pastorino Sardo|100 g|1.79|Gastronomia
+12|Santa Maria|Caciotta Sienetta mista|100 g|1.39|Gastronomia
+12|Central|Pecorino Pastore|100 g|2.19|Gastronomia
+12||Toma piemontese DOP|100 g|1.09|Gastronomia
+12|Cao|Formaggio pecorino al peperoncino|100 g|1.89|Gastronomia
+12|Lattebusche|Formaggio Piave DOP Mezzano|100 g|1.39|Gastronomia
+13||Emmentaler DOP originale|100 g|1.69|Gastronomia
+13||Asiago fresco DOP|100 g|0.99|Gastronomia
+13|Toniolo Casearia|Montasio DOP|100 g|1.29|Gastronomia
+13|Frico|Maasdam Olanda|100 g|0.79|Gastronomia
+13||Edamer tedesco|100 g|0.59|Gastronomia
+13|Cademartori|Taleggio|100 g|1.39|Gastronomia
+13|Croce Malghese|Gorgonzola piccante|100 g|1.69|Gastronomia
+13|Latteria Soresina|Gorgonzola dolce|100 g|1.19|Gastronomia
+13|Boccea|Primo sale di capra|100 g|1.49|Gastronomia
+13|Punturi|Ricotta di pecora|100 g|0.79|Gastronomia
+13|Francia|Ricotta di bufala|100 g|0.59|Gastronomia
+13|Galbani|Certosa|100 g|1.09|Gastronomia
+13|Francia|Stracciatella|100 g|1.19|Gastronomia
+13|Cuomo|Fiordilatte|100 g|0.89|Gastronomia
+13|Latteria Diano|Mozzarella di bufala campana DOP|500 g|5.19|Gastronomia
+13|Garofolive|Olive verdi schiacciate piccanti|100 g|0.89|Gastronomia
+13|Ortoetruria|Olive nostraline|100 g|0.99|Gastronomia
+13|Ortoetruria|Carciofi alla romana|100 g|1.99|Gastronomia
+13|Nursia|Salame ungherese Gli Affettosi|al kg|13.49|Gastronomia|Prezzo finale dopo sconto 25% alle casse, da 17.99 €/kg
+13|Nursia|Prosciutto crudo a tranci|al kg|11.99|Gastronomia|Prezzo finale dopo sconto 20% alle casse, da 14.99 €/kg
+13|Nursia Fior di Fetta|Prosciutto stagionato dolce ATM|al kg|23.99|Gastronomia|Prezzo finale dopo sconto 20% alle casse, da 29.99 €/kg
+13|Nursia Fior di Fetta|Petto di pollo arrosto 100% Italia ATM|al kg|14.85|Gastronomia|Prezzo finale dopo sconto 22% alle casse, da 18.99 €/kg
+14|Consilia|Orecchiette o trofie|2 x 250 g|0.99|Freschi|Prezzo per 2 pezzi
+14|Consilia|Chicche di patate|500 g|1.69|Freschi
+14|Tortuovo|Gnocchi con patate|1 kg|1.29|Freschi
+14|Rana|Lasagne Sfogliagrezza|250 g|1.59|Freschi
+14|De Angelis|Sfoglia per lasagne gluten free|250 g|2.69|Freschi
+14|Fini Granclassici|Pasta ripiena, vari tipi|250 g|1.15|Freschi
+14|Rana|Sfogliavelo tortellini prosciutto crudo, ricotta e spinaci o carne|125 g|1.49|Freschi
+14|Rana|Cuor di Sugo bolognese, cacio e pepe o pesto|280 g|2.49|Freschi
+14|Rana|Parmigiana di melanzane o lasagne alla bolognese|700/900 g|7.49|Freschi
+14|Viva la Mamma|Cannelloni ragù o ricotta e spinaci|350 g|3.49|Freschi
+14|Viva la Mamma|Vitel Tonné|180 g|2.99|Freschi
+14|Fini|La Polenta|500 g|1.19|Freschi
+14|Gran Terre Teneroni|Tortino, vari tipi|200 g|2.49|Freschi
+14|Kioene|Burger croccanti tofu e pomodori secchi o zucchine|180 g|2.39|Freschi
+14|Garden Gourmet|Straccetti, falafel ceci e spinaci, burger vegetali o cordon bleu|150/175/180/190 g|2.79|Freschi
+14|Valsoia|Nuggets vegetariani|180 g|2.39|Freschi
+14|Unconventional|Tofu a cubetti con salsa teriyaki|150 g|1.39|Freschi
+14|Compagnia Italiana|Tempeh|150 g|2.79|Freschi
+14|Rana|Sugo fresco, vari tipi|180/225 g|1.99|Freschi
+14|Rana|Pesto fresco, vari tipi|130/140 g|1.99|Freschi
+14|Biffi|Pesto vegetale fresco, ragù di soia fresco|150 g|1.49|Freschi
+14|Vogliazzi|Insalata russa o capricciosa|150 g|0.99|Freschi
+14|Ibis|Sandwich cotto e funghi prataioli, salmone norvegese, Praga, scamorza affumicata e pomodori, pollo bacon uova e maionese|150/160/165/170 g|1.69|Freschi
+14|Di Marco|Pinsa romana l'originale|2 x 230 g|2.99|Freschi
+14|Orva|Piadina bio di Kamut|225 g|1.69|Freschi
+14|Buitoni|Base per focaccia La Soffice|375 g|1.49|Freschi
+14|Buitoni|Pasta sfoglia rettangolare XXL|470 g|2.39|Freschi
+14|Exquisa|Pasta per pizza|400 g|1.49|Freschi
+14|Buitoni|Sfoglia dolce|230 g|1.69|Freschi
+14|Buitoni|Pasticceria Pain Dolce|350 g|1.89|Freschi
+14|Le Naturelle|10 uova medie, allevamento a terra|10 uova|2.99|Freschi
+14|Aia|6 uova pasta gialla, allevate a terra medie|6 uova|1.99|Freschi
+14|Latteria Soresina|Burro|250 g|1.88|Freschi
+14|Vallé|Omega 3|250 g|1.39|Freschi
+14|Centrale del Latte di Roma|Panna fresca|250 ml|1.99|Freschi
+14|Gran Cucina|Besciamella vegetale|500 ml|1.19|Freschi
+14|Trevalli|Besciamella senza lattosio|500 ml|1.29|Freschi
+14|Trevalli|Panna da cucina senza lattosio|200 ml|0.89|Freschi
+14|Hoplà|Preparato di soia da montare per dolci|500 ml|1.79|Freschi
+14|Galbani Santa Lucia|Mascarpone|250 g|1.99|Freschi
+14|Parmareggio|Snack di Parmigiano Reggiano|5 x 20 g|2.19|Freschi
+15|Parmareggio|Parmigiano Reggiano 30 mesi|250 g|7.49|Freschi
+15|Gran Soresina|Grana Padano a scaglie|80 g|1.89|Freschi
+15|Ambrosi|Parmigiano Reggiano bocconcini o scaglie|130 g|3.19|Freschi
+15|Ambrosi|Grana Padano grattugiato|150 g|2.79|Freschi
+15|Latteria Soresina|Grana Padano granelli di bontà DOP|100 g|1.79|Freschi
+15|Biraghi|Ricetta al pecorino grattugiato etico solidale|60 g|0.99|Freschi
+15|Trentingrana|Formaggio grattugiato 20 mesi|80 g|1.59|Freschi
+15|Galbani|Galbanino l'originale|550 g|5.99|Freschi
+15|Galbani|Galbanino il leggero|230 g|2.79|Freschi
+15|Diano|Scamorza bianca o affumicata|300 g|2.19|Freschi
+15|Ferrari|Formaggio svizzero|250 g|2.69|Freschi
+15|Sottilette|Classiche|200 g|1.37|Freschi
+15|Leerdammer|Il Fondente|150 g|1.99|Freschi
+15|Leerdammer|Fette L'Intenso|100 g|1.79|Freschi
+15|Old Amsterdam|Formaggio dolce a fette|150 g|1.99|Freschi
+15|Galbani Santa Lucia|Nuvola ricotta spalmabile|180 g|1.39|Freschi
+15|Exquisa|Formaggio fresco cremoso|300 g|1.89|Freschi
+15|Exquisa|Formaggio fresco cremoso alle erbe|175 g|1.39|Freschi
+15|Philadelphia|Light|210 g|1.99|Freschi
+15|Philadelphia|Senza lattosio|175 g|1.99|Freschi
+15|Galbani|Crema Bel Paese formaggini|6 x 28 g|1.69|Freschi
+15|Jocca|Senza lattosio|150 + 25 g|1.59|Freschi
+15|Parma Is|Guacamole di avocado|150 g|2.49|Freschi
+15|Holycon|Terrine Gourmet Babaghanoush|200 g|2.99|Freschi
+15|Holycon|Terrine Gourmet mousse a base di fava greca|200 g|2.39|Freschi
+15|Parmareggio|Robiola con Parmigiano Reggiano|2 x 60 g|1.29|Freschi
+15|Osella|Robiola senza lattosio|90 g|1.18|Freschi
+15|Osella|Linea senza lattosio|125 g|1.74|Freschi
+15|Longo|2 Tomini Boscaiolo|180 g|1.99|Freschi
+15|Pavlakis|Feta DOP senza lattosio|150 g|2.19|Freschi
+15|Nonno Nanni|Stracchino classico|125 g|1.39|Freschi
+15|Galbani|Certosino|100 g|0.99|Freschi
+15|Galbani|Certosa senza lattosio|165 g|1.79|Freschi
+15|Igor|Dolcetto gorgonzola e mascarpone|150 g|1.99|Freschi
+15|Galbani Santa Lucia|Ricottine|2 x 90 g|0.99|Freschi
+15|Galbani Santa Lucia|Ricottina Light|2 x 90 g|1.39|Freschi
+15|Granarolo|Ricotta|250 g|0.99|Freschi
+15|Sabelli|Burratina senza lattosio Fior di Gran Sasso|125 g|1.79|Freschi
+15|Andriese|Nodini o gocce|250 g|3.39|Freschi
+15|Nonno Nanni|Mozzarella|125 g|1.18|Freschi
+15|Vallelata|Mozzarelle di latte di bufala|3 x 100 g|3.99|Freschi
+15|Galbani Santa Lucia|Mozzarella Light|3 x 125 g|2.79|Freschi
+16|Granarolo Accadì|Mozzarella senza lattosio|3 x 100 g|2.39|Freschi
+16|Pettinicchio|Fiordilatte|4 x 180 g|4.99|Freschi
+16|Fattorie degli Alburni|Bocconcini|2 x 125 g|1.89|Freschi
+16|Buoni Sapori|Ciliegine|250 g|1.89|Freschi
+16|Spinosa|Mozzarella di bufala DOP|125 g|1.59|Freschi
+16|Pettinicchio|Fiordilatte|400 g|3.59|Freschi
+16|Francia|Mozzarella di bufala DOP|250 g|2.79|Freschi
+16|Galbani Santa Lucia|Mozzarella julienne Pizza Perfetta|150 g|1.99|Freschi
+16|Ferrarini|Prosciutto cotto alta qualità|120 g|2.49|Freschi
+16|Fiorucci|Quanto Basta prosciutto cotto|85 g|1.49|Freschi
+16|Gran Terre LiberaMente|Prosciutto cotto|110 g|1.99|Freschi
+16|Negroni|Stella prosciutto crudo|90 g|2.39|Freschi
+16|Fiorucci|Regionali Tivoli fumé|100 g|2.99|Freschi
+16|Fiorucci|Regionali guanciale|90 g|1.99|Freschi
+16|Beretta|Prosciutto crudo senza antibiotici|90 g|2.99|Freschi
+16|Citterio|La Merenda prosciutto crudo|30 g|0.79|Freschi
+16|Citterio|La Merenda coppa|30 g|0.79|Freschi
+16|Fiorucci|Spianata romana|100 g|2.39|Freschi
+16|Beretta|Fresca Salumeria salame Milano|100 g|1.99|Freschi
+16|Consilia|Mortadella Bologna IGP|120 g|1.69|Freschi
+16|Citterio|La Merenda mortadella Regina|2 x 30 g|0.99|Freschi|Prezzo per 2 pezzi
+16|Citterio|Sofficette petto di tacchino|80 g|1.39|Freschi
+16|Amadori 10+|Petto di pollo arrosto o fesa di tacchino arrosto|100 g|1.39|Freschi
+16|Citterio|Taglio Fresco carpaccio|90 g|2.99|Freschi
+16|Beretta|Prosciutto cotto per Toast a fette|100 g|1.24|Freschi
+16|Clai|Salame Golosetto 100% italiano|100 g|0.99|Freschi
+16|Incarlopsa|Fuet Extra Duroc|170 g|2.49|Freschi
+16|Fiorucci|Pallina mortadella|400 g|2.49|Freschi
+16|Beretta|Pancetta a cubetti dolce o affumicata|300 g|2.99|Freschi
+16|Negroni|Cubetti di salsiccia|2 x 60 g|1.49|Freschi
+16|Negroni|Petali di bacon 100% italiano|2 x 50 g|1.99|Freschi
+16|Beretta|Listarelle di guanciale|100 g|1.99|Freschi
+16|Fiorucci|Wurstel Suillo|250 g|1.29|Freschi
+16|Wüber|Wüberone di pollo|250 g|0.99|Freschi
+16|Aia|Wurstel Wudy classico|300 g|1.29|Freschi
+16|Senfter|Hot Dog|250 g|1.99|Freschi
+16|Wüber|Wurstel Wüberone di pollo|500 g|2.49|Freschi
+16|Wüber|Wurstel di suino gli Originali|100 g|0.79|Freschi
+16|Citterio|Gli Irresistibili salamini|75 g|1.49|Freschi
+16|Citterio|Gli Irresistibili bastoncini di salame|60 g|1.39|Freschi
+16|Beretta|Protein Stick tacchino o suino|48/52 g|1.99|Freschi
+17|Granarolo|Latte UHT parzialmente scremato|1 l|0.84|Freschi
+17|Consilia|Salmone affumicato Alaska|100 g|6.99|Freschi
+17|Re Salmone|Ti Amo Salmone norvegese|90 g|2.99|Freschi
+17|Food from the World|Salmone scozzese fetta lunga|50 g|4.49|Freschi
+17|Turchet|Antipasto al naturale gioioso|1.5 kg, sgocciolato 800 g|9.99|Freschi
+17|Balistreri|Filetti di acciughe in olio, prezzemolo o peperoncino|80 g, sgocciolato 48 g|2.99|Freschi
+17|Coraya|Bastoncini di mare|100 g|1.39|Freschi
+17|Arborea|Moltodipiù latte intero o parzialmente scremato|1 l|1.29|Freschi
+17|Arborea|Latte senza lattosio scremato o parzialmente scremato|1 l|1.39|Freschi
+17|Granarolo Accadì|Latte UHT scremato o parzialmente scremato|1 l|1.29|Freschi
+17|Parmalat|Latte Barista UHT parzialmente scremato|1 l|1.59|Freschi
+17|Latte Sano|Latte UHT Digemilk senza lattosio 1% grassi|1 l|0.99|Freschi
+17|Parmalat Zymil|Latte Barista|1 l|1.79|Freschi
+17|Valsoia|Soia Drink Barista|1 l|1.79|Bevande
+17|Valsoia|Bevanda di mandorla zero zuccheri|1 l|1.49|Bevande
+17|Alpro|Bevanda di soia senza zucchero|1 l|1.99|Bevande
+17|Alpro|Non è Latte avena drink classico o barista|1 l|2.19|Bevande
+17|Alpro|Drink alla nocciola|1 l|2.19|Bevande
+17|San Benedetto|Bevanda vegetale ananas, caffè e nocciola, fragola|400 ml|0.89|Bevande
+17|Milk Pro|Da bere senza lattosio caffè, cacao, vaniglia o caramello salato|350 g|1.49|Freschi
+17|Nestlé|I Love Kefir, vari gusti|500 g|1.19|Freschi
+17|Müller|Yogurt I Love Frutta, vari tipi|8 x 125 g|2.24|Freschi
+17|Parmalat Zymil|Yogurt gusti misti|8 x 125 g|2.49|Freschi
+17|Yomo|Yogurt omogeneo frutta, sapori o stagione|2 x 125 g|0.79|Freschi
+17|Yomo|Yogurt senza zuccheri aggiunti ciliegia, cocco, frutti di bosco o pesca|2 x 125 g|0.79|Freschi
+17|Mio|Yogurt albicocca e banana, fragola e mela o pera e biscotto|2 x 125 g|0.99|Freschi
+17|Valsoia|Yosoi Yogurt mandorla e nocciola o mandorla e pistacchio|2 x 115 g|0.99|Freschi
+17|Danone Activia|Kefir fragola, bianco, pesca e passion fruit|4 x 125 g|2.19|Freschi
+17|Danone Activia|Kefir naturale|345 g|1.39|Freschi
+17|Centrale del Latte di Roma|Yogurt bianco intero o magro|500 g|0.99|Freschi
+17|Sojasun|Alla greca naturale|170 g|1.39|Freschi
+17|Milk Benessere|Porridge|150 g|0.99|Freschi
+17|Milk|Kefir cremoso, vari tipi|150 g|0.69|Freschi
+17|Milk|Kefir fiocchi di latte|150 g|1.18|Freschi
+17|Parmalat Zymil|Yogurt alla greca, vari gusti|150 g|0.69|Freschi
+17|Oh My Yomo!|Yogurt bicomparto, vari gusti|140 g|0.69|Freschi
+17|Danone HiPRO|Pudding caramello o cioccolato|200 g|1.39|Freschi
+17|Nesquik|Chocoballs|120 g|0.69|Freschi
+17|Fruttolo|Yogurt & Smarties fragola o vaniglia|120 g|0.69|Freschi
+17|Parmalat|Coppa Malù al cacao|2 x 100 g|0.99|Freschi
+17|Cameo|Muu Muu Go! cioccolato e vaniglia|80 g|0.79|Freschi
+18|Findus|Pisellini Primavera|1.2 kg|4.79|Surgelati
+18|Orogel|Cavolfiore romanesco|400 g|1.79|Surgelati
+18|Orogel|Cubello foglia più spinaci|900 g|1.74|Surgelati
+18|Orogel|Buon Minestrone|750 g|1.59|Surgelati
+18|Casa Ottaviani|Punte d'asparagi|300 g|2.99|Surgelati
+18|Acquario|Misto Scoglio|190 g|1.99|Surgelati
+18|Findus|Misto mare cozze, calamari e pomodoro, vongole, calamari e mazzancolle|400 g|3.99|Surgelati
+18|Arbi|Condivongola|450 g|3.79|Surgelati
+18|Arbi|Calamari puliti 20/40|400 g|5.99|Surgelati
+18|Meno 30|Filetti di rombo|360 g|6.99|Surgelati
+18|Findus|4 Fiori di merluzzo|300 g|5.89|Surgelati
+18|Findus|Filetti di merluzzo gratinati al pomodoro e erbe, con patate o melanzane|380 g|2.99|Surgelati
+18|Findus|8 Bastoncini di salmone|200 g|4.99|Surgelati
+18|Findus|2 Croccole senza glutine|250 g|4.89|Surgelati
+18|Frosta|Fishburger merluzzo d'Alaska, salmone selvaggio|200/210 g|1.99|Surgelati
+18|La Valle degli Orti|Bastoncini verdure o spinaci|300 g|1.59|Surgelati
+18|Garbo|Mozzarella in carrozza|300 g|2.99|Surgelati
+18|Aia|Nuggets di pollo|260 g|1.99|Surgelati
+18|Findus Green Cuisine|Medaglioni di zucchine|200 g|2.49|Surgelati
+18|Buitoni La Alta|Pizza margherita o salsiccia e patate|375 g|2.39|Surgelati
+18|Cameo|Pizza Regina Margherita|620 g|2.99|Surgelati
+18|Pizzoli|Patasnella una tira l'altra|600 g|1.99|Surgelati
+18|McCain|Patatine Forno Country|650 g|1.99|Surgelati
+18|Findus|4 Salti in Padella: tagliatelle ai funghi, pappardelle al ragù, tonnarelli cacio e pepe, tagliolini e gamberetti, polpette al sugo|360/550 g|2.99|Surgelati
+18|Scic|Cannelloni carne o ricotta e spinaci|500 g|2.99|Surgelati
+18|Algida|Cornetto Soft caramello e vaniglia o cookie chocolate|324 g|3.29|Surgelati
+18|Consilia Optima|Parmigiano Reggiano DOP stagionato oltre 30 mesi|300 g|7.99|Freschi
+18|Consilia Optima|Pizza surgelata salsiccia, friarielli e Caciocavallo Silano DOP|385 g|2.99|Surgelati
+18|Algida|Magnum Classic|503 g|4.99|Surgelati
+18|Nuii|Mini Mix, vari tipi|253/264 g|4.19|Surgelati
+18|Algida|Cucciolone classico|480 g|4.69|Surgelati
+18|Franui|Lamponi ricoperti cioccolato bianco e fondente, latte, caramello o bianco|150 g|5.49|Surgelati
+18|Algida|Magnum Pot, vari tipi|297/310 g|3.49|Surgelati
+19|Pantene Miracles|Shampoo o balsamo, vari tipi|250/220 ml|3.49|Igiene
+19|Pantene|Maschera lisci e setosi, ricci perfetti o ristrutturante|300 ml|3.99|Igiene
+19|Dove|Doccia Active Comfort, Cool Fresh, Nutrimento Intenso|2 x 225/250 ml|2.89|Igiene|Prezzo per 2 pezzi
+19|Mantovani|Detergente intimo|250 ml|1.19|Igiene
+19|Neutro Roberts|Deo Spray, vari tipi|150 ml|2.39|Igiene
+19|Fria|Korean Beauty burro struccante|80 ml|4.99|Igiene
+19|Fria|Korean Beauty mousse detergente|150 ml|3.99|Igiene
+19|Fria|Korean Beauty maschere viso, vari tipi|1 pezzo|1.59|Igiene
+19|Oral-B|Dentifricio 3DWhite, vari tipi|3 x 75 ml|2.49|Igiene
+19|Iodosan|Dentifricio protezione globale|75 ml|1.79|Igiene
+19|Oral-B|3 spazzolini Classic Care medi|3 pezzi|1.49|Igiene
+19|Noxzema|Schiuma da barba bianca o gialla|300 ml|1.79|Igiene
+19|Carefree|Proteggi slip Cotton, 44 disteso o 30 flexiform|44/30 pezzi|1.79|Igiene
+19|Lines|Assorbenti Seta Ultra, vari tipi|1 confezione|1.79|Igiene
+19|Foxy|43 tovaglioli Scozzesi 33 x 33 cm|43 pezzi|0.69|Casa
+19|Foxy|Mega carta cucina|2 rotoli|1.99|Casa
+19|General|Detersivo lavatrice 44 lavaggi, universale o color|1.98 l|2.99|Casa
+19|Omino Bianco|Candeggina delicata|1 l|2.09|Casa
+19|Dixan|21 Discs classico, color o lavanda|21 dosi|5.99|Casa
+19|Chanteclair|Ammorbidente concentrato muschio bianco, sali marini e fiori|1 l|1.99|Casa
+19|Fabuloso|Ammorbidente fresco mattino o vaniglia e orchidea|1.5 l|1.99|Casa
+19|Ace|Spray bagno, cucina o universale Hygiene|600 ml|1.79|Casa
+19|Ace|Detersivo pavimenti igienizzante lavanda o talco|1 l|1.19|Casa
+19|Fairy|Caps Platinum 15 lemon o 12 lemon plus|15/12 dosi|2.99|Casa
+19|Frio|Cartaforno|50 fogli|1.49|Casa
+19|Frio|Vaschetta di alluminio Expert 10 porzioni|1 pezzo|1.29|Casa
+19|Frio|Vaschette di alluminio Expert 4/6 porzioni|1 confezione|0.89|Casa
+19|Bio Table|10 piatti piani o fondi|10 pezzi|0.99|Casa
+19|Purina One|Cat Sterilcat croccantini, vari tipi|1.5 kg|6.99|Animali
+19|Friskies|Croccantini junior o sterilized|375 g|1.39|Animali
+19|Ultima Dog|Crocchette Yorkshire, chihuahua, mini adult pollo|800 g|2.99|Animali
+19|Gourmet|Diamant manzo, pollo o tacchino|85 g|0.75|Animali
+19|Pedigree|Bocconcini in salsa manzo, agnello, pollo e verdure|4 x 100 g|1.69|Animali
+19|Whiskas|Pure Delight delicato, gustoso, pesce o assortiti|4 x 85 g|1.89|Animali
+19|Almo Nature|Multipack Daily Functional, vari tipi|6 x 70 g|4.29|Animali
+19|Felix|Soup Selezioni deliziose con pesce|6 x 48 g|2.49|Animali
+19|Vitakraft|Beef Stick carne, agnello, selvaggina o tacchino|2 x 12 g|0.89|Animali|Prezzo per 2 pezzi
+19|Vitakraft|Cat Stick tacchino e agnello, salmone, anatra e coniglio, merluzzo nero|18 g|0.79|Animali
