@@ -38,23 +38,15 @@ async function rpc(name, args) {
     method: 'POST', headers, body: JSON.stringify(args), signal: AbortSignal.timeout(15000), cache: 'no-store', referrerPolicy: 'no-referrer'
   });
   if (!response.ok) {
-    const error = new Error(response.status === 401 || response.status === 403 ? 'Accesso rifiutato: controlla il link e la configurazione del servizio.' : 'Sincronizzazione non riuscita. Le modifiche restano sul telefono.');
+    const error = new Error(response.status === 401 || response.status === 403 ? 'Accesso rifiutato: controlla il link e la configurazione del servizio.' : 'Connessione non riuscita. Le modifiche restano sul telefono.');
     error.status = response.status; throw error;
   }
   return response.status === 204 ? null : response.json();
-}
-function statusText() {
-  if (state.localOnly) return 'Solo su questo telefono · configura Supabase per condividere';
-  if (blocked) return 'Accesso rifiutato · controlla il link';
-  if (!navigator.onLine) return `Offline · ${state.pending.length ? `${state.pending.length} modifiche da inviare` : 'lista salvata sul telefono'}`;
-  if (busy || state.pending.length) return `Sincronizzazione${state.pending.length ? ` · ${state.pending.length} modifiche da inviare` : '…'}`;
-  return state.loaded ? 'Lista condivisa · aggiornamento ogni 4 secondi' : 'Connessione alla lista…';
 }
 function render() {
   $('#welcome').hidden = Boolean(link); $('#workspace').hidden = !link;
   if (!link) return;
   $('#list-title').textContent = state.name;
-  $('#sync-status').textContent = statusText();
   $('#share').disabled = !configured || state.localOnly || !state.created || !state.loaded;
   const items = projectItems(state.base, state.pending);
   const remaining = items.filter(item => !item.checked), done = items.filter(item => item.checked);
@@ -97,7 +89,7 @@ function addItem(name, quantity = '', offer = null) {
 }
 async function sync() {
   if (!state || state.localOnly || !configured || busy || !navigator.onLine || blocked) return;
-  busy = true; $('#sync-status').textContent = statusText();
+  busy = true;
   try {
     const credentials = { p_list_id: link.id, p_token: link.token };
     if (!state.created && state.creating) {
@@ -272,5 +264,5 @@ try {
   void sync();
 } catch (error) { notice(error.message, true); $('#welcome').hidden = false; }
 void loadCatalog();
-setInterval(() => { if (!document.hidden) void sync(); }, 4000);
+setInterval(() => { if (!document.hidden) void sync(); }, 30000);
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) navigator.serviceWorker.register('./sw.js').catch(() => toast('Installazione offline non disponibile su questo browser.'));

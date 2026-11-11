@@ -7,7 +7,7 @@ Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Databas
 ## Stato della prima versione
 
 - Lista: creazione, quantità, spunta, rimozione e condivisione del link.
-- Sincronizzazione: ogni 4 secondi quando la pagina è visibile, con operazioni idempotenti e coda offline.
+- Sincronizzazione: ogni 30 secondi quando la pagina è visibile, con operazioni idempotenti e coda offline. Gli aggiornamenti avvengono senza messaggi di stato nell'intestazione.
 - PWA: manifest, icone PNG, service worker e installazione Android/iOS.
 - Volantino: PDF e 20 immagini scaricati in `public/flyers/946-20261102/`, con provenienza e checksum. Validità verificata sulla copertina: **4–12 novembre 2026**.
 - Catalogo: **577 offerte trascritte** dalle 19 pagine di prodotti; pagina 20 contiene iniziative e condizioni. Le varianti della stessa offerta sono raggruppate; le ripetizioni in copertina conservano la propria origine.
