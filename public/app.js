@@ -8,6 +8,7 @@ let database = { active: null, lists: {} }, link = null, state = null;
 let busy = false, catalog = { offers: [], flyers: [] }, currentTab = 'list', installPrompt = null;
 let toastTimer, blocked = false;
 let offerLimit = 24, openPage = null;
+const expandedItems = new Set();
 function itemsNow() { return state ? projectItems(state.base, state.pending) : []; }
 function offerItems(offer) { return itemsNow().filter(item => matchesOffer(item, offer)); }
 function isSelected(offer) { return offerItems(offer).length > 0; }
@@ -72,9 +73,10 @@ function render() {
   $('#list-count').textContent = remaining.length;
   $('#remaining').textContent = `${remaining.length} ${remaining.length === 1 ? 'prodotto' : 'prodotti'}`;
   $('#done-count').textContent = done.length;
-  $('#empty').hidden = remaining.length > 0;
-  $('#done-section').hidden = done.length === 0;
-  renderItems($('#items'), remaining); renderItems($('#done-items'), done);
+  $('#empty').hidden = items.length > 0;
+  $('#done-section').hidden = true;
+  $('#clear-done').hidden = done.length === 0;
+  renderItems($('#items'), items); $('#done-items').replaceChildren();
   const estimate = cartEstimate(items);
   $('#list-total').hidden = !items.length;
   $('#estimate-total').textContent = money(estimate.total);
@@ -85,15 +87,16 @@ function render() {
 function renderItems(container, items) {
   container.replaceChildren(...groupItems(items).map(group => {
     const item = group[0];
-    const li = document.createElement('li'); li.className = `item${item.checked ? ' checked' : ''}`;
+    const li = document.createElement('li'); li.className = `item${item.checked ? ' checked' : ''}${item.checked && !expandedItems.has(item.id) ? ' collapsed' : ''}`;
+    li.dataset.itemId = item.id;
     const check = document.createElement('button'); check.className = 'check'; check.textContent = item.checked ? '✓' : '';
     check.setAttribute('aria-label', `${item.checked ? 'Da acquistare' : 'Segna acquistato'}: ${item.name}`);
     check.setAttribute('aria-pressed', String(item.checked));
-    check.onclick = () => { enqueueMany(group.map(unit => ({kind:'check',item_id:unit.id,data:{checked:!item.checked}}))); };
+    check.onclick = () => { expandedItems.delete(item.id); enqueueMany(group.map(unit => ({kind:'check',item_id:unit.id,data:{checked:!item.checked}}))); };
     const info = document.createElement('div'); info.className = 'item-info';
     const name = document.createElement('span'); name.className = 'item-name'; name.textContent = item.name; info.append(name);
     const detail = document.createElement('span'); detail.className = 'item-detail'; detail.textContent = [item.quantity, item.price != null ? `${money(item.price)} per ${itemOffer(item)?.size === 'al kg' ? 'kg' : itemOffer(item)?.size === '100 g' ? 'etto' : 'pezzo'}` : '', item.note].filter(Boolean).join(' · '); info.append(detail);
-    li.append(check); const photo = productPhoto(itemOffer(item)); if (photo) li.append(photo); li.append(info);
+    const photo = productPhoto(itemOffer(item)); if (photo) li.append(photo); else { const placeholder = document.createElement('span'); placeholder.className = 'item-placeholder'; placeholder.textContent = '✳'; placeholder.setAttribute('aria-hidden','true'); li.append(placeholder); } li.append(info);
     const controls = document.createElement('div'); controls.className = 'quantity-controls';
     const minus = document.createElement('button'); minus.textContent = '−'; minus.setAttribute('aria-label', `Diminuisci quantità di ${item.name}`); minus.disabled = group.length <= 1; minus.onclick = () => enqueue('delete', group.at(-1).id, {});
     const amount = document.createElement('input'); amount.type = 'number'; amount.min = '1'; amount.max = '99'; amount.step = '1'; amount.value = group.length; amount.inputMode = 'numeric'; amount.setAttribute('aria-label', `Quantità di ${item.name}`);
@@ -106,9 +109,16 @@ function renderItems(container, items) {
     amount.onchange = () => setAmount(Number(amount.value));
     amount.onkeydown = event => { if (event.key === 'Enter') { event.preventDefault(); amount.blur(); } };
     const plus = document.createElement('button'); plus.textContent = '+'; plus.setAttribute('aria-label', `Aumenta quantità di ${item.name}`); plus.disabled = group.length >= 99; plus.onclick = () => setAmount(group.length+1);
-    controls.append(minus,amount,plus); const unit = document.createElement('span'); unit.className = 'quantity-unit'; unit.textContent = itemOffer(item)?.size === 'al kg' ? 'kg' : itemOffer(item)?.size === '100 g' ? 'etti' : 'pezzi'; controls.append(unit); info.append(controls);
-    if (item.price !== null && item.price !== undefined) { const price = document.createElement('span'); price.className = 'price-tag'; price.textContent = money(item.price * group.length); li.append(price); }
-    const remove = document.createElement('button'); remove.className = 'delete'; remove.textContent = '×'; remove.setAttribute('aria-label', `Rimuovi ${item.name}`); remove.onclick = () => { enqueueMany(group.map(unit => ({kind:'delete',item_id:unit.id,data:{}}))); }; li.append(remove);
+    controls.append(minus,amount,plus); const unit = document.createElement('span'); unit.className = 'quantity-unit'; unit.textContent = itemOffer(item)?.size === 'al kg' ? 'kg' : itemOffer(item)?.size === '100 g' ? 'etti' : 'pezzi'; controls.append(unit);
+    const meta = document.createElement('div'); meta.className = 'item-meta'; meta.append(controls); li.append(meta);
+    if (item.price !== null && item.price !== undefined) { const price = document.createElement('span'); price.className = 'price-tag'; price.textContent = money(item.price * group.length); meta.append(price); }
+    const remove = document.createElement('button'); remove.className = 'delete'; remove.textContent = '×'; remove.setAttribute('aria-label', `Rimuovi ${item.name}`); remove.onclick = () => { enqueueMany(group.map(unit => ({kind:'delete',item_id:unit.id,data:{}}))); }; meta.append(remove);
+    if (item.checked) {
+      const reopen = document.createElement('button'); reopen.className = 'item-toggle'; reopen.textContent = expandedItems.has(item.id) ? 'Riduci' : 'Apri'; reopen.setAttribute('aria-expanded',String(expandedItems.has(item.id))); reopen.setAttribute('aria-label',`${expandedItems.has(item.id) ? 'Riduci' : 'Apri'} ${item.name}`);
+      reopen.onclick = () => { if (expandedItems.has(item.id)) expandedItems.delete(item.id); else expandedItems.add(item.id); render(); }; info.append(reopen);
+      const summary = document.createElement('span'); summary.className = 'item-summary'; summary.textContent = `${group.length} ${unit.textContent}${item.price != null ? ` · ${money(item.price * group.length)}` : ''}`; info.append(summary);
+    }
+    li.append(check);
     return li;
   }));
 }

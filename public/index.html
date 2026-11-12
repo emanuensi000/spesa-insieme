@@ -29,10 +29,10 @@
         <nav class="tabs" aria-label="Sezioni"><button data-tab="list" class="selected" aria-pressed="true">La lista <span id="list-count">0</span></button><button data-tab="offers" aria-pressed="false">Offerte Ipertriscount</button></nav>
         <section id="list-panel">
           <form id="add-form" class="add-form card"><label class="sr-only" for="product-name">Prodotto</label><input id="product-name" placeholder="Cosa manca in frigo?" maxlength="160" required autocomplete="off"><label class="sr-only" for="quantity">Quantità</label><input id="quantity" placeholder="Qtà" aria-label="Quantità" maxlength="40"><button class="primary" type="submit" aria-label="Aggiungi prodotto">+</button></form>
-          <div class="section-heading"><h3>Da mettere nel carrello</h3><span id="remaining"></span></div>
+          <div class="section-heading"><h3>La tua spesa</h3><span id="remaining"></span></div>
           <aside id="list-total" class="cart-estimate" aria-live="polite" hidden><div><span>Stima della spesa</span><strong id="estimate-total"></strong></div><p id="estimate-detail"></p><small id="estimate-note"></small></aside><ul id="items" class="items" aria-label="Prodotti da acquistare"></ul>
           <div id="empty" class="empty card"><span aria-hidden="true">✳</span><h3>Facciamo spazio alle cose buone.</h3><p>Aggiungi il primo prodotto oppure scegli tra le offerte.</p></div>
-          <details id="done-section"><summary>Già nel carrello <span id="done-count">0</span></summary><ul id="done-items" class="items" aria-label="Prodotti acquistati"></ul><button id="clear-done" class="text-button">Rimuovi gli acquistati</button></details>
+          <details id="done-section"><summary>Già nel carrello <span id="done-count">0</span></summary><ul id="done-items" class="items" aria-label="Prodotti acquistati"></ul></details><button id="clear-done" class="text-button" hidden>Rimuovi gli acquistati</button>
         </section>
         <section id="offers-panel" hidden>
           <div class="offer-banner"><div><span class="eyebrow">SOLO IL TUO VOLANTINO</span><h3>Le offerte, a portata di lista.</h3><p>Casal Bertone · Fonte Nuova · Guidonia · Viterbo</p></div><a href="https://www.ipertriscount.it/volantini" target="_blank" rel="noopener noreferrer">Sito ufficiale ↗</a></div>
