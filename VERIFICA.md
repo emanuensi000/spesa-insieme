@@ -70,3 +70,31 @@ Verificati con `npm test`, suite Python e build statica:
 - La selezione distingue pagina 1 e pagina 10, date e prezzi diversi.
 
 I nuovi test delle interazioni eseguono gli handler reali con un adattatore DOM in Node, senza chiamare Supabase. Verificato anche Chromium con viewport mobile 390 × 844: tap sulle aree con aggiunta e rimozione, navigazione e swipe simulato, incremento quantità, stima e foto visibile, nessun errore JavaScript o scorrimento orizzontale. Zoom e aggiornamento della PWA vanno provati anche su telefono fisico. Per le offerte al kg o per etto sono supportate quantità intere.
+
+## Rinomina OrganAIzer — 12 novembre 2026
+
+Il percorso citato nelle prove precedenti è quello storico, non una pubblicazione del nuovo nome. La rinomina corrente mantiene indirizzo pubblico, schema Spesa e formato dei link. I riferimenti tecnici al vecchio nome rimangono soltanto per recuperare memoria locale e cache, nei test di migrazione e nel resoconto storico. La nuova identità non implementa ancora login, gruppi o nuovi moduli.
+
+Controlli eseguiti per questa modifica:
+
+- `npm test`: suite JavaScript completata, inclusi recupero della lista/token/coda dalla vecchia chiave, precedenza ai dati nuovi e conservazione dei dati in caso di memoria piena.
+- `python3 -m unittest discover -s tests -p 'test_*.py'`: 6 test riusciti.
+- `npm run build`: riuscita con la configurazione pubblica esistente; output aggiornato in `dist/`.
+- `git diff --check`: nessun errore di spaziatura.
+
+Nessuna pubblicazione remota, modifica al database o nuova prova su browser/telefono eseguita in questo passaggio. Le prove browser delle sezioni precedenti restano storiche.
+
+## OrganAIzer 0.2 — nuova applicazione
+
+Implementati accesso con rilevamento provider, home a quattro card, navigazione flottante Home/Profilo/Impostazioni anche nel modulo Spesa, modalità locale, attività ricorrenti, agenda, spese/rimborsi, impostazioni e migrazione SQL additiva. Il documento `docs/IMPLEMENTAZIONE.md` specifica funzioni, limiti e attivazione remota.
+
+Verifiche del 12 novembre 2026:
+
+- Cinque file di test JavaScript/SQL completati con `npm test`, compreso PostgreSQL in PGlite. Il test SQL applica due volte la migrazione e usa i ruoli effettivi `anon` e `authenticated`.
+- Verificati isolamento fra gruppi, invito e iscrizione, idempotenza dei salvataggi, conflitti di versione, accesso negato alle tabelle private, visibilità sanitaria, guest limitato alla risorsa, revoca e trasferimento della proprietà.
+- Sei test Python del catalogo riusciti; build statica riuscita.
+- Chromium a 390×844 e 1440×1000: login con provider non disponibili, griglia, barra flottante, profilo, preferenze, creazione e completamento di attività ricorrenti, bolletta con quote e rimborso, appuntamento, lista Spesa e prodotto. Nessun errore JavaScript o scorrimento orizzontale indesiderato. Riapertura e utilizzo offline riusciti.
+- Prova dell’interfaccia condivisa con due account e un ospite, richieste RPC instradate a un PostgreSQL di test che esegue la migrazione reale: completamento guest, revoca, ingresso nel gruppo e appuntamento privato escluso da memoria offline e dal secondo account.
+- Il login OAuth/SMS con veri provider non è stato provato: le impostazioni pubbliche Supabase indicano Google, Facebook e telefono disabilitati. Non sono state applicate migrazioni al database remoto né modificate configurazioni di provider.
+
+Le prove Chromium usano un database di test separato, non attestano l’attivazione delle nuove RPC nel progetto remoto. Installazione e safe area vanno provate anche su dispositivi Android/iOS fisici.

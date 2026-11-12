@@ -127,7 +127,7 @@ def parse_flyer(html, url):
 
 
 def fetch(url):
-    request = Request(source_url(url), headers={"User-Agent": "SpesaInsieme/0.1 (personal shopping list; daily flyer discovery)", "Accept": "text/html"})
+    request = Request(source_url(url), headers={"User-Agent": "OrganAIzer/0.1 (personal shopping list; daily flyer discovery)", "Accept": "text/html"})
     with urlopen(request, timeout=35) as response:
         source_url(response.url)
         data = response.read(5_000_001)

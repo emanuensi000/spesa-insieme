@@ -1,6 +1,10 @@
-# Spesa insieme
+# OrganAIzer
 
-PWA in italiano per una lista della spesa condivisa tramite link privato, con catalogo delle offerte Ipertriscount esclusivamente del gruppo **Casal Bertone - Fonte Nuova - Guidonia - Viterbo**.
+OrganAIzer è una PWA in italiano pensata per organizzare impegni, attività e spese di famiglie e gruppi. La nuova visione e la roadmap sono in [REQUISITI.md](REQUISITI.md).
+
+**Stato implementato:** nuova schermata di accesso, home a quattro card, barra flottante Home / Profilo / Impostazioni, modalità locale, attività ricorrenti, agenda, spese con quote/rimborsi e collegamento alla Spesa. Il backend additivo e i flussi di login sono nel repository; la disponibilità condivisa richiede l’applicazione della migrazione e l’abilitazione dei provider nel progetto Supabase. Vedere [funzioni e attivazione](docs/IMPLEMENTAZIONE.md) per stato e limiti.
+
+Il modulo Spesa conserva catalogo delle offerte Ipertriscount del gruppo **Casal Bertone - Fonte Nuova - Guidonia - Viterbo**, volantino e condivisione storica tramite link privato. I requisiti della base esistente sono in [docs/REQUISITI_SPESA.md](docs/REQUISITI_SPESA.md).
 
 Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Database Supabase con funzioni PostgreSQL. Volantino scaricato e trascritto con supporto OCR locale, senza API a pagamento.
 
@@ -20,7 +24,7 @@ Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Databas
 
 ## Avvio locale
 
-Richiede Node.js 22 o successivo. Python 3.11+ serve solo per i volantini e non richiede pacchetti aggiuntivi.
+Richiede Node.js 22 o successivo. Eseguire prima `npm ci` per installare la dipendenza di test PostgreSQL (nessuna dipendenza runtime nel frontend). Python 3.11+ serve solo per i volantini e non richiede pacchetti aggiuntivi.
 
 ```powershell
 npm.cmd run dev
@@ -32,7 +36,7 @@ Aprire `http://127.0.0.1:4173`. Per produrre i file statici:
 npm.cmd run build
 ```
 
-L'output è in `dist/`. Il sito funziona anche sotto il percorso di un repository, ad esempio `https://utente.github.io/spesa-insieme/`.
+L'output è in `dist/`. Il sito funziona anche sotto il percorso di un repository, ad esempio `https://utente.github.io/organaizer/`.
 
 ## Collegare Supabase
 
@@ -52,14 +56,14 @@ Il progetto Supabase dell'utente è già configurato in `config.public.json`; lo
 
 5. Riavviare `npm.cmd run dev`, creare una nuova lista e condividerne il link. Le liste create in modalità locale restano locali; non vengono caricate automaticamente. Ordine delle configurazioni: variabili di ambiente → `config.local.json` ignorato da Git → `config.public.json` tracciato nel repository.
 
-La chiave pubblica viene inclusa nella build. **Non inserire mai service_role, sb_secret, password database o token personali.** La build rifiuta chiavi amministrative riconoscibili. Non servono utenti registrati: il possesso del link è l'autorizzazione.
+La chiave pubblica viene inclusa nella build. **Non inserire mai service_role, sb_secret, password database o token personali.** La build rifiuta chiavi amministrative riconoscibili. Per il modulo Spesa storico non servono utenti registrati: il possesso del link è l’autorizzazione. I nuovi gruppi OrganAIzer usano invece Supabase Auth e le RPC della migrazione `supabase/migrations/001_organaizer.sql`.
 
 ## GitHub e pubblicazione
 
-Il repository locale è pronto per essere collegato a un repository GitHub vuoto.
+Il nome del pacchetto è `organaizer`. Il repository remoto e il percorso GitHub Pages esistenti restano quelli configurati: gli URL seguenti sono esempi per un repository nuovo o rinominato. La rinomina remota richiede un passaggio separato e un piano per i link già condivisi.
 
 ```powershell
-git remote add origin https://github.com/TUO-UTENTE/spesa-insieme.git
+git remote add origin https://github.com/TUO-UTENTE/organaizer.git
 git push -u origin main
 ```
 
@@ -158,3 +162,7 @@ npm.cmd run build
 I test coprono parsing del link, coda offline, idempotenza, eliminazioni, fuso orario, offerte future, sconti senza prezzo, selezione esatta della sede, pagine mancanti, validazione CSV, checksum delle copie scaricate e copertura delle pagine. Il collegamento al progetto Supabase reale è stato verificato; vedere [VERIFICA.md](VERIFICA.md).
 
 Documentazione: [GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages/), [funzioni Supabase](https://supabase.com/docs/guides/database/functions), [volantini ufficiali](https://www.ipertriscount.it/volantini).
+
+## Rinomina OrganAIzer
+
+Nome visibile, manifest, pacchetto, condivisione e cache usano OrganAIzer. L’identità relativa `id`, `scope` e `start_url` della PWA resta stabile. Al primo avvio sullo stesso dominio e percorso, le liste precedenti vengono copiate nella nuova chiave locale senza eliminare la copia originaria; una chiave nuova già presente ha precedenza. La vecchia chiave resta solo per compatibilità. Cambiare dominio o percorso richiederà una migrazione dedicata: il browser non trasferisce automaticamente memoria locale, installazione e service worker. Lo schema privato del modulo Spesa resta invariato perché identifica il modulo e contiene dati già in uso.

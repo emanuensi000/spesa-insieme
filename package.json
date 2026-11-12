@@ -1,6 +1,6 @@
 {
-  "name": "spesa-insieme",
-  "version": "0.1.0",
+  "name": "organaizer",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,5 +10,10 @@
     "offers:discover": "python scripts/offers.py discover",
     "offers:import": "python scripts/offers.py import"
   },
-  "engines": { "node": ">=22" }
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.16"
+  }
 }

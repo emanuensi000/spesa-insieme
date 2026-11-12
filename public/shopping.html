@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#245b45">
+  <meta name="description" content="OrganAIzer: impegni, attività e spese da organizzare insieme.">
+  <meta name="referrer" content="no-referrer">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>OrganAIzer</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <link rel="stylesheet" href="./styles.css"><link rel="stylesheet" href="./navigation.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar"><a class="brand" href="./"><span class="brand-icon" aria-hidden="true">✳</span> Organ<span>AI</span>zer</a><button id="install" class="text-button" hidden>Installa app</button></header>
+    <main><a href="./" class="text-button">← Home OrganAIzer</a>
+      <button id="update-app" class="primary" hidden>Aggiornamento disponibile · Aggiorna app</button><div id="notice" class="notice" role="status" hidden></div>
+      <section id="welcome" class="welcome card" hidden>
+        <div><span class="eyebrow">PARTIAMO DA QUI</span><h2>La vostra prossima spesa</h2><p>Crea una lista e condividi il link con chi fa la spesa con te.</p></div>
+        <form id="create-form"><label for="list-name">Nome della lista</label><input id="list-name" maxlength="80" value="La spesa di casa" required><button class="primary" type="submit">Crea la lista <span aria-hidden="true">↗</span></button></form>
+      </section>
+      <section id="workspace" hidden>
+        <div class="list-heading"><div><span class="eyebrow">IL VOSTRO CARRELLO, IN COMUNE</span><h2 id="list-title"></h2></div><button id="share" class="secondary">Condividi link ↗</button></div>
+        <nav class="tabs" aria-label="Sezioni"><button data-tab="list" class="selected" aria-pressed="true">La lista <span id="list-count">0</span></button><button data-tab="offers" aria-pressed="false">Offerte Ipertriscount</button></nav>
+        <section id="list-panel">
+          <form id="add-form" class="add-form card"><label class="sr-only" for="product-name">Prodotto</label><input id="product-name" placeholder="Cosa manca in frigo?" maxlength="160" required autocomplete="off"><label class="sr-only" for="quantity">Quantità</label><input id="quantity" placeholder="Qtà" aria-label="Quantità" maxlength="40"><button class="primary" type="submit" aria-label="Aggiungi prodotto">+</button></form>
+          <div class="section-heading"><h3>La tua spesa</h3><span id="remaining"></span></div>
+          <aside id="list-total" class="cart-estimate" aria-live="polite" hidden><div><span>Stima della spesa</span><strong id="estimate-total"></strong></div><p id="estimate-detail"></p><small id="estimate-note"></small></aside><ul id="items" class="items" aria-label="Prodotti da acquistare"></ul>
+          <div id="empty" class="empty card"><span aria-hidden="true">✳</span><h3>Facciamo spazio alle cose buone.</h3><p>Aggiungi il primo prodotto oppure scegli tra le offerte.</p></div>
+          <details id="done-section"><summary>Già nel carrello <span id="done-count">0</span></summary><ul id="done-items" class="items" aria-label="Prodotti acquistati"></ul></details><button id="clear-done" class="text-button" hidden>Rimuovi gli acquistati</button>
+        </section>
+        <section id="offers-panel" hidden>
+          <div class="offer-banner"><div><span class="eyebrow">SOLO IL TUO VOLANTINO</span><h3>Le offerte, a portata di lista.</h3><p>Casal Bertone · Fonte Nuova · Guidonia · Viterbo</p></div><a href="https://www.ipertriscount.it/volantini" target="_blank" rel="noopener noreferrer">Sito ufficiale ↗</a></div>
+          <button id="open-flyer" class="primary open-flyer" disabled>Sfoglia il volantino · tocca e aggiungi ↗</button><div id="catalog-status" class="notice"></div>
+          <div class="offer-filters"><label class="sr-only" for="offer-search">Cerca offerte</label><input id="offer-search" type="search" placeholder="Cerca un prodotto in offerta…"><label class="sr-only" for="offer-category">Reparto</label><select id="offer-category"><option value="">Tutti i reparti</option></select><label class="sr-only" for="offer-validity">Validità</label><select id="offer-validity"><option value="available">In corso e in arrivo</option><option value="today">Solo valide oggi</option><option value="all">Tutte, anche scadute</option></select><label class="sr-only" for="offer-page">Pagina</label><select id="offer-page"><option value="">Tutte le pagine</option></select></div>
+
+          <p id="offer-results" class="muted" aria-live="polite"></p><div id="offers" class="offers"></div><button id="more-offers" class="secondary more-offers" hidden>Mostra altri prodotti</button><p id="no-offers" class="empty" hidden>Nessuna offerta corrispondente. Puoi comunque consultare le pagine del volantino qui sotto.</p>
+          <div id="promotions" class="promotions"></div>
+          <div class="section-heading"><h3>Sfoglia e scegli dalla pagina</h3><div class="flyer-links"><a id="pdf-link" target="_blank" rel="noopener noreferrer" hidden>PDF scaricato ↗</a><a id="flyer-link" target="_blank" rel="noopener noreferrer" hidden>Sito ufficiale ↗</a></div></div><p id="flyer-note" class="muted">Caricamento del volantino…</p><div id="flyer-pages" class="flyer-pages"></div>
+        </section>
+      </section>
+      <footer><span>OrganAIzer · La vita quotidiana, organizzata insieme.</span><button id="help" class="text-button">Come funziona</button></footer>
+    </main>
+  </div>
+  <dialog id="info-dialog"><button class="close" aria-label="Chiudi">×</button><span class="eyebrow">OrganAIzer</span><h2>Un link, una lista.</h2><p>Chi possiede il link privato può vedere e modificare la lista. Invialo solo alle persone con cui vuoi condividerla.</p><p>Le modifiche restano sul telefono quando manca la connessione e vengono inviate al ritorno online.</p><p>Per installare l’app su iPhone: Safari → Condividi → Aggiungi alla schermata Home. Su Android usa il menu del browser → Installa app.</p><p>Le offerte sono trascritte manualmente: verifica prezzi, scadenze e condizioni sulla pagina originale del volantino.</p></dialog>
+  <dialog id="share-dialog"><button class="close" aria-label="Chiudi">×</button><h2>La spesa si condivide.</h2><p>Chi riceve questo link può modificare la lista.</p><label for="share-url">Link privato</label><input id="share-url" readonly><button id="copy-link" class="primary">Copia link</button><button id="native-share" class="secondary" hidden>Invia…</button></dialog>
+  <dialog id="page-dialog" class="page-dialog"><button class="close" aria-label="Chiudi">×</button><h2 id="page-title"></h2><p>Scorri a sinistra o destra per sfogliare. Tocca un prodotto per aggiungerlo; toccalo di nuovo per rimuoverlo. Puoi ingrandire con due dita.</p><nav class="page-navigation" aria-label="Sfoglia volantino"><button id="previous-page" class="secondary" aria-label="Pagina precedente">←</button><span id="page-position" aria-live="polite"></span><label class="sr-only" for="page-jump">Vai alla pagina</label><select id="page-jump" aria-label="Vai alla pagina"></select><button id="next-page" class="secondary" aria-label="Pagina successiva">→</button></nav><div id="page-canvas" class="page-canvas"><img id="page-image" alt=""><div id="page-hotspots"></div></div><h3>Prodotti di questa pagina</h3><div id="page-products" class="page-products"></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+<nav id="shopping-nav" class="floating-nav" aria-label="Navigazione principale"><a href="./?screen=home" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 12 3l9 7v10h-6v-7H9v7H3Z"/></svg><span>Home</span></a><a href="./?screen=profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a7 7 0 0 0-14 0v2M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0"/></svg><span>Profilo</span></a><a href="./?screen=settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 3-1 3-3 1-2 4 2 3v4l4 3 3-1 3 1 4-3v-4l2-3-2-4-3-1-1-3ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/></svg><span>Impostazioni</span></a></nav>
+</body>
+</html>

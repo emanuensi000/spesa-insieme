@@ -15,24 +15,28 @@ class Element {
   showModal() { this.open=true; }
   cloneNode() { return Object.assign(new Element(this.tagName),{value:this.value,textContent:this.textContent}); }
 }
-async function startApp() {
-  const html=await readFile(new URL('../public/index.html',import.meta.url),'utf8');
+async function startApp({legacy=false, both=false, full=false}={}) {
+  const html=await readFile(new URL('../public/shopping.html',import.meta.url),'utf8');
   const nodes=new Map([...html.matchAll(/id="([^"]+)"/g)].map(m=>[`#${m[1]}`,new Element()]));
   nodes.get('#offer-validity').value='all';
   const id='12345678-1234-1234-1234-123456789012',token='a'.repeat(64);
   const stored={active:{id,token},lists:{[id]:{name:'Test',base:[],pending:[],created:true,loaded:true,localOnly:true,token}}};
   const catalog=JSON.parse(await readFile(new URL('../public/data/offers.json',import.meta.url),'utf8'));
-  let memory=JSON.stringify(stored),failStorage=false;
+  stored.lists[id].pending=[{op_id:'23456789-1234-1234-1234-123456789012',kind:'add',item_id:'34567890-1234-1234-1234-123456789012',data:{name:'Latte',quantity:'1'}}].filter(()=>legacy || both);
+  const original=JSON.stringify(stored);
+  const memory=new Map([[legacy ? 'spesa-insieme:v1' : 'organaizer:v1',original]]);
+  if(both) memory.set('spesa-insieme:v1',JSON.stringify({...stored,active:null,lists:{}}));
+  let failStorage=full;
   const context=vm.createContext({...core,config:{},crypto:webcrypto,URLSearchParams,Intl,AbortSignal,
     document:{querySelector:selector=>nodes.get(selector),querySelectorAll:()=>[],createElement:tag=>new Element(tag),createTextNode:text=>({textContent:text}),addEventListener(){}},
     navigator:{onLine:false},location:{hash:'',protocol:'http:',hostname:'test'},window:{addEventListener(){}},
-    localStorage:{getItem:()=>memory,setItem:(key,value)=>{if(failStorage) throw Error('Full');memory=value;}},
+    localStorage:{getItem:key=>memory.get(key) ?? null,setItem:(key,value)=>{if(failStorage) throw Error('Full');memory.set(key,value);}},
     fetch:async()=>({ok:true,json:async()=>catalog}),setInterval(){},setTimeout(){},clearTimeout(){},confirm:()=>true
   });
   const source=(await readFile(new URL('../public/app.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
   vm.runInContext(source,context);
   await new Promise(resolve=>setImmediate(resolve));
-  return {context,nodes,run:script=>vm.runInContext(script,context),snapshot:()=>JSON.parse(memory).lists[id],fail:()=>{failStorage=true;}};
+  return {context,nodes,run:script=>vm.runInContext(script,context),memory,original,snapshot:()=>JSON.parse(memory.get('organaizer:v1')).lists[id],fail:()=>{failStorage=true;}};
 }
 
 test('tap sul volantino, quantità, acquisto, rimozione e riaggiunta mantengono prezzi e stato',async()=>{
@@ -78,4 +82,27 @@ test('la modifica di quantità viene annullata interamente se il salvataggio fal
   controls.children[1].value='5';controls.children[1].onchange();
   assert.equal(run('itemsNow().length'),1);
   assert.equal(controls.children[1].value,1);
+});
+
+
+test('la rinomina recupera lista, token e coda offline e conserva la copia precedente',async()=>{
+  const app=await startApp({legacy:true});
+  assert.equal(app.memory.get('spesa-insieme:v1'),app.original);
+  assert.equal(app.memory.get('organaizer:v1'),app.original);
+  assert.equal(app.run('itemsNow()[0].name'),'Latte');
+  assert.equal(app.snapshot().pending.length,1);
+  assert.equal(app.snapshot().token,'a'.repeat(64));
+});
+
+test('i dati OrganAIzer esistenti prevalgono sulla copia precedente',async()=>{
+  const app=await startApp({both:true});
+  assert.equal(app.memory.get('organaizer:v1'),app.original);
+  assert.equal(app.run('itemsNow()[0].name'),'Latte');
+});
+
+test('memoria piena durante la migrazione conserva intatta la coda precedente',async()=>{
+  const app=await startApp({legacy:true,full:true});
+  assert.equal(app.memory.get('spesa-insieme:v1'),app.original);
+  assert.equal(app.memory.has('organaizer:v1'),false);
+  assert.equal(app.nodes.get('#notice').hidden,false);
 });

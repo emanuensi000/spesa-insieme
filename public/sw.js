@@ -1,7 +1,7 @@
-const VERSION = 'spesa-v1-__BUILD_ID__';
-const SHELL = ['./', './index.html', './styles.css', './app.js', './core.js', './config.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './data/offers.json', ...__FLYER_ASSETS__];
+const VERSION = 'organaizer-v1-__BUILD_ID__';
+const SHELL = ['./', './index.html', './shopping.html', './organizer.js', './organizer-core.js', './auth.js', './organizer.css', './navigation.css', './docs/REQUISITI.md', './docs/IMPLEMENTAZIONE.md', './docs/001_organaizer.sql', './styles.css', './app.js', './core.js', './config.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './data/offers.json', ...__FLYER_ASSETS__];
 self.addEventListener('install', event => { event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(SHELL))); });
-self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('spesa-v1-') && key !== VERSION).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
+self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => (key.startsWith('organaizer-v1-') || key.startsWith('spesa-v1-')) && key !== VERSION).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', event => {
   const request = event.request, url = new URL(request.url);
   // Nessuna lista, token o risposta del database viene memorizzata dal service worker.

@@ -3,7 +3,9 @@ import { createSecret, parseLink, projectItems, activeOffers, availableOffers, r
 
 const $ = selector => document.querySelector(selector);
 const configured = Boolean(config.supabaseUrl && config.supabasePublishableKey);
-const cacheKey = 'spesa-insieme:v1';
+const cacheKey = 'organaizer:v1';
+// Compatibilità con le liste e la coda offline salvate prima della rinomina.
+const legacyCacheKey = 'spesa-insieme:v1';
 let database = { active: null, lists: {} }, link = null, state = null;
 let busy = false, catalog = { offers: [], flyers: [] }, currentTab = 'list', installPrompt = null;
 let toastTimer, blocked = false;
@@ -294,7 +296,7 @@ $('#page-canvas').addEventListener('touchend',event => { if (!swipeStart) return
 $('#page-canvas').addEventListener('click',event => { if(swipeMoved) { event.preventDefault(); event.stopImmediatePropagation(); swipeMoved=false; } },true);
 $('#share').onclick = () => { $('#share-url').value = location.href; $('#native-share').hidden = !navigator.share; $('#share-dialog').showModal(); };
 $('#copy-link').onclick = async () => { try { await navigator.clipboard.writeText(location.href); toast('Link copiato'); } catch { $('#share-url').select(); toast('Seleziona e copia il link'); } };
-$('#native-share').onclick = async () => { try { await navigator.share({ title: state.name, text: 'Facciamo la spesa insieme', url: location.href }); } catch (error) { if (error.name !== 'AbortError') toast('Invio non riuscito. Puoi copiare il link.'); } };
+$('#native-share').onclick = async () => { try { await navigator.share({ title: state.name, text: 'Organizziamo la spesa con OrganAIzer', url: location.href }); } catch (error) { if (error.name !== 'AbortError') toast('Invio non riuscito. Puoi copiare il link.'); } };
 $('#help').onclick = () => $('#info-dialog').showModal();
 for (const close of document.querySelectorAll('dialog .close')) close.onclick = () => close.closest('dialog').close();
 window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; $('#install').hidden = false; });
@@ -302,10 +304,20 @@ $('#install').onclick = async () => { if (installPrompt) { await installPrompt.p
 window.addEventListener('online', () => { render(); void sync(); }); window.addEventListener('offline', render);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderOffers(); void sync(); } });
 // Ogni scheda ha un solo writer della propria coda. Evita che due schede si sovrascrivano.
-window.addEventListener('storage', event => { if (event.key === cacheKey) { notice('La lista è stata aggiornata in un’altra scheda. Ricarica questa pagina per continuare.', true); blocked = true; render(); } });
+window.addEventListener('storage', event => { if (event.key === cacheKey || event.key === legacyCacheKey) { notice('La lista è stata aggiornata in un’altra scheda. Ricarica questa pagina per continuare.', true); blocked = true; render(); } });
 window.addEventListener('hashchange', () => { try { const next = parseLink(location.hash); if (next && (next.id !== link?.id || next.token !== link?.token)) location.reload(); } catch (error) { notice(error.message, true); } });
 try {
-  database = JSON.parse(localStorage.getItem(cacheKey) || 'null') || database;
+  let stored = localStorage.getItem(cacheKey);
+  if (stored === null) {
+    const legacy = localStorage.getItem(legacyCacheKey);
+    if (legacy !== null) {
+      // Prima valida, poi copia. Conserva l’originale anche se la memoria è piena.
+      JSON.parse(legacy);
+      localStorage.setItem(cacheKey, legacy);
+      stored = legacy;
+    }
+  }
+  database = JSON.parse(stored || 'null') || database;
   const next = parseLink(location.hash) || database.active;
   if (next) setLink(next); else render();
   if (!configured) notice('Anteprima locale: la lista resta su questo telefono. Per la condivisione occorre collegare Supabase.');

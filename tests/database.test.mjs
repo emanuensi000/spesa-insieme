@@ -1,0 +1,33 @@
+import {PGlite} from '@electric-sql/pglite';
+import fs from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const db=new PGlite();
+await db.exec(`create role anon;create role authenticated;create schema auth;create table auth.users(id uuid primary key);create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$;grant usage on schema auth to anon,authenticated;grant execute on function auth.uid() to anon,authenticated;`);
+const sql=await fs.readFile(new URL('../supabase/migrations/001_organaizer.sql',import.meta.url),'utf8');await db.exec(sql);await db.exec(sql);
+const alice='11111111-1111-4111-8111-111111111111',bob='22222222-2222-4222-8222-222222222222',charlie='33333333-3333-4333-8333-333333333333',group='44444444-4444-4444-8444-444444444444',item='55555555-5555-4555-8555-555555555555',medical='66666666-6666-4666-8666-666666666666',token='a'.repeat(64);
+await db.query('insert into auth.users values($1),($2),($3)',[alice,bob,charlie]);
+async function as(user,role='authenticated'){await db.exec(`reset role;set role ${role};`);await db.query("select set_config('request.jwt.claim.sub',$1,false)",[user||'']);}
+async function call(name,args=[]){const r=await db.query(`select public.${name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) as result`,args);return r.rows[0].result;}
+const denied=async(fn)=>{await assert.rejects(fn);};
+await as(alice);await call('organizer_create_group',['Casa', 'Anna',group]);await call('organizer_create_group',['Casa','Anna',group]);
+let r=await call('organizer_save',[group,item,'task',{title:'Pulizie',status:'open'},0,false]);assert.equal(r.version,1);
+assert.equal((await call('organizer_save',[group,item,'task',{title:'Pulizie',status:'open'},0,false])).version,1);
+await denied(()=>call('organizer_save',[group,item,'task',{title:'Stale'},0,false]));
+const invite=await call('organizer_invite',[group,null,'join',token,7]);
+await as(bob);await denied(()=>call('organizer_snapshot',[group]));await call('organizer_join',[invite,token,'Luca']);
+assert.equal((await call('organizer_snapshot',[group])).items.length,1);
+await denied(()=>call('organizer_member',[group,alice,'remove']));
+await as(alice);await call('organizer_save',[group,medical,'event',{title:'Visita privata',sensitive:true},0,false]);
+await denied(()=>call('organizer_invite',[group,medical,'read',token,7]));
+const guestInvite=await call('organizer_invite',[group,item,'edit',token,7]);
+await as(bob);assert.equal((await call('organizer_snapshot',[group])).items.length,1);
+await denied(()=>call('organizer_save',[group,medical,'event',{title:'Forzato',sensitive:false},1,false]));
+await as(charlie);await denied(()=>call('organizer_snapshot',[group]));await denied(()=>call('organizer_save',[group,item,'task',{title:'Forzato'},1,false]));
+await as(null,'anon');let guest=await call('organizer_read_invite',[guestInvite,token]);assert.equal(guest.item.data.title,'Pulizie');
+await denied(()=>call('organizer_read_invite',[guestInvite,'b'.repeat(64)]));
+await denied(()=>db.query('select * from organizer_private.items'));
+guest=await call('organizer_guest_complete',[guestInvite,token,1,true]);assert.equal(guest.item.data.status,'done');
+await denied(()=>call('organizer_guest_complete',[guestInvite,token,1,false]));
+await as(alice);await call('organizer_revoke',[guestInvite]);await as(null,'anon');await denied(()=>call('organizer_read_invite',[guestInvite,token]));await denied(()=>call('organizer_guest_complete',[guestInvite,token,2,false]));
+await as(alice);await denied(()=>call('organizer_member',[group,alice,'leave']));await call('organizer_member',[group,bob,'owner']);await call('organizer_member',[group,alice,'leave']);await denied(()=>call('organizer_snapshot',[group]));
+await db.close();console.log('SQL OK: migrazione ripetibile, ruoli, isolamento gruppi, riservatezza, guest, revoca, conflitti, trasferimento proprietà.');

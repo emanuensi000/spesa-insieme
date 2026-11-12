@@ -7,6 +7,13 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const output = new URL('../dist/', import.meta.url);
 await mkdir(output, { recursive: true });
 await cp(new URL('../public/', import.meta.url), output, { recursive: true });
+await mkdir(new URL('docs/', output), {recursive:true});
+for (const [source,target] of [['REQUISITI.md','REQUISITI.md'],['docs/IMPLEMENTAZIONE.md','IMPLEMENTAZIONE.md'],['supabase/migrations/001_organaizer.sql','001_organaizer.sql']]) await cp(new URL('../'+source,import.meta.url),new URL('docs/'+target,output));
+const implementationPath=new URL('docs/IMPLEMENTAZIONE.md',output);
+await writeFile(implementationPath,(await readFile(implementationPath,'utf8')).replace('../supabase/migrations/001_organaizer.sql','./001_organaizer.sql'));
+const requirementsPath=new URL('docs/REQUISITI.md',output);
+await writeFile(requirementsPath,(await readFile(requirementsPath,'utf8')).replace('docs/REQUISITI_SPESA.md','./REQUISITI_SPESA.md').replace('docs/IMPLEMENTAZIONE.md','./IMPLEMENTAZIONE.md'));
+await cp(new URL('../docs/REQUISITI_SPESA.md',import.meta.url),new URL('docs/REQUISITI_SPESA.md',output));
 let config = {};
 try { config = JSON.parse(await readFile(new URL('../config.public.json', import.meta.url), 'utf8')); }
 catch (error) { if (error.code !== 'ENOENT') throw error; }
@@ -37,18 +44,18 @@ function chunk(type, bytes) {
 }
 function icon(size) {
   const scan = Buffer.alloc(size * (1 + size * 4));
-  const lines = [[.28,.37,.75,.37],[.75,.37,.69,.65],[.69,.65,.34,.65],[.34,.65,.27,.29],[.27,.29,.20,.29],[.42,.44,.47,.50],[.47,.50,.59,.39]];
+  const lines = [[.30,.31,.43,.31],[.30,.31,.30,.44],[.43,.31,.43,.44],[.30,.44,.43,.44],[.57,.31,.70,.31],[.57,.31,.57,.44],[.70,.31,.70,.44],[.57,.44,.70,.44],[.30,.57,.43,.57],[.30,.57,.30,.70],[.43,.57,.43,.70],[.30,.70,.43,.70],[.55,.64,.61,.70],[.61,.70,.73,.56]];
   function distance(x,y,ax,ay,bx,by) { const dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy))); return Math.hypot(x-ax-t*dx,y-ay-t*dy); }
   for(let y=0;y<size;y++) for(let x=0;x<size;x++) {
     const nx=x/size,ny=y/size, offset=y*(1+size*4)+1+x*4;
-    const light=lines.some(l=>distance(nx,ny,...l)<.024)||Math.hypot(nx-.39,ny-.75)<.027||Math.hypot(nx-.65,ny-.75)<.027;
-    scan.set(light?[243,244,220,255]:[36,91,69,255],offset);
+    const light=lines.some(l=>distance(nx,ny,...l)<.024);
+    scan.set(light?[243,244,220,255]:[51,79,61,255],offset);
   }
   const header=Buffer.alloc(13);header.writeUInt32BE(size);header.writeUInt32BE(size,4);header[8]=8;header[9]=6;
   return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('IDAT',deflateSync(scan)),chunk('IEND',Buffer.alloc(0))]);
 }
 for (const size of [192,512]) await writeFile(new URL(`icons/icon-${size}.png`,output),icon(size));
-const inputs = await Promise.all(['app.js','core.js','styles.css','index.html','config.js','data/offers.json'].map(name => readFile(new URL(name, output))));
+const inputs = await Promise.all(['app.js','core.js','styles.css','index.html','shopping.html','organizer.js','organizer-core.js','organizer.css','navigation.css','auth.js','manifest.webmanifest','docs/REQUISITI.md','docs/IMPLEMENTAZIONE.md','docs/001_organaizer.sql','config.js','data/offers.json'].map(name => readFile(new URL(name, output))));
 const digest = createHash('sha256').update(Buffer.concat(inputs)).digest('hex').slice(0,12);
 const worker = await readFile(new URL('sw.js',output),'utf8');
 const catalog = JSON.parse(await readFile(new URL('data/offers.json', output),'utf8'));
