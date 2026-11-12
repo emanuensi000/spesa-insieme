@@ -33,7 +33,7 @@ async function startApp({legacy=false, both=false, full=false}={}) {
     localStorage:{getItem:key=>memory.get(key) ?? null,setItem:(key,value)=>{if(failStorage) throw Error('Full');memory.set(key,value);}},
     fetch:async()=>({ok:true,json:async()=>catalog}),setInterval(){},setTimeout(){},clearTimeout(){},confirm:()=>true
   });
-  const source=(await readFile(new URL('../public/app.js',import.meta.url),'utf8')).replace(/^import .*;\n/gm,'');
+  const source=(await readFile(new URL('../public/app.js',import.meta.url),'utf8')).replace(/^import .*;\r?\n/gm,'');
   vm.runInContext(source,context);
   await new Promise(resolve=>setImmediate(resolve));
   return {context,nodes,run:script=>vm.runInContext(script,context),memory,original,snapshot:()=>JSON.parse(memory.get('organaizer:v1')).lists[id],fail:()=>{failStorage=true;}};

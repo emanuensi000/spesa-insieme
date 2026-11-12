@@ -40,6 +40,8 @@ L'output è in `dist/`. Il sito funziona anche sotto il percorso di un repositor
 
 ## Collegare Supabase
 
+Per attivare Google, Facebook e telefono e capire la modalità ospite seguire [docs/LOGIN.md](docs/LOGIN.md): contiene gli URL esatti per Google/Meta e Supabase. Il codice è pronto; i provider richiedono le credenziali configurate nei rispettivi pannelli.
+
 Il progetto Supabase dell'utente è già configurato in `config.public.json`; lo schema è presente e le operazioni sono state verificate. Le istruzioni seguenti servono per collegare un altro progetto.
 
 1. Creare un progetto Supabase e aspettare che sia pronto.

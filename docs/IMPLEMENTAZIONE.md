@@ -18,6 +18,8 @@
 
 ## Stato dei servizi verificato il 12 novembre 2026
 
+I flussi di login sono stati aggiornati: sessioni persistenti, refresh serializzato, gestione callback/annullamento, ritorno all'invito, OTP con reinvio e cambio numero, separazione dei dati fra account. La guida passo passo con gli URL del progetto è in [LOGIN.md](LOGIN.md).
+
 Nel progetto Supabase configurato, Google, Facebook e telefono sono **disabilitati**. Il frontend non può abilitarli con una chiave pubblica. La nuova migrazione deve essere applicata da chi amministra il progetto. La modalità locale e la spesa preesistente restano utilizzabili anche prima dell’attivazione.
 
 ### Attivazione del database

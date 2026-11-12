@@ -1,5 +1,15 @@
 # Verifica della prima versione
 
+## Aggiornamento login — 12 novembre 2026
+
+- OAuth Google/Facebook con PKCE e ripristino dell'invito, anche dopo annullamento del provider.
+- Sessioni persistenti separate per progetto, migrazione della vecchia sessione di scheda, refresh serializzato, logout offline e protezione contro refresh tardivi.
+- OTP con numero normalizzato, reinvio persistente dopo almeno 60 secondi, errori per codice errato/scaduto e cambio numero.
+- Cambio account e logout fra schede nascondono i dati precedenti; il caricamento del nuovo account parte da uno stato vuoto.
+- Codici ed errori OAuth non finiscono nella cache del service worker.
+- Verifica Chromium mobile con risposte Auth simulate: provider disabilitati, Google/Facebook, ritorno all'invito, annullamento e successivo ingresso ospite, persistenza dopo reload, OTP, logout fra schede, modalità locale e ospite in sola lettura.
+- Nessun SMS reale inviato. I provider Google, Facebook e Phone risultano disabilitati nel progetto Supabase: il collaudo end-to-end sui servizi reali richiede la configurazione indicata in [docs/LOGIN.md](docs/LOGIN.md).
+
 Eseguita l'11 novembre 2026. Include il collegamento al progetto Supabase reale; GitHub non è ancora pubblicato.
 
 ## Controlli ripetibili nel progetto
