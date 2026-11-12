@@ -41,8 +41,12 @@ def main():
     catalog = offers.read_catalog()
     flyer = catalog["flyers"][0]
     flyer.update(local_pages=[f"{FOLDER}/page-{page:02d}.jpg" for page in range(1,21)], local_pdf=f"{FOLDER}/volantino.pdf", valid_from="2026-11-04", valid_until="2026-11-12")
+    regions = json.loads((ROOT / "data/flyer-regions-946.json").read_text(encoding="utf-8"))
     for offer in catalog["offers"]:
         offer["local_page"] = flyer["local_pages"][offer["page"] - 1]
+        if offer["id"] not in regions:
+            raise ValueError(f"Ritaglio mancante per {offer['brand']} {offer['name']}; verificare la mappa del volantino.")
+        offer["region"] = regions[offer["id"]]
     catalog["analysis"] = {"method": "Trascrizione visiva pagina per pagina con supporto OCR Tesseract italiano locale, senza API a pagamento", "pages_reviewed": 20,
         "product_pages": list(range(1,20)), "initiative_pages": [20], "note": "Le varianti elencate nella stessa offerta sono raggruppate; le ripetizioni in copertina e all'interno conservano la propria pagina di origine."}
     catalog["promotions"] = [

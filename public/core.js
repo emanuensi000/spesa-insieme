@@ -57,3 +57,32 @@ export function safeSourceUrl(value) {
     return url.protocol === 'https:' && ['ipertriscount.it', 'www.ipertriscount.it'].includes(url.hostname) && !url.username && !url.password ? url.href : null;
   } catch { return null; }
 }
+
+// Le unità restano operazioni indipendenti: compatibili con liste condivise esistenti.
+export function groupItems(items) {
+  const groups = new Map();
+  for (const item of items) {
+    const key = JSON.stringify([item.name,item.quantity,item.note,item.price,item.checked]);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(item);
+  }
+  return [...groups.values()];
+}
+
+export function matchesOffer(item, offer) {
+  const date = value => value.split('-').reverse().join('/');
+  return item.name === [offer.brand, offer.name].filter(Boolean).join(' ').trim().slice(0,160)
+    && item.price === (offer.price ?? null)
+    && (item.note || '').startsWith(`Offerta dal ${date(offer.valid_from)} al ${date(offer.valid_until)} · pag. ${offer.page}`)
+    && new RegExp(` · pag\\. ${offer.page}(?: ·|$)`).test(item.note || '');
+}
+
+export function cartEstimate(items) {
+  const total = list => list.reduce((sum, item) => sum + (Number.isFinite(item.price) ? Math.round(item.price * 100) : 0), 0) / 100;
+  return {
+    total: total(items),
+    remaining: total(items.filter(item => !item.checked)),
+    checked: total(items.filter(item => item.checked)),
+    unpriced: items.filter(item => !Number.isFinite(item.price)).length
+  };
+}

@@ -43,3 +43,26 @@ test('uno sconto senza prezzo non diventa un prodotto a zero euro',()=>{
   assert.equal(safeLocalFlyer('./flyers/../../config.js'),null);
   assert.equal(safeLocalFlyer('https://example.com/x.jpg'),null);
 });
+
+test('la stima conta tutte le unità, distingue acquistati e prezzi mancanti senza errori sui centesimi', async()=>{
+  const { cartEstimate, groupItems } = await import('../public/core.js');
+  const items = [
+    {name:'Latte',quantity:'1 l',price:.1,checked:false},
+    {name:'Latte',quantity:'1 l',price:.1,checked:false},
+    {name:'Pane',price:.2,checked:true},
+    {name:'Sconto senza prezzo',price:null,checked:false}
+  ];
+  assert.equal(groupItems(items)[0].length,2);
+  assert.deepEqual(cartEstimate(items),{total:.4,remaining:.2,checked:.2,unpriced:1});
+  assert.deepEqual(cartEstimate([]),{total:0,remaining:0,checked:0,unpriced:0});
+});
+
+test('la selezione distingue pagina 1 e 10, edizioni e prezzi diversi',async()=>{
+  const { matchesOffer } = await import('../public/core.js');
+  const offer={brand:'Marca',name:'Latte',price:1.29,page:1,valid_from:'2026-11-04',valid_until:'2026-11-12'};
+  const item={name:'Marca Latte',price:1.29,note:'Offerta dal 04/11/2026 al 12/11/2026 · pag. 1 · Fidelity Card'};
+  assert.ok(matchesOffer(item,offer));
+  assert.ok(!matchesOffer({...item,note:item.note.replace('pag. 1','pag. 10')},offer));
+  assert.ok(!matchesOffer({...item,price:2.29},offer));
+  assert.ok(!matchesOffer({...item,note:item.note.replace('04/11/2026','01/11/2026')},offer));
+});

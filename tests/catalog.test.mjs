@@ -25,3 +25,15 @@ test('PDF e tutte le pagine archiviate corrispondono ai checksum dichiarati',asy
     assert.ok(bytes.subarray(0,4).toString().startsWith('%PDF')||bytes.subarray(0,2).equals(Buffer.from([255,216])));
   }
 });
+
+test('ogni prodotto ha un ritaglio locale e una zona selezionabile dentro la pagina',async()=>{
+  const regions=JSON.parse(await readFile(new URL('../data/flyer-regions-946.json',import.meta.url),'utf8'));
+  for (const offer of catalog.offers) {
+    assert.deepEqual(offer.region,regions[offer.id]);
+    assert.equal(offer.region.length,4);
+    const [x,y,w,h]=offer.region;
+    assert.ok([x,y,w,h].every(Number.isFinite));
+    assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=1.000001&&y+h<=1.000001,offer.id);
+    assert.equal(offer.local_page,catalog.flyers[0].local_pages[offer.page-1]);
+  }
+});

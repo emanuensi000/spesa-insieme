@@ -1,5 +1,5 @@
 import config from './config.js';
-import { createSecret, parseLink, projectItems, activeOffers, availableOffers, romeDate, money, offerPrice, safeSourceUrl, safeLocalFlyer } from './core.js';
+import { createSecret, parseLink, projectItems, activeOffers, availableOffers, romeDate, money, offerPrice, safeSourceUrl, safeLocalFlyer, groupItems, matchesOffer, cartEstimate } from './core.js';
 
 const $ = selector => document.querySelector(selector);
 const configured = Boolean(config.supabaseUrl && config.supabasePublishableKey);
@@ -7,8 +7,27 @@ const cacheKey = 'spesa-insieme:v1';
 let database = { active: null, lists: {} }, link = null, state = null;
 let busy = false, catalog = { offers: [], flyers: [] }, currentTab = 'list', installPrompt = null;
 let toastTimer, blocked = false;
-let offerLimit = 24, selectedOffers = new Set(), openPage = null;
-try { selectedOffers = new Set(JSON.parse(localStorage.getItem('spesa-insieme:selection') || '[]')); } catch { /* Selezione non disponibile: parte vuota. */ }
+let offerLimit = 24, openPage = null;
+function itemsNow() { return state ? projectItems(state.base, state.pending) : []; }
+function offerItems(offer) { return itemsNow().filter(item => matchesOffer(item, offer)); }
+function isSelected(offer) { return offerItems(offer).length > 0; }
+function itemOffer(item) { return catalog.offers.find(o => matchesOffer(item, o)); }
+function toggleOffer(offer) {
+  const existing = offerItems(offer);
+  if (existing.length) { enqueueMany(existing.map(item => ({kind:'delete', item_id:item.id, data:{}}))); }
+  else if (!addItem(offer.name,offer.size,offer)) return;
+}
+function productPhoto(offer) {
+  if (!offer?.region) return null;
+  const source = safeLocalFlyer(catalog.flyers?.[0]?.local_pages?.[offer.page-1]);
+  if (!source) return null;
+  const frame = document.createElement('span'); frame.className = 'product-photo';
+  const img = document.createElement('img'); img.src = source; img.alt = `${offer.brand} ${offer.name}`; img.loading = 'lazy';
+  const [x,y,w,h] = offer.region;
+  frame.style.aspectRatio = `${w} / ${h}`;
+  img.style.width = `${100/w}%`; img.style.left = `${-x/w*100}%`; img.style.top = `${-y/h*100}%`; img.style.height = `${100/h}%`;
+  frame.append(img); return frame;
+}
 
 function toast(message) {
   $('#toast').textContent = message; $('#toast').hidden = false;
@@ -56,31 +75,53 @@ function render() {
   $('#empty').hidden = remaining.length > 0;
   $('#done-section').hidden = done.length === 0;
   renderItems($('#items'), remaining); renderItems($('#done-items'), done);
+  const estimate = cartEstimate(items);
+  $('#list-total').hidden = !items.length;
+  $('#estimate-total').textContent = money(estimate.total);
+  $('#estimate-detail').textContent = `Da acquistare ${money(estimate.remaining)} · Già nel carrello ${money(estimate.checked)}`;
+  $('#estimate-note').textContent = `${estimate.unpriced ? `${estimate.unpriced} ${estimate.unpriced === 1 ? 'unità senza prezzo esclusa' : 'unità senza prezzo escluse'}. ` : ''}Stima ai prezzi annotati del volantino. Per i prodotti a peso: quantità in kg o etti; verifica peso, validità e condizioni in negozio.`;
+
 }
 function renderItems(container, items) {
-  container.replaceChildren(...items.map(item => {
+  container.replaceChildren(...groupItems(items).map(group => {
+    const item = group[0];
     const li = document.createElement('li'); li.className = `item${item.checked ? ' checked' : ''}`;
     const check = document.createElement('button'); check.className = 'check'; check.textContent = item.checked ? '✓' : '';
     check.setAttribute('aria-label', `${item.checked ? 'Da acquistare' : 'Segna acquistato'}: ${item.name}`);
     check.setAttribute('aria-pressed', String(item.checked));
-    check.onclick = () => enqueue('check', item.id, { checked: !item.checked });
+    check.onclick = () => { enqueueMany(group.map(unit => ({kind:'check',item_id:unit.id,data:{checked:!item.checked}}))); };
     const info = document.createElement('div'); info.className = 'item-info';
     const name = document.createElement('span'); name.className = 'item-name'; name.textContent = item.name; info.append(name);
-    const detail = document.createElement('span'); detail.className = 'item-detail'; detail.textContent = [item.quantity, item.note].filter(Boolean).join(' · '); info.append(detail);
-    li.append(check, info);
-    if (item.price !== null && item.price !== undefined) { const price = document.createElement('span'); price.className = 'price-tag'; price.textContent = money(item.price); li.append(price); }
-    const remove = document.createElement('button'); remove.className = 'delete'; remove.textContent = '×'; remove.setAttribute('aria-label', `Rimuovi ${item.name}`); remove.onclick = () => enqueue('delete', item.id, {}); li.append(remove);
+    const detail = document.createElement('span'); detail.className = 'item-detail'; detail.textContent = [item.quantity, item.price != null ? `${money(item.price)} per ${itemOffer(item)?.size === 'al kg' ? 'kg' : itemOffer(item)?.size === '100 g' ? 'etto' : 'pezzo'}` : '', item.note].filter(Boolean).join(' · '); info.append(detail);
+    li.append(check); const photo = productPhoto(itemOffer(item)); if (photo) li.append(photo); li.append(info);
+    const controls = document.createElement('div'); controls.className = 'quantity-controls';
+    const minus = document.createElement('button'); minus.textContent = '−'; minus.setAttribute('aria-label', `Diminuisci quantità di ${item.name}`); minus.disabled = group.length <= 1; minus.onclick = () => enqueue('delete', group.at(-1).id, {});
+    const amount = document.createElement('input'); amount.type = 'number'; amount.min = '1'; amount.max = '99'; amount.step = '1'; amount.value = group.length; amount.inputMode = 'numeric'; amount.setAttribute('aria-label', `Quantità di ${item.name}`);
+    const copyUnit = () => { const id = crypto.randomUUID(); return [{kind:'add',item_id:id,data:{name:item.name,quantity:item.quantity,note:item.note,price:item.price,created_at:new Date().toISOString()}}, ...(item.checked ? [{kind:'check',item_id:id,data:{checked:true}}] : [])]; };
+    const setAmount = value => {
+      if (!Number.isInteger(value) || value < 1 || value > 99) { amount.value = group.length; toast('Inserisci una quantità intera da 1 a 99.'); return; }
+      const operations = value < group.length ? group.slice(value).map(unit => ({kind:'delete',item_id:unit.id,data:{}})) : Array.from({length:value-group.length},copyUnit).flat();
+      if (operations.length && !enqueueMany(operations)) amount.value = group.length;
+    };
+    amount.onchange = () => setAmount(Number(amount.value));
+    amount.onkeydown = event => { if (event.key === 'Enter') { event.preventDefault(); amount.blur(); } };
+    const plus = document.createElement('button'); plus.textContent = '+'; plus.setAttribute('aria-label', `Aumenta quantità di ${item.name}`); plus.disabled = group.length >= 99; plus.onclick = () => setAmount(group.length+1);
+    controls.append(minus,amount,plus); const unit = document.createElement('span'); unit.className = 'quantity-unit'; unit.textContent = itemOffer(item)?.size === 'al kg' ? 'kg' : itemOffer(item)?.size === '100 g' ? 'etti' : 'pezzi'; controls.append(unit); info.append(controls);
+    if (item.price !== null && item.price !== undefined) { const price = document.createElement('span'); price.className = 'price-tag'; price.textContent = money(item.price * group.length); li.append(price); }
+    const remove = document.createElement('button'); remove.className = 'delete'; remove.textContent = '×'; remove.setAttribute('aria-label', `Rimuovi ${item.name}`); remove.onclick = () => { enqueueMany(group.map(unit => ({kind:'delete',item_id:unit.id,data:{}}))); }; li.append(remove);
     return li;
   }));
 }
-function enqueue(kind, item_id, data) {
+function enqueue(kind, item_id, data) { return enqueueMany([{kind, item_id, data}]); }
+function enqueueMany(operations) {
   if (!state || blocked || (!state.loaded && !state.created)) { toast('Attendi il caricamento della lista prima di modificarla.'); return false; }
-  if (state.pending.length >= 500) { toast('Troppe modifiche in attesa. Ricollegati per sincronizzarle.'); return false; }
-  const operation = { op_id: crypto.randomUUID(), kind, item_id, data };
-  state.pending.push(operation);
-  try { persist(); } catch (error) { state.pending.pop(); toast(error.message); return false; }
-  render(); void sync(); return true;
+  if (state.pending.length + operations.length > 500) { toast('Troppe modifiche in attesa. Ricollegati per sincronizzarle.'); return false; }
+  const previous = state.pending;
+  state.pending = [...previous, ...operations.map(operation => ({...operation,op_id:crypto.randomUUID()}))];
+  try { persist(); } catch (error) { state.pending = previous; toast(error.message); return false; }
+  render(); renderOffers(); if ($('#page-dialog').open) renderPageProducts(); void sync(); return true;
 }
+
 function addItem(name, quantity = '', offer = null) {
   const date = value => value.split('-').reverse().join('/');
   const title = offer ? [offer.brand, name].filter(Boolean).join(' ') : name;
@@ -114,7 +155,7 @@ async function sync() {
   } catch (error) {
     if (error.status === 401 || error.status === 403) blocked = true;
     notice(error.message || 'Connessione assente. Le modifiche restano sul telefono.', true);
-  } finally { busy = false; render(); }
+  } finally { busy = false; render(); renderOffers(); if ($('#page-dialog').open) renderPageProducts(); }
 }
 function renderOffers() {
   const todayOffers = activeOffers(catalog.offers ?? []);
@@ -124,11 +165,8 @@ function renderOffers() {
   const page = $('#offer-page').value;
   const filtered = pool.filter(o => (!category || o.category === category) && (!page || o.page === Number(page)) && `${o.name} ${o.brand} ${o.size}`.toLocaleLowerCase('it').includes(query));
   $('#offers').replaceChildren(...filtered.slice(0,offerLimit).map(offer => {
-    const card = document.createElement('article'); card.className = `offer-card${selectedOffers.has(offer.id) ? ' is-selected' : ''}`;
-    const selection = document.createElement('label'); selection.className = 'offer-select';
-    const checkbox = document.createElement('input'); checkbox.type = 'checkbox'; checkbox.checked = selectedOffers.has(offer.id); checkbox.setAttribute('aria-label', `Seleziona ${offer.brand} ${offer.name}`);
-    checkbox.onchange = () => { toggleSelection(offer.id, checkbox.checked); card.classList.toggle('is-selected',checkbox.checked); };
-    selection.append(checkbox, document.createTextNode('Scegli per la lista')); card.append(selection);
+    const card = document.createElement('article'); card.className = `offer-card${isSelected(offer) ? ' is-selected' : ''}`;
+    const photo = productPhoto(offer); if (photo) card.append(photo);
     const today = romeDate();
     const validity = offer.valid_from > today ? `Dal ${offer.valid_from.split('-').reverse().join('/')}` : offer.valid_until < today ? 'Offerta scaduta' : 'In corso';
     const badge = document.createElement('span'); badge.className = `validity-badge${offer.valid_from > today ? ' upcoming' : offer.valid_until < today ? ' expired' : ''}`; badge.textContent = validity; card.append(badge);
@@ -137,63 +175,53 @@ function renderOffers() {
     }
     if (offer.conditions) { const conditions = document.createElement('p'); conditions.textContent = offer.conditions; card.append(conditions); }
     const source = document.createElement('button'); source.className = 'source-button'; source.textContent = `Vedi sul volantino · pag. ${offer.page}`; source.onclick = () => showPage(offer.page); card.append(source);
-    const button = document.createElement('button'); button.className = 'secondary'; button.textContent = '+ Aggiungi alla lista'; button.onclick = () => { if (addItem(offer.name, offer.size, offer)) toast('Aggiunto alla lista'); }; card.append(button);
+    const button = document.createElement('button'); button.className = 'secondary'; button.textContent = isSelected(offer) ? '✓ Nella lista · rimuovi' : '+ Aggiungi alla lista'; button.setAttribute('aria-pressed',String(isSelected(offer))); button.onclick = () => toggleOffer(offer);
+    card.onclick = event => { if (!event.target.closest('button')) toggleOffer(offer); }; card.append(button);
     return card;
   }));
   $('#no-offers').hidden = filtered.length > 0;
   $('#offer-results').textContent = `${filtered.length} offerte trovate · ${Math.min(offerLimit,filtered.length)} mostrate`;
   $('#more-offers').hidden = filtered.length <= offerLimit;
-  renderSelection();
+
   const total = catalog.offers?.length || 0;
   const upcoming = (catalog.offers ?? []).filter(o => o.valid_from > romeDate()).length;
   $('#catalog-status').textContent = total ? `${total} offerte trascritte · ${todayOffers.length} valide oggi${upcoming ? ` · ${upcoming} in arrivo` : ''}. ${catalog.completeness === 'reviewed' ? 'Lette tutte le 20 pagine; varianti della stessa offerta raggruppate.' : 'Catalogo parziale: consulta anche il volantino.'} Le condizioni e i prezzi originali restano verificabili aprendo la pagina.` : 'Il catalogo prodotti è ancora da compilare. Le pagine originali sono disponibili qui sotto; i prodotti verranno mostrati dopo l’importazione del CSV.';
 }
 
-function toggleSelection(id, checked) {
-  if (checked) selectedOffers.add(id); else selectedOffers.delete(id);
-  try { localStorage.setItem('spesa-insieme:selection',JSON.stringify([...selectedOffers])); } catch { toast('La selezione resterà disponibile solo in questa pagina.'); }
-  renderSelection();
-}
-function renderSelection() {
-  const count = (catalog.offers ?? []).filter(o => selectedOffers.has(o.id)).length;
-  $('#selection-bar').hidden = count === 0;
-  $('#selected-count').textContent = `${count} ${count === 1 ? 'prodotto scelto' : 'prodotti scelti'}`;
-  $('#add-selected').textContent = `Aggiungi ${count} alla lista`;
-  $('#page-add-selected').textContent = count ? `Aggiungi ${count} selezionati alla lista` : 'Seleziona i prodotti della pagina';
-  $('#page-add-selected').disabled = !count;
-}
-function addSelected() {
-  let added = 0;
-  for (const offer of (catalog.offers ?? []).filter(o => selectedOffers.has(o.id))) {
-    if (!addItem(offer.name,offer.size,offer)) break;
-    toggleSelection(offer.id,false); added++;
-  }
-  if (added) toast(`${added} prodotti aggiunti alla lista`);
-  renderOffers();
-  if ($('#page-dialog').open) renderPageProducts();
-}
 function showPage(page) {
+  const total = catalog.flyers?.[0]?.pages?.length || 0;
+  if (page < 1 || page > total) return;
   openPage = page;
+  $('#previous-page').disabled = page === 1; $('#next-page').disabled = page === total;
+  $('#page-position').textContent = `${page} / ${total}`;
+  $('#page-jump').value = String(page);
   const flyer = catalog.flyers?.[0];
   const source = safeLocalFlyer(flyer?.local_pages?.[page-1]) || safeSourceUrl(flyer?.pages?.[page-1]);
   if (!source) return;
   $('#page-title').textContent = `Volantino · pagina ${page}`;
   $('#page-image').src = source; $('#page-image').alt = `Pagina originale ${page}`;
   renderPageProducts();
+  $('#page-dialog').scrollTop = 0;
   if (!$('#page-dialog').open) $('#page-dialog').showModal();
 }
 function renderPageProducts() {
   const products = (catalog.offers ?? []).filter(o => o.page === openPage);
+  $('#page-hotspots').replaceChildren(...products.filter(o => o.region).map(offer => {
+    const button = document.createElement('button'); button.className = `product-hotspot${isSelected(offer) ? ' selected' : ''}`;
+    const [x,y,w,h] = offer.region; Object.assign(button.style,{left:`${x*100}%`,top:`${y*100}%`,width:`${w*100}%`,height:`${h*100}%`});
+    button.setAttribute('aria-label',`${isSelected(offer) ? 'Rimuovi' : 'Aggiungi'} ${offer.brand} ${offer.name} · ${offerPrice(offer)}`); button.setAttribute('aria-pressed',String(isSelected(offer)));
+    button.title = `${offer.brand} ${offer.name} · ${offerPrice(offer)}`; button.textContent = isSelected(offer) ? '✓' : '+'; button.onclick = () => toggleOffer(offer); return button;
+  }));
   $('#page-products').replaceChildren(...products.map(offer => {
     const label = document.createElement('label'); label.className = 'page-product';
-    const input = document.createElement('input'); input.type = 'checkbox'; input.checked = selectedOffers.has(offer.id);
-    input.onchange = () => { toggleSelection(offer.id,input.checked); renderOffers(); };
+    const input = document.createElement('input'); input.type = 'checkbox'; input.checked = isSelected(offer);
+    input.onchange = () => toggleOffer(offer);
     const text = document.createElement('span'); text.textContent = `${offer.brand} ${offer.name} · ${offer.size}`.trim();
     const price = document.createElement('strong'); price.textContent = offerPrice(offer);
     label.append(input,text,price); return label;
   }));
   if (!products.length) { const note = document.createElement('p'); note.textContent = 'Questa pagina contiene iniziative e condizioni del punto vendita, senza altri prodotti da aggiungere.'; $('#page-products').append(note); }
-  renderSelection();
+
 }
 async function loadCatalog() {
   try {
@@ -201,15 +229,17 @@ async function loadCatalog() {
     if (!response.ok) throw new Error(); catalog = await response.json();
     const categories = [...new Set((catalog.offers ?? []).map(o => o.category))].sort();
     for (const category of categories) { const option = document.createElement('option'); option.value = category; option.textContent = category; $('#offer-category').append(option); }
-    renderOffers();
+    renderOffers(); render();
     const flyer = catalog.flyers?.[0];
     if (!flyer) { $('#flyer-note').textContent = 'Volantino non ancora acquisito. Usa il collegamento al sito ufficiale.'; return; }
+    $('#open-flyer').disabled = false;
     $('#flyer-note').textContent = `${flyer.pages.length} pagine${flyer.local_pages ? ' scaricate nel progetto e disponibili offline' : ''} · ${flyer.valid_from ? `validità ${flyer.valid_from.split('-').reverse().join('/')} – ${flyer.valid_until.split('-').reverse().join('/')}` : 'verifica la validità sulla copertina'}. Tocca una pagina per aprirla e scegliere i prodotti.`;
     $('#flyer-link').href = safeSourceUrl(flyer.url) || 'https://www.ipertriscount.it/volantini'; $('#flyer-link').hidden = false;
     const pdf = safeLocalFlyer(flyer.local_pdf); if (pdf) { $('#pdf-link').href = pdf; $('#pdf-link').hidden = false; }
     $('#flyer-pages').replaceChildren(...flyer.pages.map((url, index) => {
       const source = safeLocalFlyer(flyer.local_pages?.[index]) || safeSourceUrl(url); if (!source) return document.createTextNode('');
       const option = document.createElement('option'); option.value = String(index+1); option.textContent = `Pagina ${index+1}`; $('#offer-page').append(option);
+      const jump = option.cloneNode(true); $('#page-jump').append(jump);
       const a = document.createElement('button'); a.className = 'flyer-page'; a.onclick = () => showPage(index+1);
       const img = document.createElement('img'); img.src = source; img.alt = `Volantino originale, pagina ${index + 1}`; img.loading = 'lazy'; img.referrerPolicy = 'no-referrer';
       const label = document.createElement('span'); label.textContent = `Pagina ${index + 1} · scegli prodotti`; a.append(img, label); return a;
@@ -233,7 +263,7 @@ $('#create-form').onsubmit = async event => {
   } catch (error) { notice(error.message, true); }
 };
 $('#add-form').onsubmit = event => { event.preventDefault(); const input = $('#product-name'); if (input.value.trim() && addItem(input.value, $('#quantity').value)) { input.value = ''; $('#quantity').value = ''; input.focus(); } };
-$('#clear-done').onclick = () => { const done = projectItems(state.base, state.pending).filter(i => i.checked); if (confirm(`Rimuovere ${done.length} prodotti acquistati?`)) done.forEach(i => enqueue('delete', i.id, {})); };
+$('#clear-done').onclick = () => { const done = projectItems(state.base, state.pending).filter(i => i.checked); if (confirm(`Rimuovere ${done.length} prodotti acquistati?`)) enqueueMany(done.map(i => ({kind:'delete',item_id:i.id,data:{}}))); };
 for (const tab of document.querySelectorAll('[data-tab]')) tab.onclick = () => {
   currentTab = tab.dataset.tab;
   for (const other of document.querySelectorAll('[data-tab]')) { const selected = other === tab; other.classList.toggle('selected', selected); other.setAttribute('aria-pressed', String(selected)); }
@@ -242,8 +272,16 @@ for (const tab of document.querySelectorAll('[data-tab]')) tab.onclick = () => {
 $('#offer-search').oninput = () => { offerLimit = 24; renderOffers(); };
 for (const id of ['#offer-category','#offer-validity','#offer-page']) $(id).onchange = () => { offerLimit = 24; renderOffers(); };
 $('#more-offers').onclick = () => { offerLimit += 24; renderOffers(); };
-$('#clear-selection').onclick = () => { selectedOffers.clear(); try { localStorage.removeItem('spesa-insieme:selection'); } catch {} renderOffers(); if ($('#page-dialog').open) renderPageProducts(); };
-$('#add-selected').onclick = addSelected; $('#page-add-selected').onclick = addSelected;
+$('#previous-page').onclick = () => showPage(openPage-1);
+$('#next-page').onclick = () => showPage(openPage+1);
+$('#page-jump').onchange = event => showPage(Number(event.target.value));
+$('#open-flyer').onclick = () => showPage(openPage || 1);
+$('#page-dialog').addEventListener('keydown', event => { if (!event.target.closest('input,select,textarea') && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) { event.preventDefault(); showPage(openPage + (event.key === 'ArrowLeft' ? -1 : 1)); } });
+let swipeStart = null, swipeMoved = false;
+$('#page-canvas').addEventListener('touchstart',event => { swipeStart = event.touches.length === 1 && (window.visualViewport?.scale ?? 1) <= 1 ? {x:event.touches[0].clientX,y:event.touches[0].clientY} : null; swipeMoved = false; },{passive:true});
+$('#page-canvas').addEventListener('touchmove',event => { if (swipeStart && event.touches.length === 1 && Math.abs(event.touches[0].clientX-swipeStart.x)>15) swipeMoved = true; else if(event.touches.length !== 1) swipeStart = null; },{passive:true});
+$('#page-canvas').addEventListener('touchend',event => { if (!swipeStart) return; const dx = event.changedTouches[0].clientX-swipeStart.x, dy = event.changedTouches[0].clientY-swipeStart.y; swipeStart=null; if (Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5) { swipeMoved=true; showPage(openPage+(dx<0?1:-1)); } },{passive:true});
+$('#page-canvas').addEventListener('click',event => { if(swipeMoved) { event.preventDefault(); event.stopImmediatePropagation(); swipeMoved=false; } },true);
 $('#share').onclick = () => { $('#share-url').value = location.href; $('#native-share').hidden = !navigator.share; $('#share-dialog').showModal(); };
 $('#copy-link').onclick = async () => { try { await navigator.clipboard.writeText(location.href); toast('Link copiato'); } catch { $('#share-url').select(); toast('Seleziona e copia il link'); } };
 $('#native-share').onclick = async () => { try { await navigator.share({ title: state.name, text: 'Facciamo la spesa insieme', url: location.href }); } catch (error) { if (error.name !== 'AbortError') toast('Invio non riuscito. Puoi copiare il link.'); } };
@@ -265,4 +303,9 @@ try {
 } catch (error) { notice(error.message, true); $('#welcome').hidden = false; }
 void loadCatalog();
 setInterval(() => { if (!document.hidden) void sync(); }, 30000);
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) navigator.serviceWorker.register('./sw.js').catch(() => toast('Installazione offline non disponibile su questo browser.'));
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) navigator.serviceWorker.register('./sw.js').then(registration => {
+  const offerUpdate = () => { if (registration.waiting && navigator.serviceWorker.controller) { $('#update-app').hidden = false; $('#update-app').onclick = () => registration.waiting?.postMessage({type:'SKIP_WAITING'}); } };
+  offerUpdate(); registration.addEventListener('updatefound',() => registration.installing?.addEventListener('statechange',offerUpdate));
+  document.addEventListener('visibilitychange',() => { if (!document.hidden) void registration.update().catch(()=>{}); });
+  navigator.serviceWorker.addEventListener('controllerchange',() => { if (navigator.serviceWorker.controller && !$('#update-app').hidden) location.reload(); });
+}).catch(() => toast('Installazione offline non disponibile su questo browser.'));

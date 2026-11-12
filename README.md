@@ -6,12 +6,14 @@ Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Databas
 
 ## Stato della prima versione
 
-- Lista: creazione, quantità, spunta, rimozione e condivisione del link.
+- Lista: creazione, quantità modificabili con +/− o numero da 1 a 99, spunta, rimozione e condivisione del link. Le unità uguali sono raggruppate; prezzo unitario e subtotale restano visibili. Le modifiche di un gruppo si salvano insieme nella coda offline, usando le operazioni già supportate dal database.
 - Sincronizzazione: ogni 30 secondi quando la pagina è visibile, con operazioni idempotenti e coda offline. Gli aggiornamenti avvengono senza messaggi di stato nell'intestazione.
 - PWA: manifest, icone PNG, service worker e installazione Android/iOS.
 - Volantino: PDF e 20 immagini scaricati in `public/flyers/946-20261102/`, con provenienza e checksum. Validità verificata sulla copertina: **4–12 novembre 2026**.
 - Catalogo: **577 offerte trascritte** dalle 19 pagine di prodotti; pagina 20 contiene iniziative e condizioni. Le varianti della stessa offerta sono raggruppate; le ripetizioni in copertina conservano la propria origine.
-- Filtri per testo, reparto, pagina e validità; selezione multipla e aggiunta di tutti i selezionati alla lista. Ogni pagina si apre in un visualizzatore con i suoi prodotti selezionabili.
+- Filtri per testo, reparto, pagina e validità. Il pulsante «Sfoglia il volantino» apre il visualizzatore: scorrimento laterale, frecce e scelta della pagina. Un tap sul prodotto lo aggiunge alla lista; un secondo tap lo rimuove, comprese tutte le quantità. La selezione è condivisa tra pagina, catalogo e lista.
+- Immagini dei 577 prodotti ritagliate dalle pagine originali mediante la mappa `data/flyer-regions-946.json`, collegata agli ID delle offerte e riapplicata da `compile_catalog.py`. Alcune offerte condividono uno spazio nel volantino: le relative aree sono suddivise; i nomi precisi restano disponibili nell’elenco sotto la pagina.
+- Stima della spesa: somma in centesimi di tutte le unità con prezzo, con separazione fra da acquistare e già nel carrello. Gli articoli senza prezzo sono segnalati ed esclusi. Per le offerte al kg o per 100 g la quantità rappresenta rispettivamente kg o etti interi; la stima non applica sconti condizionati e non garantisce la validità attuale del prezzo.
 - Distinzione fra offerte in corso, future e scadute. Le quattro offerte del 12 novembre indicano Fidelity Card e limiti di pezzi; la promozione Pollo Rurale senza prezzo espone solo lo sconto 10%.
 - Supabase configurato nel file pubblico `config.public.json` e verificato con chiamate reali. Il file contiene solo URL e chiave pubblica, mai credenziali amministrative.
 - Shell, catalogo, immagini e PDF sono disponibili offline dopo il primo caricamento completo del service worker.

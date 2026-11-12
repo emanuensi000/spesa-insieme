@@ -57,3 +57,16 @@ La validità è 4–12 novembre 2026. La pagina 20 non contiene altri prodotti: 
 - Una lista reale condivisa tra due telefoni.
 - Pubblicazione effettiva e URL GitHub Pages.
 - Installazione su iPhone e Android fisici.
+
+
+## Aggiornamento quantità e volantino interattivo
+
+Verificati con `npm test`, suite Python e build statica:
+
+- I tap aggiungono, rimuovono tutte le unità e permettono di riaggiungere il prodotto con un nuovo ID.
+- Le quantità si modificano con i pulsanti oppure inserendo un intero da 1 a 99. Le modifiche di gruppo sono salvate insieme; un errore di memoria annulla l'intero gruppo.
+- Spuntare un prodotto conserva la stima totale e sposta il relativo valore fra da acquistare e già nel carrello. La somma avviene in centesimi; gli importi mancanti restano esclusi e segnalati.
+- Tutte le 577 offerte hanno una regione all'interno della pagina e una sorgente locale. La mappa dei ritagli resta disponibile per ricompilare il catalogo.
+- La selezione distingue pagina 1 e pagina 10, date e prezzi diversi.
+
+I nuovi test delle interazioni eseguono gli handler reali con un adattatore DOM in Node, senza chiamare Supabase. Verificato anche Chromium con viewport mobile 390 × 844: tap sulle aree con aggiunta e rimozione, navigazione e swipe simulato, incremento quantità, stima e foto visibile, nessun errore JavaScript o scorrimento orizzontale. Zoom e aggiornamento della PWA vanno provati anche su telefono fisico. Per le offerte al kg o per etto sono supportate quantità intere.
