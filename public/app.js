@@ -146,7 +146,9 @@ function renderItems(container, items) {
       if (!before || !after || !row.animate || !after.width) continue;
       const dx = before.left-after.left, dy = before.top-after.top;
       if (Math.abs(dx)+Math.abs(dy) < 1) continue;
-      row.animate([{transform:`translate(${dx}px, ${dy}px)`,opacity:.78},{transform:'translate(0, 0)',opacity:1}], {duration:280,easing:'cubic-bezier(.2,.7,.2,1)'});
+      // Scorrimento locale uniforme: distanza e durata non dipendono dalla lista.
+      const offset = Math.sign(dy || dx) * 24;
+      row.animate([{transform:`translateY(${offset}px)`,opacity:.65},{transform:'translateY(0)',opacity:1}], {duration:240,easing:'cubic-bezier(.2,.7,.2,1)'});
     }
   }
   if (focusedId) Array.from(container.children).find(row => row.dataset.itemId === focusedId)?.querySelector('.check')?.focus({preventScroll:true});
