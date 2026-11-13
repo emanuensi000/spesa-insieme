@@ -5,7 +5,7 @@ Requisiti ricavati dalla documentazione e dalle funzionalità presenti nel proge
 ## 1. Obiettivo
 
 - App in italiano per gestire una lista della spesa condivisa.
-- Offerte Ipertriscount esclusivamente del gruppo Casal Bertone – Fonte Nuova – Guidonia – Viterbo.
+- Offerte Ipertriscount esclusivamente del gruppo Casal Bertone – Fonte Nuova – Guidonia. Dall'edizione 20001 del 13–23 novembre 2026 la fonte ufficiale non include Viterbo, presente nell'edizione precedente.
 - Aggiunta di prodotti manualmente, dal catalogo e dalle pagine del volantino.
 - Stima della spesa, uso offline e installazione su smartphone come PWA.
 
@@ -42,6 +42,7 @@ Requisiti ricavati dalla documentazione e dalle funzionalità presenti nel proge
 - Conservare nella lista prezzo annotato e scadenza anche dopo la fine dell’offerta.
 - Mostrare separatamente le iniziative promozionali generali.
 - Contenuto iniziale: edizione 4–12 novembre 2026, 20 pagine e 577 voci di offerta. Le edizioni successive possono avere dimensioni diverse.
+- Edizione corrente: Al costo!, 13–23 novembre 2026, 20 pagine e 577 voci; otto voci riguardano le quattro offerte Iper Day del solo 23 novembre ripetute in copertina e sul retro. Sorgenti, prezzi e ritagli sono specifici dell'edizione; gli articoli già salvati nelle liste conservano il prezzo annotato.
 
 ## 5. Volantino interattivo
 

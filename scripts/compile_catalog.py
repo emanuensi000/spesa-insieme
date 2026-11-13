@@ -1,4 +1,4 @@
-"""Compila la trascrizione locale verificata del volantino 946 (4-12 novembre 2026)."""
+"""Compila la trascrizione verificata dell'edizione corrente (946 oppure 20001)."""
 import csv
 import hashlib
 import json
@@ -13,6 +13,9 @@ FOLDER = "./flyers/946-20261102"
 def main():
     catalog = offers.read_catalog()
     flyer = catalog["flyers"][0]
+    if flyer["id"] == "20001":
+        from compile_catalog_20001 import main as compile_current
+        return compile_current()
     if flyer["id"] != "946" or "20261102090207" not in flyer["pages"][0]:
         raise ValueError("Questa trascrizione appartiene esclusivamente all'edizione 946 del 4-12 novembre 2026.")
     rows = []

@@ -46,15 +46,15 @@ test('tap sul volantino, quantità, acquisto, rimozione e riaggiunta mantengono 
   assert.equal(nodes.get('#page-hotspots').children.length,12);
   nodes.get('#page-hotspots').children[0].onclick();
   assert.equal(run('itemsNow().length'),1);
-  assert.equal(nodes.get('#estimate-total').textContent,core.money(.74));
+  assert.equal(nodes.get('#estimate-total').textContent,core.money(.75));
   let controls=nodes.get('#items').children[0].children.find(n=>n.className==='item-meta').children[0];
   controls.children[2].onclick();
   assert.equal(run('itemsNow().length'),2);
-  assert.equal(nodes.get('#estimate-total').textContent,core.money(1.48));
+  assert.equal(nodes.get('#estimate-total').textContent,core.money(1.50));
   controls=nodes.get('#items').children[0].children.find(n=>n.className==='item-meta').children[0];
   controls.children[1].value='4';controls.children[1].onchange();
   assert.equal(run('itemsNow().length'),4);
-  assert.equal(nodes.get('#estimate-total').textContent,core.money(2.96));
+  assert.equal(nodes.get('#estimate-total').textContent,core.money(3.00));
   nodes.get('#items').children[0].children.find(n=>n.className==='check').onclick();
   assert.equal(nodes.get('#items').children.length,1);
   assert.ok(nodes.get('#items').children[0].className.includes('collapsed'));
@@ -62,7 +62,7 @@ test('tap sul volantino, quantità, acquisto, rimozione e riaggiunta mantengono 
   nodes.get('#items').children[0].children.find(n=>n.className==='item-info').children.find(n=>n.className==='item-toggle').onclick();
   assert.ok(!nodes.get('#items').children[0].className.includes('collapsed'));
   assert.equal(run('itemsNow().filter(i=>i.checked).length'),4);
-  assert.equal(nodes.get('#estimate-total').textContent,core.money(2.96));
+  assert.equal(nodes.get('#estimate-total').textContent,core.money(3.00));
   assert.equal(nodes.get('#page-hotspots').children[0]['aria-pressed'],'true');
   nodes.get('#page-hotspots').children[0].onclick();
   assert.equal(run('itemsNow().length'),0);
@@ -71,7 +71,7 @@ test('tap sul volantino, quantità, acquisto, rimozione e riaggiunta mantengono 
   assert.equal(core.projectItems(app.snapshot().base,app.snapshot().pending).length,1);
   nodes.get('#next-page').onclick();
   assert.equal(nodes.get('#page-position').textContent,'2 / 20');
-  assert.equal(nodes.get('#page-hotspots').children.length,39);
+  assert.equal(nodes.get('#page-hotspots').children.length,42);
 });
 
 test('la modifica di quantità viene annullata interamente se il salvataggio fallisce',async()=>{

@@ -13,7 +13,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG = ROOT / "public/data/offers.json"
-GROUP = "Casal Bertone - Fonte Nuova - Guidonia - Viterbo"
+GROUP = "Casal Bertone - Fonte Nuova - Guidonia"
 SOURCE = "https://www.ipertriscount.it/volantini"
 COLUMNS = ["flyer_url", "store_group", "page", "name", "brand", "size", "price", "unit_price", "category", "valid_from", "valid_until", "conditions"]
 
@@ -99,9 +99,9 @@ def flyer_links(html, base=SOURCE):
     return sorted(links)
 
 
-def parse_flyer(html, url):
+def parse_flyer(html, url, *, group_confirmed=False):
     tree = Tree(html)
-    if not any(node.text() == GROUP for node in tree.root.walk() if node.tag in {"div", "p", "span"}):
+    if not group_confirmed and not any(node.text() == GROUP for node in tree.root.walk() if node.tag in {"div", "p", "span"}):
         raise ValueError("La pagina del volantino non conferma il gruppo richiesto.")
     match = re.search(r"/volantini/(?:item/)?(\d+)[-/]", url)
     if not match:
@@ -154,7 +154,9 @@ def discover(args):
     links = flyer_links(listing)
     if args.detail_html and len(links) != 1:
         raise ValueError("Il file dettaglio locale richiede esattamente un volantino.")
-    flyers = [parse_flyer(Path(args.detail_html).read_text(encoding="utf-8") if args.detail_html else fetch(url), url) for url in links]
+    # La nuova pagina dettaglio non ripete le sedi: la card esatta nell'elenco
+    # ufficiale conferma il gruppo per questo URL, senza ripieghi su altre sedi.
+    flyers = [parse_flyer(Path(args.detail_html).read_text(encoding="utf-8") if args.detail_html else fetch(url), url, group_confirmed=True) for url in links]
     catalog = read_catalog(args.output)
     source_fields = ["id", "store_group", "url", "pdf_url", "pages"]
     signature = lambda values: [{key: flyer.get(key) for key in source_fields} for flyer in values]

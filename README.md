@@ -4,21 +4,21 @@ OrganAIzer è una PWA in italiano pensata per organizzare impegni, attività e s
 
 **Stato implementato:** nuova schermata di accesso, home a quattro card, barra flottante Home / Profilo / Impostazioni, modalità locale, attività ricorrenti, agenda, spese con quote/rimborsi e collegamento alla Spesa. Il backend additivo e i flussi di login sono nel repository; la disponibilità condivisa richiede l’applicazione della migrazione e l’abilitazione dei provider nel progetto Supabase. Vedere [funzioni e attivazione](docs/IMPLEMENTAZIONE.md) per stato e limiti.
 
-Il modulo Spesa conserva catalogo delle offerte Ipertriscount del gruppo **Casal Bertone - Fonte Nuova - Guidonia - Viterbo**, volantino e condivisione storica tramite link privato. I requisiti della base esistente sono in [docs/REQUISITI_SPESA.md](docs/REQUISITI_SPESA.md).
+Il modulo Spesa conserva catalogo delle offerte Ipertriscount del gruppo **Casal Bertone - Fonte Nuova - Guidonia**, volantino e condivisione storica tramite link privato. L'edizione corrente non comprende Viterbo, come indicato nella fonte ufficiale. I requisiti della base esistente sono in [docs/REQUISITI_SPESA.md](docs/REQUISITI_SPESA.md).
 
-Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Database Supabase con funzioni PostgreSQL. Volantino scaricato e trascritto con supporto OCR locale, senza API a pagamento.
+Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Database Supabase con funzioni PostgreSQL. Volantino scaricato e trascritto visivamente, senza API a pagamento.
 
 ## Stato della prima versione
 
 - Lista: creazione, quantità modificabili con +/− o numero da 1 a 99, spunta, rimozione e condivisione del link. Le unità uguali sono raggruppate; prezzo unitario e subtotale restano visibili. Le modifiche di un gruppo si salvano insieme nella coda offline, usando le operazioni già supportate dal database.
 - Sincronizzazione: ogni 30 secondi quando la pagina è visibile, con operazioni idempotenti e coda offline. Gli aggiornamenti avvengono senza messaggi di stato nell'intestazione.
 - PWA: manifest, icone PNG, service worker e installazione Android/iOS.
-- Volantino: PDF e 20 immagini scaricati in `public/flyers/946-20261102/`, con provenienza e checksum. Validità verificata sulla copertina: **4–12 novembre 2026**.
-- Catalogo: **577 offerte trascritte** dalle 19 pagine di prodotti; pagina 20 contiene iniziative e condizioni. Le varianti della stessa offerta sono raggruppate; le ripetizioni in copertina conservano la propria origine.
+- Volantino: **Al costo!**, edizione 20001, 20 immagini ufficiali in `public/flyers/20001-20261112/`, con provenienza e checksum. Validità verificata sulla copertina: **13–23 novembre 2026**. Il PDF offline è assemblato localmente dalle immagini originali senza ricompressione: il download PDF ufficiale ha restituito una pagina HTML di verifica.
+- Catalogo: **577 offerte trascritte** dalle 20 pagine. Le varianti della stessa offerta sono raggruppate; le ripetizioni in copertina e sul retro conservano la propria origine. Sono **569 offerte valide dal 13 novembre**, più quattro offerte del solo 23 novembre ripetute in copertina e a pagina 20 (otto voci).
 - Filtri per testo, reparto, pagina e validità. Il pulsante «Sfoglia il volantino» apre il visualizzatore: scorrimento laterale, frecce e scelta della pagina. Un tap sul prodotto lo aggiunge alla lista; un secondo tap lo rimuove, comprese tutte le quantità. La selezione è condivisa tra pagina, catalogo e lista.
-- Immagini dei 577 prodotti ritagliate dalle pagine originali mediante la mappa `data/flyer-regions-946.json`, collegata agli ID delle offerte e riapplicata da `compile_catalog.py`. Alcune offerte condividono uno spazio nel volantino: le relative aree sono suddivise; i nomi precisi restano disponibili nell’elenco sotto la pagina.
+- Immagini delle 577 offerte ritagliate dalle pagine originali mediante la mappa `data/flyer-regions-20001.json`, collegata agli ID delle offerte e rigenerata da `compile_catalog.py`. Alcune offerte condividono uno spazio nel volantino: le relative aree sono suddivise; i nomi precisi restano disponibili nell’elenco sotto la pagina.
 - Stima della spesa: somma in centesimi di tutte le unità con prezzo, con separazione fra da acquistare e già nel carrello. Gli articoli senza prezzo sono segnalati ed esclusi. Per le offerte al kg o per 100 g la quantità rappresenta rispettivamente kg o etti interi; la stima non applica sconti condizionati e non garantisce la validità attuale del prezzo.
-- Distinzione fra offerte in corso, future e scadute. Le quattro offerte del 12 novembre indicano Fidelity Card e limiti di pezzi; la promozione Pollo Rurale senza prezzo espone solo lo sconto 10%.
+- Distinzione fra offerte in corso, future e scadute. Le offerte Iper Day del **solo lunedì 23 novembre** indicano Fidelity Card, limiti di pezzi ove presenti e condizioni di cumulabilità. I prodotti già nelle liste conservano il prezzo e la scadenza annotati dell'edizione precedente.
 - Supabase configurato nel file pubblico `config.public.json` e verificato con chiamate reali. Il file contiene solo URL e chiave pubblica, mai credenziali amministrative.
 - Shell, catalogo, immagini e PDF sono disponibili offline dopo il primo caricamento completo del service worker.
 
@@ -83,13 +83,13 @@ GitHub Pages ospita la PWA; Supabase conserva la lista. Il repository e i file d
 
 ### Catalogo già pronto
 
-La trascrizione verificata è in [data/catalogo-946.txt](data/catalogo-946.txt), con CSV corrispondente in [data/catalogo-946.csv](data/catalogo-946.csv). Per ricompilare l'edizione corrente, aggiungere i collegamenti alle copie locali e aggiornare i checksum:
+La trascrizione verificata è in [data/catalogo-20001.txt](data/catalogo-20001.txt), con CSV corrispondente in [data/catalogo-20001.csv](data/catalogo-20001.csv). Per ricompilare l'edizione corrente, rigenerare i ritagli, il PDF e i checksum:
 
 ```powershell
 python scripts/compile_catalog.py
 ```
 
-Questo comando riguarda **esclusivamente** l'edizione 946 del 4–12 novembre 2026; non applica la trascrizione a nuovi volantini. Richiede soltanto Python standard. Il primo esame delle pagine ha usato Tesseract italiano disponibile sul computer come supporto alla lettura visiva; l'app e la build non richiedono OCR.
+Il comando seleziona il compilatore dell'edizione corrente e rifiuta edizioni sconosciute: non applica la trascrizione a nuovi volantini. L'edizione 20001 usa `compile_catalog_20001.py`, i metadati verificati in `data/flyer-20001.json` e le aree in `scripts/flyer_regions_20001.py`. Richiede soltanto Python standard. Le fonti e i ritagli della precedente edizione 946 restano archiviati, separati dal catalogo attivo.
 
 Il modello CSV supporta anche una colonna finale facoltativa `discount_percent`: quando il volantino indica solo una percentuale si lascia il prezzo vuoto. Non si inventa un prezzo di 0 €.
 
@@ -99,7 +99,7 @@ Il modello CSV supporta anche una colonna finale facoltativa `discount_percent`:
 python scripts/offers.py discover
 ```
 
-Il comando legge `https://www.ipertriscount.it/volantini`, seleziona la card con l'etichetta esatta del gruppo, verifica il dettaglio e recupera le pagine. Non seleziona singole parole come “Viterbo” e non ripiega su altri negozi. Se la struttura cambia o il risultato è ambiguo interrompe l'operazione e conserva il catalogo precedente.
+Il comando legge `https://www.ipertriscount.it/volantini`, seleziona la card con l'etichetta esatta del gruppo, verifica il dettaglio e recupera le pagine. La nuova pagina dettaglio non ripete le sedi: la conferma proviene dalla card esatta che collega quell'URL. Non seleziona singole parole e non ripiega su altri negozi. Se la struttura cambia o il risultato è ambiguo interrompe l'operazione e conserva il catalogo precedente.
 
 Se cambia l'edizione (URL o immagini), il catalogo trascritto e il conteggio delle pagine revisionate vengono azzerati per evitare associazioni sbagliate. I soli parametri di cache delle immagini non fanno cambiare l'edizione.
 
@@ -110,7 +110,7 @@ Copiare [data/offers.template.csv](data/offers.template.csv) in un nuovo CSV UTF
 | Colonna | Contenuto |
 | --- | --- |
 | `flyer_url` | URL esatto presente in `public/data/offers.json`, campo `flyers[0].url` |
-| `store_group` | `Casal Bertone - Fonte Nuova - Guidonia - Viterbo` |
+| `store_group` | `Casal Bertone - Fonte Nuova - Guidonia` |
 | `page` | Pagina originale, da 1 al totale |
 | `name` | Nome del prodotto, obbligatorio |
 | `brand`, `size` | Marca e formato, se indicati |

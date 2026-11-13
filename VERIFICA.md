@@ -10,6 +10,18 @@
 - Verifica Chromium mobile con risposte Auth simulate: provider disabilitati, Google/Facebook, ritorno all'invito, annullamento e successivo ingresso ospite, persistenza dopo reload, OTP, logout fra schede, modalità locale e ospite in sola lettura.
 - Nessun SMS reale inviato. I provider Google, Facebook e Phone risultano disabilitati nel progetto Supabase: il collaudo end-to-end sui servizi reali richiede la configurazione indicata in [docs/LOGIN.md](docs/LOGIN.md).
 
+## Aggiornamento volantino — 13 novembre 2026
+
+Fonte corrente: [Al costo!, edizione 20001](https://www.ipertriscount.it/volantini/20001-al-costo-2), selezionata dalla card esatta nell'elenco ufficiale. Il nuovo gruppo comprende Casal Bertone, Fonte Nuova e Guidonia; Viterbo non è incluso. Le sezioni successive documentano le verifiche storiche della precedente edizione.
+
+- Lette visivamente tutte le 20 pagine; trascritte 577 offerte con varianti raggruppate e ripetizioni mantenute nella pagina di origine. Dal 13 al 22 novembre sono attive 569 voci; le quattro offerte Iper Day del solo 23 novembre sono ripetute a pagina 1 e 20, per otto voci con Fidelity Card e condizioni specifiche.
+- Tutte le offerte hanno ID nuovi, prezzi, date, pagine locali e aree selezionabili della nuova edizione. I dati delle liste esistenti non vengono modificati.
+- Le 20 immagini ufficiali e il PDF offline sono in `public/flyers/20001-20261112/`, con checksum SHA-256. Il PDF è assemblato localmente dalle immagini JPEG originali senza ricompressione: l'endpoint PDF ufficiale ha restituito una pagina HTML di verifica.
+- `npm test`: sette file JavaScript/SQL passati, comprese interazioni reali con adattatore DOM, prezzi aggiornati, confini delle date, ritagli, checksum e presenza di tutte le immagini originali nel PDF.
+- Suite Python: sette test passati, inclusa scoperta tramite card esatta quando il dettaglio non ripete le sedi e rifiuto di gruppi diversi.
+- `npm run build`: riuscito; cache PWA rigenerata dal contenuto del nuovo catalogo e dalle nuove pagine offline.
+- Nessuna nuova prova su browser o dispositivi fisici in questo aggiornamento; le prove Chromium sotto riportate restano storiche.
+
 Eseguita l'11 novembre 2026. Include il collegamento al progetto Supabase reale; GitHub non è ancora pubblicato.
 
 ## Controlli ripetibili nel progetto

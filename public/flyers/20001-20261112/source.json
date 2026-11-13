@@ -1,0 +1,116 @@
+{
+  "url": "https://www.ipertriscount.it/volantini/20001-al-costo-2",
+  "pdf_url": "https://ipertriscount.it/index.php?option=com_myegojwt&view=flyer&id=20001&pdf=1&Itemid=0",
+  "listing_url": "https://www.ipertriscount.it/volantini",
+  "store_group": "Casal Bertone - Fonte Nuova - Guidonia",
+  "valid_from": "2026-11-13",
+  "valid_until": "2026-11-23",
+  "pdf_note": "PDF assemblato localmente dalle 20 immagini JPEG ufficiali senza ricompressione; il download PDF del sito ha restituito una pagina HTML di verifica.",
+  "files": [
+    {
+      "name": "page-01.jpg",
+      "bytes": 199629,
+      "sha256": "5b39a727ab6c04e24d1c056d2c463beb54afe96e310f08ab0e7afa0eaaa9b233"
+    },
+    {
+      "name": "page-02.jpg",
+      "bytes": 246936,
+      "sha256": "0c3a0ee1bfea1a8dad10ff6e1794d50fa88672ccbe41743d77d23c5d1188cd7a"
+    },
+    {
+      "name": "page-03.jpg",
+      "bytes": 235776,
+      "sha256": "0b4280a0dd887056e80d741543e85bf7935f132f346a13bfddafbc15183fa6f6"
+    },
+    {
+      "name": "page-04.jpg",
+      "bytes": 231884,
+      "sha256": "9b27d618e3b31695167415585502cfb7551357340ea29aa05e37b554febd008d"
+    },
+    {
+      "name": "page-05.jpg",
+      "bytes": 242569,
+      "sha256": "aa520976078eb5951bf86830626cd490a156bce0f02cd37ba6630dba86895096"
+    },
+    {
+      "name": "page-06.jpg",
+      "bytes": 220041,
+      "sha256": "51c4e687bf6ee9cbfcc2f72b283122ad5d168baf0c675cb453d933859b72673c"
+    },
+    {
+      "name": "page-07.jpg",
+      "bytes": 192851,
+      "sha256": "67ae7d6e7e32c4309d07fe3b380af411f888b0facce495e25e1c940aa015d084"
+    },
+    {
+      "name": "page-08.jpg",
+      "bytes": 189274,
+      "sha256": "5394cd1cfe8a1ef95ae73b97c8a6f673c1e6592d05e80714150b37b1c87cebe4"
+    },
+    {
+      "name": "page-09.jpg",
+      "bytes": 209477,
+      "sha256": "3736659da99db5c2995d6aed3501ec84f884d361127b0f33acf4fa16073b4008"
+    },
+    {
+      "name": "page-10.jpg",
+      "bytes": 199666,
+      "sha256": "e9db847c709eeb330fb4f2b7e0a2430da3a154cee8eccc80e73f6fdb85c1492a"
+    },
+    {
+      "name": "page-11.jpg",
+      "bytes": 196075,
+      "sha256": "cc4773199a67764fe1cad19337c5c6d8a3c6752088dd45867e9854526b6b41b8"
+    },
+    {
+      "name": "page-12.jpg",
+      "bytes": 202920,
+      "sha256": "3c5df906daed5c067c7c9b41c7e91a8a7012aaba8f9b1283b5d38ed044e4601c"
+    },
+    {
+      "name": "page-13.jpg",
+      "bytes": 201928,
+      "sha256": "b53fd53ce642ddfa07c9aac3d5b282ed841a5f224e12e7844e1fb32bd78c7c59"
+    },
+    {
+      "name": "page-14.jpg",
+      "bytes": 224305,
+      "sha256": "01f1efc67d58f50e6004e79bc39ecb299f51f85884b32517ec3753397fd81c03"
+    },
+    {
+      "name": "page-15.jpg",
+      "bytes": 221147,
+      "sha256": "a67e8e9533e92afff06a74718851a325b43f8dfde9e82f169673fd576a4c84d4"
+    },
+    {
+      "name": "page-16.jpg",
+      "bytes": 225825,
+      "sha256": "75c5799a448ac8cb8017a7041b5b9264d43752e7f2dac7f1b4d72dbdc69311ec"
+    },
+    {
+      "name": "page-17.jpg",
+      "bytes": 232444,
+      "sha256": "d8872106b1039fe6dabd9ec67b9c3bbcb9ba59d7629873f6925dedd2bd439b68"
+    },
+    {
+      "name": "page-18.jpg",
+      "bytes": 246158,
+      "sha256": "cdbd3b4a17faf389a619a2ebf67d0532dd1a339f6f4879d40b49361b2470e297"
+    },
+    {
+      "name": "page-19.jpg",
+      "bytes": 227928,
+      "sha256": "af111f15058439a6cf2c04e9e7687738c34d794806b882d2959ff2e218f9418c"
+    },
+    {
+      "name": "page-20.jpg",
+      "bytes": 217696,
+      "sha256": "64834bd9ffdef8f151100f57f4b81a569fd3dce5dfabb517f5aae26223d34581"
+    },
+    {
+      "name": "volantino.pdf",
+      "bytes": 4373880,
+      "sha256": "ab4f6f78d4d0b83e95985b1562fdb97992fd7f99c2a19544e8541ae096963638"
+    }
+  ]
+}

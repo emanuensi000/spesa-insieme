@@ -26,6 +26,23 @@ class OffersTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             offers.parse_flyer(html.replace('page_02', 'page_03'), URL)
 
+    def test_detail_without_stores_requires_exact_listing_confirmation(self):
+        listing = f'<div><a href="/volantini/946-offerte">Offerte</a><div>{offers.GROUP}</div></div>'
+        detail = '<h1>Al costo!</h1><img src="/media/com_myegojwt/contents/flyers/946/new-page_01.jpg">'
+        with self.assertRaises(ValueError): offers.parse_flyer(detail, URL)
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            page, child, catalog = (folder / name for name in ['listing.html', 'detail.html', 'offers.json'])
+            page.write_text(listing, encoding='utf-8')
+            child.write_text(detail, encoding='utf-8')
+            offers.write_catalog({'flyers': [], 'offers': [{'id': 'expired'}]}, catalog)
+            offers.discover(Namespace(listing_html=page, detail_html=child, output=catalog))
+            result = offers.read_catalog(catalog)
+            self.assertEqual(result['flyers'][0]['store_group'], offers.GROUP)
+            self.assertEqual(result['offers'], [])
+        with self.assertRaises(ValueError):
+            offers.flyer_links(listing.replace(offers.GROUP, offers.GROUP + ' - Viterbo'))
+
     def test_csv_validation_and_atomic_failure(self):
         flyer = {'url': URL, 'pages': ['https://www.ipertriscount.it/page1.jpg']}
         row = dict(zip(offers.COLUMNS, [URL, offers.GROUP, '1', 'Prodotto di test', '', '1 kg', '1,99', '', 'Alimentari', '2026-11-01', '2026-11-15', '']))
