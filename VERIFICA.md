@@ -20,6 +20,7 @@ Fonte corrente: [Al costo!, edizione 20001](https://www.ipertriscount.it/volanti
 - `npm test`: sette file JavaScript/SQL passati, comprese interazioni reali con adattatore DOM, prezzi aggiornati, confini delle date, ritagli, checksum e presenza di tutte le immagini originali nel PDF.
 - Suite Python: sette test passati, inclusa scoperta tramite card esatta quando il dettaglio non ripete le sedi e rifiuto di gruppi diversi.
 - `npm run build`: riuscito; cache PWA rigenerata dal contenuto del nuovo catalogo e dalle nuove pagine offline.
+- Vecchie immagini e PDF dell'edizione 946 rimossi dalla cartella pubblica; la build ripulisce `dist/` per evitare di ripubblicare file di edizioni eliminate. Catalogo e cache offline includono solo il nuovo volantino.
 - Nessuna nuova prova su browser o dispositivi fisici in questo aggiornamento; le prove Chromium sotto riportate restano storiche.
 
 Eseguita l'11 novembre 2026. Include il collegamento al progetto Supabase reale; GitHub non è ancora pubblicato.

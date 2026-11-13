@@ -89,7 +89,7 @@ La trascrizione verificata è in [data/catalogo-20001.txt](data/catalogo-20001.t
 python scripts/compile_catalog.py
 ```
 
-Il comando seleziona il compilatore dell'edizione corrente e rifiuta edizioni sconosciute: non applica la trascrizione a nuovi volantini. L'edizione 20001 usa `compile_catalog_20001.py`, i metadati verificati in `data/flyer-20001.json` e le aree in `scripts/flyer_regions_20001.py`. Richiede soltanto Python standard. Le fonti e i ritagli della precedente edizione 946 restano archiviati, separati dal catalogo attivo.
+Il comando seleziona il compilatore dell'edizione corrente e rifiuta edizioni sconosciute: non applica la trascrizione a nuovi volantini. L'edizione 20001 usa `compile_catalog_20001.py`, i metadati verificati in `data/flyer-20001.json` e le aree in `scripts/flyer_regions_20001.py`. Richiede soltanto Python standard. La precedente edizione 946 è rimossa dal sito: immagini e PDF non sono pubblicati né inclusi nella cache offline. Solo le trascrizioni e le mappe interne restano in `data/` come riferimento storico.
 
 Il modello CSV supporta anche una colonna finale facoltativa `discount_percent`: quando il volantino indica solo una percentuale si lascia il prezzo vuoto. Non si inventa un prezzo di 0 €.
 

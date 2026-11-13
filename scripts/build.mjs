@@ -1,10 +1,12 @@
-import { cp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { deflateSync } from 'node:zlib';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = new URL('../dist/', import.meta.url);
+// Una nuova build deve eliminare anche i volantini rimossi dalle sorgenti.
+await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(new URL('../public/', import.meta.url), output, { recursive: true });
 await mkdir(new URL('docs/', output), {recursive:true});
