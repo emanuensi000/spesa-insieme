@@ -101,14 +101,19 @@ function renderItems(container, items) {
   const signature = JSON.stringify([items.map(i=>[i.id,i.name,i.quantity,i.note,i.price,i.checked]),[...expandedItems],!!state.closure,catalog.offers.length]);
   if (container.dataset.renderSignature === signature) return;
   container.dataset.renderSignature = signature;
-  const previous = new Map(Array.from(container.children, row => [row.dataset.itemId, {rect:row.getBoundingClientRect?.(), checked:row.dataset.checked}]));
+  const previous = new Map(Array.from(container.children, row => [row.dataset.itemId, {rect:row.getBoundingClientRect?.(), checked:row.dataset.checked, moving:row.dataset.moving === 'true'}]));
   const focusedId = document.activeElement?.classList?.contains('check') ? document.activeElement.closest('.item')?.dataset.itemId : null;
   const groups = groupItems(items).sort((a,b) => Number(a[0].checked) - Number(b[0].checked));
   const reordered = groups.some(group => previous.has(group[0].id) && previous.get(group[0].id).checked !== String(group[0].checked));
+  const animateReorder = reordered && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   container.replaceChildren(...groups.map(group => {
     const item = group[0];
     const li = document.createElement('li'); li.className = `item${item.checked ? ' checked' : ''}${item.checked && !expandedItems.has(item.id) ? ' collapsed' : ''}`;
     li.dataset.itemId = item.id; li.dataset.checked = String(item.checked);
+    const old = previous.get(item.id);
+    if (item.checked && li.animate && !expandedItems.has(item.id) && (animateReorder && old?.checked === 'false' || old?.moving)) {
+      li.className = 'item checked is-reordering'; li.dataset.moving = 'true';
+    }
     const check = document.createElement('button'); check.className = 'check'; check.textContent = item.checked ? '✓' : '';
     check.disabled=!!state.closure;
     check.setAttribute('aria-label', `${item.checked ? 'Da acquistare' : 'Segna acquistato'}: ${item.name}`);
@@ -143,27 +148,31 @@ function renderItems(container, items) {
     li.append(check);
     return li;
   }));
-  if (reordered && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-    for (const row of container.children) {
-      const before = previous.get(row.dataset.itemId)?.rect, after = row.getBoundingClientRect?.();
-      if (!before || !after || !row.animate || !after.width) continue;
-      const dx = before.left-after.left, dy = before.top-after.top;
-      const distance = Math.hypot(dx,dy);
-      const resized = Math.abs(before.height-after.height) > 1;
-      if (distance < 1 && !resized) continue;
-      const changed = previous.get(row.dataset.itemId).checked !== row.dataset.checked;
-      // Traslazione sul percorso reale a 1,2 px/ms, indipendente dalla lunghezza.
-      row.style.transformOrigin = 'top left';
-      row.style.position = 'relative'; row.style.zIndex = changed ? '2' : '1';
-      if (distance >= 1) row.animate([
-        {transform:`translate(${dx}px, ${dy}px)`},
-        {transform:'translate(0, 0)'}
-      ], {duration:distance/1.2,easing:'linear'});
-      // La riduzione della card ha un suo ritmo, anche se è già in fondo.
-      if (resized) row.animate([
-        {scale:`${before.width/after.width} ${before.height/after.height}`},
-        {scale:'1 1'}
-      ], {duration:240,easing:'ease-in-out'});
+  for (const row of container.children) {
+    const old = previous.get(row.dataset.itemId), before = old?.rect;
+    if (!before || !row.animate || !(animateReorder || old?.moving)) continue;
+    const after = row.getBoundingClientRect();
+    if (!after.width) continue;
+    const dx = before.left-after.left, dy = before.top-after.top;
+    const distance = Math.hypot(dx,dy);
+    const moving = row.dataset.moving === 'true';
+    // Solo traslazione della card intera: nessuna scala, dissolvenza o salto.
+    const movement = distance >= 1 ? row.animate([
+      {transform:`translate(${dx}px, ${dy}px)`}, {transform:'translate(0, 0)'}
+    ], {duration:distance / .9,easing:'linear'}) : null;
+    if (moving) {
+      const settle = () => {
+        if (!row.isConnected) return;
+        const height = row.getBoundingClientRect().height;
+        row.dataset.moving = 'false'; row.classList.remove('is-reordering'); row.classList.add('collapsed');
+        const compactHeight = row.getBoundingClientRect().height;
+        if (Math.abs(height-compactHeight) < 1) return;
+        // Si compatta soltanto dopo l'arrivo. L'altezza muove il layout senza deformare il testo.
+        row.style.overflow = 'hidden';
+        const resize = row.animate([{height:`${height}px`},{height:`${compactHeight}px`}],{duration:220,easing:'ease-out'});
+        resize.finished.catch(()=>{}).then(()=>{row.style.overflow='';});
+      };
+      if (movement) movement.finished.then(settle,()=>{}); else settle();
     }
   }
   if (focusedId) Array.from(container.children).find(row => row.dataset.itemId === focusedId)?.querySelector('.check')?.focus({preventScroll:true});

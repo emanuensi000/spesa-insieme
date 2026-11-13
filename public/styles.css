@@ -48,3 +48,9 @@
 
 /* Il riordino muove le card sul percorso reale senza l'ancoraggio del browser. */
 .items{overflow-anchor:none;isolation:isolate}
+
+/* La card resta intera durante il viaggio; si compatta solo all'arrivo. */
+.items{align-content:start}
+.item.is-reordering{position:relative;z-index:3;background:#f8faf4;box-shadow:0 8px 22px #203e3126;pointer-events:none}
+.item.is-reordering .item-toggle,.item.is-reordering .item-summary{display:none}
+@media(prefers-reduced-motion:no-preference){.item{transition:box-shadow .18s ease,background .18s ease}}
