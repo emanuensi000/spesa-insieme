@@ -174,17 +174,12 @@ test('i prodotti spuntati vanno in fondo e tornano tra quelli da acquistare togl
   assert.equal(run('itemsNow().length'),3);
 });
 
-test('anche l’ultimo prodotto attende la transizione prima della spunta e del riordino',async()=>{
+test('la spunta è immediatamente salvata senza dissolvenze o attese prima del riordino',async()=>{
   const {nodes,run}=await startApp();
-  run("addItem('Latte'); addItem('Pane'); globalThis.finishCheck = null; globalThis.setTimeout = callback => { finishCheck = callback; };");
-  const row=nodes.get('#items').children.at(-1);let departure,cancelled=false;
-  row.animate=(frames,timing)=>{departure={frames,timing};return {cancel(){cancelled=true;}};};
+  run("addItem('Latte'); addItem('Pane');");
+  const row=nodes.get('#items').children[0];
+  row.animate=()=>{throw Error('Non deve esserci una fase di sparizione prima del salvataggio');};
   row.children.find(n=>n.className==='check').onclick();
-  assert.equal(run('itemsNow().filter(i=>i.checked).length'),0);
-  assert.equal(departure.timing.duration,200);
-  assert.equal(departure.timing.easing,'linear');
-  run('finishCheck()');
   assert.equal(run('itemsNow().filter(i=>i.checked).length'),1);
-  assert.ok(cancelled);
   assert.ok(nodes.get('#items').children.at(-1).className.includes('collapsed'));
 });

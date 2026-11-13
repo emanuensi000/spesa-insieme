@@ -45,3 +45,6 @@
 .item.collapsed{padding:8px 12px;gap:6px 10px}.item.collapsed>.product-photo,.item.collapsed>.item-placeholder{width:34px;max-height:38px;justify-self:center}.item.collapsed .item-name{font-size:13px}.item.collapsed .item-detail,.item.collapsed .item-meta{display:none}
 .item-toggle{background:transparent;color:var(--green);font-size:11px;padding:6px 8px 6px 0;min-height:32px;text-decoration:underline}.item-summary{font-size:11px;color:var(--muted)}.item.checked:not(.collapsed) .item-summary{display:none}
 @media(max-width:360px){.item{grid-template-columns:42px minmax(0,1fr) 40px;gap:7px}.item>.product-photo,.item>.item-placeholder{width:42px}.item-meta{gap:5px}.item-meta .quantity-controls button{width:36px;min-width:36px}.item-meta .quantity-controls input{width:32px}}
+
+/* Il riordino muove le card sul percorso reale senza l'ancoraggio del browser. */
+.items{overflow-anchor:none;isolation:isolate}

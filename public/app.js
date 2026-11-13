@@ -97,19 +97,6 @@ function render() {
   $('#estimate-note').textContent = `${estimate.unpriced ? `${estimate.unpriced} ${estimate.unpriced === 1 ? 'unità senza prezzo esclusa' : 'unità senza prezzo escluse'}. ` : ''}Stima ai prezzi annotati del volantino. Per i prodotti a peso: quantità in kg o etti; verifica peso, validità e condizioni in negozio.`;
 
 }
-function checkProduct(row, button, group) {
-  const item = group[0], listState = state;
-  const apply = () => {
-    if (state !== listState) return;
-    expandedItems.delete(item.id);
-    enqueueMany(group.map(unit => ({kind:'check',item_id:unit.id,data:{checked:!item.checked}})));
-  };
-  if (!row.animate || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) { apply(); return; }
-  button.disabled = true;
-  // La stessa fase di uscita avviene anche sull'ultima card, che non cambia posizione.
-  const departure = row.animate([{transform:'translateY(0)',opacity:1},{transform:'translateY(12px)',opacity:.35}],{duration:200,easing:'linear',fill:'forwards'});
-  setTimeout(() => { departure.cancel(); button.disabled = false; apply(); },200);
-}
 function renderItems(container, items) {
   const signature = JSON.stringify([items.map(i=>[i.id,i.name,i.quantity,i.note,i.price,i.checked]),[...expandedItems],!!state.closure,catalog.offers.length]);
   if (container.dataset.renderSignature === signature) return;
@@ -126,7 +113,7 @@ function renderItems(container, items) {
     check.disabled=!!state.closure;
     check.setAttribute('aria-label', `${item.checked ? 'Da acquistare' : 'Segna acquistato'}: ${item.name}`);
     check.setAttribute('aria-pressed', String(item.checked));
-    check.onclick = () => checkProduct(li,check,group);
+    check.onclick = () => { expandedItems.delete(item.id); enqueueMany(group.map(unit => ({kind:'check',item_id:unit.id,data:{checked:!item.checked}}))); };
     const info = document.createElement('div'); info.className = 'item-info';
     const name = document.createElement('span'); name.className = 'item-name'; name.textContent = item.name; info.append(name);
     const detail = document.createElement('span'); detail.className = 'item-detail'; detail.textContent = [item.quantity, item.price != null ? `${money(item.price)} per ${itemOffer(item)?.size === 'al kg' ? 'kg' : itemOffer(item)?.size === '100 g' ? 'etto' : 'pezzo'}` : '', item.note].filter(Boolean).join(' · '); info.append(detail);
@@ -160,11 +147,23 @@ function renderItems(container, items) {
     for (const row of container.children) {
       const before = previous.get(row.dataset.itemId)?.rect, after = row.getBoundingClientRect?.();
       if (!before || !after || !row.animate || !after.width) continue;
+      const dx = before.left-after.left, dy = before.top-after.top;
+      const distance = Math.hypot(dx,dy);
+      const resized = Math.abs(before.height-after.height) > 1;
+      if (distance < 1 && !resized) continue;
       const changed = previous.get(row.dataset.itemId).checked !== row.dataset.checked;
-      const dy = before.top-after.top;
-      if (!changed && Math.abs(dy) < 1) continue;
-      const offset = changed ? -12 : Math.sign(dy)*12;
-      row.animate([{transform:`translateY(${offset}px)`,opacity:changed?.35:1},{transform:'translateY(0)',opacity:1}], {duration:200,easing:'linear'});
+      // Traslazione sul percorso reale a 1,2 px/ms, indipendente dalla lunghezza.
+      row.style.transformOrigin = 'top left';
+      row.style.position = 'relative'; row.style.zIndex = changed ? '2' : '1';
+      if (distance >= 1) row.animate([
+        {transform:`translate(${dx}px, ${dy}px)`},
+        {transform:'translate(0, 0)'}
+      ], {duration:distance/1.2,easing:'linear'});
+      // La riduzione della card ha un suo ritmo, anche se è già in fondo.
+      if (resized) row.animate([
+        {scale:`${before.width/after.width} ${before.height/after.height}`},
+        {scale:'1 1'}
+      ], {duration:240,easing:'ease-in-out'});
     }
   }
   if (focusedId) Array.from(container.children).find(row => row.dataset.itemId === focusedId)?.querySelector('.check')?.focus({preventScroll:true});
