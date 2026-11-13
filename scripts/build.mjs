@@ -10,9 +10,9 @@ await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(new URL('../public/', import.meta.url), output, { recursive: true });
 await mkdir(new URL('docs/', output), {recursive:true});
-for (const [source,target] of [['REQUISITI.md','REQUISITI.md'],['docs/IMPLEMENTAZIONE.md','IMPLEMENTAZIONE.md'],['docs/LOGIN.md','LOGIN.md'],['supabase/migrations/001_organaizer.sql','001_organaizer.sql']]) await cp(new URL('../'+source,import.meta.url),new URL('docs/'+target,output));
+for (const [source,target] of [['REQUISITI.md','REQUISITI.md'],['docs/IMPLEMENTAZIONE.md','IMPLEMENTAZIONE.md'],['docs/LOGIN.md','LOGIN.md'],['supabase/migrations/001_organaizer.sql','001_organaizer.sql'],['supabase/migrations/002_shopping_history.sql','002_shopping_history.sql']]) await cp(new URL('../'+source,import.meta.url),new URL('docs/'+target,output));
 const implementationPath=new URL('docs/IMPLEMENTAZIONE.md',output);
-await writeFile(implementationPath,(await readFile(implementationPath,'utf8')).replace('../supabase/migrations/001_organaizer.sql','./001_organaizer.sql'));
+await writeFile(implementationPath,(await readFile(implementationPath,'utf8')).replace('../supabase/migrations/001_organaizer.sql','./001_organaizer.sql').replace('../supabase/migrations/002_shopping_history.sql','./002_shopping_history.sql'));
 const requirementsPath=new URL('docs/REQUISITI.md',output);
 await writeFile(requirementsPath,(await readFile(requirementsPath,'utf8')).replace('docs/REQUISITI_SPESA.md','./REQUISITI_SPESA.md').replace('docs/IMPLEMENTAZIONE.md','./IMPLEMENTAZIONE.md'));
 await cp(new URL('../docs/REQUISITI_SPESA.md',import.meta.url),new URL('docs/REQUISITI_SPESA.md',output));
@@ -57,11 +57,12 @@ function icon(size) {
   return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('IDAT',deflateSync(scan)),chunk('IEND',Buffer.alloc(0))]);
 }
 for (const size of [192,512]) await writeFile(new URL(`icons/icon-${size}.png`,output),icon(size));
-const inputs = await Promise.all(['app.js','core.js','styles.css','index.html','shopping.html','organizer.js','organizer-core.js','organizer.css','navigation.css','auth.js','auth-client.js','login.js','manifest.webmanifest','docs/REQUISITI.md','docs/IMPLEMENTAZIONE.md','docs/LOGIN.md','docs/001_organaizer.sql','config.js','data/offers.json'].map(name => readFile(new URL(name, output))));
+const inputs = await Promise.all(['app.js','core.js','shopping-history.js','styles.css','index.html','shopping.html','organizer.js','organizer-core.js','organizer.css','navigation.css','auth.js','auth-client.js','login.js','manifest.webmanifest','docs/REQUISITI.md','docs/IMPLEMENTAZIONE.md','docs/LOGIN.md','docs/001_organaizer.sql','docs/002_shopping_history.sql','config.js','data/offers.json','data/archived-offers.json'].map(name => readFile(new URL(name, output))));
 const digest = createHash('sha256').update(Buffer.concat(inputs)).digest('hex').slice(0,12);
 const worker = await readFile(new URL('sw.js',output),'utf8');
 const catalog = JSON.parse(await readFile(new URL('data/offers.json', output),'utf8'));
-const offlineAssets = (catalog.flyers || []).flatMap(flyer => [...(flyer.local_pages || []), ...(flyer.local_pdf ? [flyer.local_pdf] : [])]);
+const archivedPhotos=JSON.parse(await readFile(new URL('data/archived-offers.json',output),'utf8'));
+const offlineAssets = [...new Set([...(catalog.flyers || []).flatMap(flyer => [...(flyer.local_pages || []), ...(flyer.local_pdf ? [flyer.local_pdf] : [])]),...archivedPhotos.local_pages])];
 if (offlineAssets.some(path => !/^\.\/flyers\/[a-z0-9-]+\/(?:page-\d{2}\.jpg|volantino\.pdf)$/.test(path))) throw new Error('Percorso del volantino locale non valido.');
 await Promise.all(offlineAssets.map(path => readFile(new URL(path,output))));
 await writeFile(new URL('sw.js',output),worker.replace('__BUILD_ID__',digest).replace('__FLYER_ASSETS__',JSON.stringify(offlineAssets)));

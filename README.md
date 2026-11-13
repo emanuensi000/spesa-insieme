@@ -18,9 +18,17 @@ Frontend statico senza dipendenze runtime, pubblicabile su GitHub Pages. Databas
 - Filtri per testo, reparto, pagina e validità. Il pulsante «Sfoglia il volantino» apre il visualizzatore: scorrimento laterale, frecce e scelta della pagina. Un tap sul prodotto lo aggiunge alla lista; un secondo tap lo rimuove, comprese tutte le quantità. La selezione è condivisa tra pagina, catalogo e lista.
 - Immagini delle 577 offerte ritagliate dalle pagine originali mediante la mappa `data/flyer-regions-20001.json`, collegata agli ID delle offerte e rigenerata da `compile_catalog.py`. Alcune offerte condividono uno spazio nel volantino: le relative aree sono suddivise; i nomi precisi restano disponibili nell’elenco sotto la pagina.
 - Stima della spesa: somma in centesimi di tutte le unità con prezzo, con separazione fra da acquistare e già nel carrello. Gli articoli senza prezzo sono segnalati ed esclusi. Per le offerte al kg o per 100 g la quantità rappresenta rispettivamente kg o etti interi; la stima non applica sconti condizionati e non garantisce la validità attuale del prezzo.
-- Distinzione fra offerte in corso, future e scadute. Le offerte Iper Day del **solo lunedì 23 novembre** indicano Fidelity Card, limiti di pezzi ove presenti e condizioni di cumulabilità. I prodotti già nelle liste conservano il prezzo e la scadenza annotati dell'edizione precedente.
+- Distinzione fra offerte in corso, future e scadute. Le offerte Iper Day del **solo lunedì 23 novembre** indicano Fidelity Card, limiti di pezzi ove presenti e condizioni di cumulabilità. I prodotti già nelle liste conservano prezzo, scadenza e foto dell'edizione precedente.
 - Supabase configurato nel file pubblico `config.public.json` e verificato con chiamate reali. Il file contiene solo URL e chiave pubblica, mai credenziali amministrative.
-- Shell, catalogo, immagini e PDF sono disponibili offline dopo il primo caricamento completo del service worker.
+- Shell, catalogo, immagini e PDF sono disponibili offline dopo il primo caricamento completo del service worker, incluse le foto storiche.
+
+## Chiudere una spesa e consultare lo storico
+
+Spuntare i prodotti acquistati e scegliere **Ho finito · Chiudi la spesa**. Confermare data e totale dello scontrino, precompilato con la stima dei soli prodotti spuntati. La lista diventa consultabile senza modifiche; **Crea una nuova lista** avvia la spesa successiva. I prodotti non acquistati restano nel dettaglio, esclusi dalla stima. Le quantità, i prezzi annotati e le foto sono conservati nello scontrino archiviato.
+
+In **Profilo** la dashboard mostra totale speso, numero di spese, media, andamento di sei mesi e storico filtrabile per mese. Ogni spesa ha un dettaglio consultabile; l'esportazione JSON nelle Impostazioni comprende lo storico visibile. Le liste chiuse sono contate una sola volta per ID.
+
+La modalità locale funziona anche offline. La sincronizzazione della chiusura fra dispositivi richiede la migrazione [002_shopping_history.sql](supabase/migrations/002_shopping_history.sql), aggiuntiva rispetto al database Spesa esistente: blocca anche le modifiche dei vecchi client e verifica che la lista non sia cambiata prima di chiuderla. Il database remoto non è stato modificato da questo aggiornamento; finché la migrazione non viene applicata, le chiusure condivise restano salvate sul dispositivo con indicazione “da sincronizzare”. Vedere [attivazione dello storico](docs/IMPLEMENTAZIONE.md#attivazione-dello-storico-spesa).
 
 ## Avvio locale
 
@@ -45,7 +53,7 @@ Per attivare Google, Facebook e telefono e capire la modalità ospite seguire [d
 Il progetto Supabase dell'utente è già configurato in `config.public.json`; lo schema è presente e le operazioni sono state verificate. Le istruzioni seguenti servono per collegare un altro progetto.
 
 1. Creare un progetto Supabase e aspettare che sia pronto.
-2. Nel **SQL Editor** eseguire interamente [supabase/schema.sql](supabase/schema.sql).
+2. Nel **SQL Editor** eseguire interamente [supabase/schema.sql](supabase/schema.sql), poi [002_shopping_history.sql](supabase/migrations/002_shopping_history.sql) per la chiusura condivisa delle liste.
 3. Dalle impostazioni API del progetto recuperare l'URL HTTPS e la **publishable key** (oppure la vecchia chiave `anon`).
 4. Copiare `config.example.json` in `config.local.json` e inserire i due valori:
 
@@ -89,7 +97,7 @@ La trascrizione verificata è in [data/catalogo-20001.txt](data/catalogo-20001.t
 python scripts/compile_catalog.py
 ```
 
-Il comando seleziona il compilatore dell'edizione corrente e rifiuta edizioni sconosciute: non applica la trascrizione a nuovi volantini. L'edizione 20001 usa `compile_catalog_20001.py`, i metadati verificati in `data/flyer-20001.json` e le aree in `scripts/flyer_regions_20001.py`. Richiede soltanto Python standard. La precedente edizione 946 è rimossa dal sito: immagini e PDF non sono pubblicati né inclusi nella cache offline. Solo le trascrizioni e le mappe interne restano in `data/` come riferimento storico.
+Il comando seleziona il compilatore dell'edizione corrente e rifiuta edizioni sconosciute: non applica la trascrizione a nuovi volantini. L'edizione 20001 usa `compile_catalog_20001.py`, i metadati verificati in `data/flyer-20001.json` e le aree in `scripts/flyer_regions_20001.py`. Richiede soltanto Python standard. La precedente edizione 946 non compare nel catalogo e il vecchio PDF resta rimosso. Le immagini sono conservate per le foto dei prodotti nelle liste e nello storico, incluse nella cache offline e indicizzate separatamente in `public/data/archived-offers.json`, con checksum delle fonti.
 
 Il modello CSV supporta anche una colonna finale facoltativa `discount_percent`: quando il volantino indica solo una percentuale si lascia il prezzo vuoto. Non si inventa un prezzo di 0 €.
 
@@ -149,7 +157,7 @@ Il workflow **Controlla nuovo volantino** controlla la fonte ogni giorno alle 06
 - Sulla stessa spunta, l'ultima operazione ricevuta dal server prevale. Le modifiche offline vengono applicate quando la connessione torna: non c'è un ordinamento globale per orario del dispositivo.
 - Il telefono conserva token, lista e coda in `localStorage`, necessari al funzionamento offline. Chi ha accesso al browser può accedere alla lista. Cancellare i dati del sito elimina anche le modifiche non sincronizzate.
 - Ogni telefono può lavorare normalmente; sullo stesso browser usare una sola scheda per evitare scritture concorrenti della memoria locale.
-- Il service worker memorizza shell, catalogo e copie locali di immagini/PDF, non le risposte Supabase. La prima installazione completa scarica circa 9 MB di materiale del volantino.
+- Il service worker memorizza shell, catalogo e copie locali di immagini/PDF, non le risposte Supabase. La prima installazione completa scarica il volantino corrente e le immagini storiche, circa 15 MB complessivi di risorse.
 - Chi ha il link può modificare la lista. La prima versione non include revoca/rotazione del link, account, recupero accesso o protezioni contro abusi massivi della creazione di liste. È pensata per un piccolo gruppo fidato.
 - Limite: 500 operazioni offline in attesa e 5.000 identificativi di prodotto per lista, compresi i rimossi; raggiunto il limite creare una nuova lista.
 

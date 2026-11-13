@@ -10,6 +10,7 @@
 - Agenda con date, orari, luoghi, appuntamenti riservati al loro autore e file calendario ICS per eventi di giornata intera. L’orario salvato resta visibile nell’app; l’esportazione attuale è di giornata intera.
 - Spese con categorie, quote uguali in centesimi, pagatore, saldo dei rimborsi e registrazione di rimborsi completi per quota.
 - Liste della spesa collegate al modulo preesistente, mantenendo volantino e offerte. I link precedenti restano validi e il primo accesso da un vecchio link propone l’ingresso ospite.
+- Chiusura della lista dopo l’acquisto, totale dello scontrino modificabile, data e archivio immutabile con quantità, prezzi e foto. Nel Profilo: storico per mese, totale, numero di spese, media e andamento degli ultimi sei mesi. Le immagini delle edizioni precedenti restano disponibili come riferimenti fotografici, senza riproporre offerte scadute nel catalogo corrente.
 - Spazi per pasti, scuola, animali, viaggi, manutenzione e progetti tramite attività dedicate.
 - Promemoria interni, esportazione JSON, preferenze e installazione PWA.
 - Backend SQL additivo: gruppi, appartenenze, ruoli, risorse versionate, audit, inviti a scadenza, accesso ospite limitato e revoca.
@@ -28,6 +29,16 @@ Nel progetto Supabase configurato, Google, Facebook e telefono sono **disabilita
 2. Nel SQL Editor del progetto eseguire [001_organaizer.sql](../supabase/migrations/001_organaizer.sql). La copia distribuita si trova accanto a questo documento come `001_organaizer.sql`.
 3. La migrazione non elimina o rinomina tabelle e funzioni del modulo Spesa. Crea lo schema privato `organizer_private`, abilita RLS e concede solo le RPC necessarie.
 4. Verificare con due account distinti: creazione gruppo, invito, completamento attività e rifiuto di letture in un altro gruppo. Provare anche una revoca e un conflitto di versione.
+
+### Attivazione dello storico Spesa
+
+La chiusura locale e la dashboard funzionano sul dispositivo, anche offline. La chiusura condivisa richiede [002_shopping_history.sql](../supabase/migrations/002_shopping_history.sql), da applicare nel SQL Editor del progetto che contiene già `spesa_private` e le funzioni di `supabase/schema.sql`. La migrazione è additiva e ripetibile; non elimina liste esistenti. La pubblicazione del frontend non esegue SQL sul database.
+
+Il 13 novembre 2026 il controllo dell’endpoint remoto `close_shared_list` ha restituito `PGRST202`: la migrazione non risulta ancora applicata. In questa situazione la chiusura resta salvata sul dispositivo e indicata come da sincronizzare; sugli altri dispositivi la lista resta aperta fino all’attivazione e alla sincronizzazione. Quando il server segnala modifiche concorrenti, la chiusura viene annullata e va riconfermata sui prodotti aggiornati. La prima chiusura condivisa confermata è definitiva, anche per i client precedenti.
+
+Lo storico nel Profilo include le liste del browser associate al contesto locale/account e le liste collegate agli spazi accessibili. Su un nuovo dispositivo una lista storica condivisa è disponibile attraverso il suo link o il collegamento già presente nello spazio; non esiste un elenco pubblico delle liste basate su token. Profili locali e account differenti hanno filtri separati. L’esportazione JSON include lo storico visibile.
+
+Il totale è quello confermato dall’utente sullo scontrino; la stima conserva solo i prodotti spuntati con prezzo noto. I prodotti non acquistati restano nel dettaglio ed esclusi dalla stima. Non vengono create automaticamente bollette o spese nel modulo Casa e pagamenti.
 
 ### Attivazione del login
 

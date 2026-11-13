@@ -1,5 +1,16 @@
 # Verifica della prima versione
 
+## Chiusura della spesa e dashboard Profilo — 13 novembre 2026
+
+- Implementati conferma di data e totale scontrino, archivio immutabile per lista, nuova lista e dashboard del Profilo con riepiloghi, andamento di sei mesi, filtro mensile e dettaglio con foto.
+- Ripristinate le 20 immagini della precedente edizione 946, senza ripristinare il vecchio PDF né le offerte scadute nel catalogo. Hash originali conservati nell'indice fotografico; ritagli storici usati anche per gli articoli nelle liste esistenti.
+- Test JavaScript/SQL: importi in centesimi, stima dei soli acquistati, prodotti senza prezzo, isolamento locale/account, filtro del mese a cavallo d'anno, memoria piena, nuova lista dopo chiusura, foto storiche e checksum.
+- Migrazione `002_shopping_history.sql` applicata due volte a PostgreSQL PGlite di test: autenticazione con token, accesso negato alle tabelle, chiusura senza prodotti acquistati rifiutata, conflitto con modifica concorrente, validazione foto/importi, chiusura idempotente e modifiche tardive negate anche ai vecchi client.
+- Chromium a 390×844 e 1440×1000: chiusura di due liste, modifica del totale, quantità, non acquistati, foto, filtro mensile, riepiloghi e media, nuova lista, ricaricamento offline e assenza di errori JavaScript o scorrimento orizzontale.
+- Due browser con RPC instradate al database SQL di test: chiusura propagata e sola lettura sul secondo dispositivo; chiusura locale conservata se la funzione manca e sincronizzata dopo attivazione. Nessun dato reale delle liste dell'utente modificato dal collaudo.
+- Sul database online `close_shared_list` restituisce `PGRST202` (funzione non presente). Nessuna migrazione remota applicata: il frontend conserva le chiusure sul dispositivo e segnala l'attivazione necessaria per sincronizzarle. Le prove condivise attestano il database di test, non l'attivazione del servizio remoto.
+
+
 ## Aggiornamento login — 12 novembre 2026
 
 - OAuth Google/Facebook con PKCE e ripristino dell'invito, anche dopo annullamento del provider.

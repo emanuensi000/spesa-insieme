@@ -44,6 +44,16 @@ Requisiti ricavati dalla documentazione e dalle funzionalità presenti nel proge
 - Contenuto iniziale: edizione 4–12 novembre 2026, 20 pagine e 577 voci di offerta. Le edizioni successive possono avere dimensioni diverse.
 - Edizione corrente: Al costo!, 13–23 novembre 2026, 20 pagine e 577 voci; otto voci riguardano le quattro offerte Iper Day del solo 23 novembre ripetute in copertina e sul retro. Sorgenti, prezzi e ritagli sono specifici dell'edizione; gli articoli già salvati nelle liste conservano il prezzo annotato.
 
+## 4.1 Chiusura e storico
+
+- Chiudere una lista dopo l'acquisto con data e totale dello scontrino modificabile, suggerito dalla stima dei prodotti spuntati.
+- Conservare prodotti, quantità, prezzi, condizioni, foto e prodotti non acquistati nel dettaglio della spesa archiviata.
+- Impedire modifiche dopo la chiusura e consentire la creazione della lista successiva.
+- Mostrare nel Profilo storico mensile, totale pagato, conteggio delle spese, media e andamento di sei mesi; non conteggiare liste aperte o duplicare chiusure ritentate.
+- Separare lo storico locale e degli account; includerlo nell'esportazione JSON.
+- Conservare le foto delle edizioni precedenti senza includere le relative offerte nel catalogo attivo.
+- Per le liste condivise, verificare le modifiche concorrenti e applicare il blocco sul server; offline o prima dell'attivazione della migrazione conservare la chiusura sul dispositivo e segnalarla come da sincronizzare.
+
 ## 5. Volantino interattivo
 
 - Apertura e visualizzazione leggibile delle pagine originali.

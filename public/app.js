@@ -1,5 +1,6 @@
 import config from './config.js';
 import { createSecret, parseLink, projectItems, activeOffers, availableOffers, romeDate, money, offerPrice, safeSourceUrl, safeLocalFlyer, groupItems, matchesOffer, cartEstimate } from './core.js';
+import {shoppingOwner, validPhoto, shoppingFingerprint, createReceipt} from './shopping-history.js';
 
 const $ = selector => document.querySelector(selector);
 const configured = Boolean(config.supabaseUrl && config.supabasePublishableKey);
@@ -10,11 +11,13 @@ let database = { active: null, lists: {} }, link = null, state = null;
 let busy = false, catalog = { offers: [], flyers: [] }, currentTab = 'list', installPrompt = null;
 let toastTimer, blocked = false;
 let offerLimit = 24, openPage = null;
+let archivedOffers = [], closing = false;
 const expandedItems = new Set();
 function itemsNow() { return state ? projectItems(state.base, state.pending) : []; }
 function offerItems(offer) { return itemsNow().filter(item => matchesOffer(item, offer)); }
 function isSelected(offer) { return offerItems(offer).length > 0; }
-function itemOffer(item) { return catalog.offers.find(o => matchesOffer(item, o)); }
+function itemOffer(item) { return [...(catalog.offers||[]),...archivedOffers].find(o => matchesOffer(item, o)); }
+function photoFor(item) { const offer=itemOffer(item);return validPhoto(item.photo)||validPhoto(offer&&{path:offer.local_page,region:offer.region}); }
 function toggleOffer(offer) {
   const existing = offerItems(offer);
   if (existing.length) { enqueueMany(existing.map(item => ({kind:'delete', item_id:item.id, data:{}}))); }
@@ -22,7 +25,7 @@ function toggleOffer(offer) {
 }
 function productPhoto(offer) {
   if (!offer?.region) return null;
-  const source = safeLocalFlyer(catalog.flyers?.[0]?.local_pages?.[offer.page-1]);
+  const source = safeLocalFlyer(offer.local_page) || safeLocalFlyer(catalog.flyers?.[0]?.local_pages?.[offer.page-1]);
   if (!source) return null;
   const frame = document.createElement('span'); frame.className = 'product-photo';
   const img = document.createElement('img'); img.src = source; img.alt = `${offer.brand} ${offer.name}`; img.loading = 'lazy';
@@ -46,11 +49,11 @@ function persist() {
 function setLink(next) {
   link = next; database.active = next;
   state = database.lists[next.id];
-  if (!state) database.lists[next.id] = state = { name: 'La spesa condivisa', base: [], pending: [], created: false, loaded: false, localOnly: !configured, token: next.token };
+  if (!state) database.lists[next.id] = state = { name: 'La spesa condivisa', base: [], pending: [], created: false, loaded: false, localOnly: !configured, token: next.token, historyOwner:shoppingOwner(globalThis.sessionStorage) };
   if (state.token !== next.token) throw new Error('Chiave diversa da quella salvata per questa lista. Apri il link in una finestra privata per verificarlo.');
   // Il frammento non viene inviato all'hosting e non compare nei referrer.
   location.hash = new URLSearchParams({ list: next.id, key: next.token }).toString();
-  persist(); render();
+  persist(); render(); renderOffers();
 }
 async function rpc(name, args) {
   const headers = { 'Content-Type': 'application/json', apikey: config.supabasePublishableKey };
@@ -61,7 +64,9 @@ async function rpc(name, args) {
   });
   if (!response.ok) {
     const error = new Error(response.status === 401 || response.status === 403 ? 'Accesso rifiutato: controlla il link e la configurazione del servizio.' : 'Connessione non riuscita. Le modifiche restano sul telefono.');
-    error.status = response.status; throw error;
+    error.status = response.status;
+    try{error.code=(await response.json()).code;}catch{}
+    throw error;
   }
   return response.status === 204 ? null : response.json();
 }
@@ -71,13 +76,19 @@ function render() {
   $('#list-title').textContent = state.name;
   $('#share').disabled = !configured || state.localOnly || !state.created || !state.loaded;
   const items = projectItems(state.base, state.pending);
+  const closed=!!state.closure;
+  $('#new-shopping').disabled=busy||closing||blocked;
+  $('#add-form').hidden=closed;$('#close-shopping').hidden=closed||!items.length;
+  $('#close-shopping').disabled=blocked||busy||closing||!state.loaded;
+  $('#closed-shopping').hidden=!closed;
+  $('#closed-description').textContent=closed?`Spesa del ${state.closure.receipt.date.split('-').reverse().join('/')} · Totale ${money(state.closure.receipt.amount_cents/100)}. ${state.closure.pending?'Chiusura salvata sul dispositivo, in attesa di sincronizzazione.':'Archiviata nello storico del Profilo.'}`:'';
   const remaining = items.filter(item => !item.checked), done = items.filter(item => item.checked);
   $('#list-count').textContent = remaining.length;
   $('#remaining').textContent = `${remaining.length} ${remaining.length === 1 ? 'prodotto' : 'prodotti'}`;
   $('#done-count').textContent = done.length;
   $('#empty').hidden = items.length > 0;
   $('#done-section').hidden = true;
-  $('#clear-done').hidden = done.length === 0;
+  $('#clear-done').hidden = closed || done.length === 0;
   renderItems($('#items'), items); $('#done-items').replaceChildren();
   const estimate = cartEstimate(items);
   $('#list-total').hidden = !items.length;
@@ -92,13 +103,14 @@ function renderItems(container, items) {
     const li = document.createElement('li'); li.className = `item${item.checked ? ' checked' : ''}${item.checked && !expandedItems.has(item.id) ? ' collapsed' : ''}`;
     li.dataset.itemId = item.id;
     const check = document.createElement('button'); check.className = 'check'; check.textContent = item.checked ? '✓' : '';
+    check.disabled=!!state.closure;
     check.setAttribute('aria-label', `${item.checked ? 'Da acquistare' : 'Segna acquistato'}: ${item.name}`);
     check.setAttribute('aria-pressed', String(item.checked));
     check.onclick = () => { expandedItems.delete(item.id); enqueueMany(group.map(unit => ({kind:'check',item_id:unit.id,data:{checked:!item.checked}}))); };
     const info = document.createElement('div'); info.className = 'item-info';
     const name = document.createElement('span'); name.className = 'item-name'; name.textContent = item.name; info.append(name);
     const detail = document.createElement('span'); detail.className = 'item-detail'; detail.textContent = [item.quantity, item.price != null ? `${money(item.price)} per ${itemOffer(item)?.size === 'al kg' ? 'kg' : itemOffer(item)?.size === '100 g' ? 'etto' : 'pezzo'}` : '', item.note].filter(Boolean).join(' · '); info.append(detail);
-    const photo = productPhoto(itemOffer(item)); if (photo) li.append(photo); else { const placeholder = document.createElement('span'); placeholder.className = 'item-placeholder'; placeholder.textContent = '✳'; placeholder.setAttribute('aria-hidden','true'); li.append(placeholder); } li.append(info);
+    const savedPhoto=photoFor(item),photo = productPhoto(savedPhoto?{name:item.name,brand:'',local_page:savedPhoto.path,region:savedPhoto.region}:itemOffer(item)); if (photo) li.append(photo); else { const placeholder = document.createElement('span'); placeholder.className = 'item-placeholder'; placeholder.textContent = '✳'; placeholder.setAttribute('aria-hidden','true'); li.append(placeholder); } li.append(info);
     const controls = document.createElement('div'); controls.className = 'quantity-controls';
     const minus = document.createElement('button'); minus.textContent = '−'; minus.setAttribute('aria-label', `Diminuisci quantità di ${item.name}`); minus.disabled = group.length <= 1; minus.onclick = () => enqueue('delete', group.at(-1).id, {});
     const amount = document.createElement('input'); amount.type = 'number'; amount.min = '1'; amount.max = '99'; amount.step = '1'; amount.value = group.length; amount.inputMode = 'numeric'; amount.setAttribute('aria-label', `Quantità di ${item.name}`);
@@ -120,12 +132,14 @@ function renderItems(container, items) {
       reopen.onclick = () => { if (expandedItems.has(item.id)) expandedItems.delete(item.id); else expandedItems.add(item.id); render(); }; info.append(reopen);
       const summary = document.createElement('span'); summary.className = 'item-summary'; summary.textContent = `${group.length} ${unit.textContent}${item.price != null ? ` · ${money(item.price * group.length)}` : ''}`; info.append(summary);
     }
+    if(state.closure){minus.disabled=true;plus.disabled=true;amount.disabled=true;remove.hidden=true;}
     li.append(check);
     return li;
   }));
 }
 function enqueue(kind, item_id, data) { return enqueueMany([{kind, item_id, data}]); }
 function enqueueMany(operations) {
+  if(state?.closure){toast('Questa spesa è chiusa. Crea una nuova lista per altri acquisti.');return false;}
   if (!state || blocked || (!state.loaded && !state.created)) { toast('Attendi il caricamento della lista prima di modificarla.'); return false; }
   if (state.pending.length + operations.length > 500) { toast('Troppe modifiche in attesa. Ricollegati per sincronizzarle.'); return false; }
   const previous = state.pending;
@@ -152,22 +166,40 @@ async function sync() {
     // Acquisisce prima i permessi; non invia modifiche ad un link non verificato.
     if (!state.loaded) {
       const snapshot = await rpc('read_shared_list', credentials);
-      state.name = snapshot.name; state.base = snapshot.items; state.created = true; state.loaded = true; persist();
+      receiveSnapshot(snapshot); state.created = true; state.loaded = true; persist();
     }
     let count = 0;
     while (state.pending.length && count++ < 50) {
       const operation = state.pending[0];
-      const snapshot = await rpc('apply_list_operation', { ...credentials, p_operation: operation });
+      let snapshot;
+      try { snapshot = await rpc('apply_list_operation', { ...credentials, p_operation: operation }); }
+      catch(error){const latest=await rpc('read_shared_list',credentials).catch(()=>null);if(latest?.receipt){receiveSnapshot(latest);persist();notice('La spesa è stata chiusa da un partecipante. Le modifiche non accettate restano conservate sul dispositivo.',true);return;}throw error;}
       const previousBase = state.base;
       state.base = snapshot.items; state.pending.shift();
       try { persist(); } catch (error) { state.base = previousBase; state.pending.unshift(operation); throw error; }
     }
     const snapshot = await rpc('read_shared_list', credentials);
-    state.base = snapshot.items; state.name = snapshot.name; persist(); notice('');
+    receiveSnapshot(snapshot); persist(); notice('');
+    if(state.closure?.pending){
+      const closure=state.closure;
+      try{
+        const closed=await rpc('close_shared_list',{...credentials,p_expected:closure.expected,p_amount:closure.receipt.amount_cents,p_date:closure.receipt.date,p_photos:Object.fromEntries(closure.receipt.items.filter(i=>i.photo).map(i=>[i.id,i.photo]))});
+        receiveSnapshot(closed);persist();
+      }catch(error){
+        const latest=await rpc('read_shared_list',credentials).catch(()=>null);
+        if(latest?.receipt){receiveSnapshot(latest);persist();}
+        else if(error.code==='40001'||error.status===409){delete state.closure;if(latest)receiveSnapshot(latest);persist();notice('La lista è cambiata su un altro dispositivo. Controlla i prodotti e conferma di nuovo la chiusura.',true);}
+        else notice(error.status===404?'Chiusura e storico salvati su questo dispositivo. La sincronizzazione della chiusura richiede l’attivazione del database aggiornato.':'Chiusura salvata sul dispositivo; la sincronizzazione verrà ritentata al ritorno della connessione.',true);
+      }
+    }
   } catch (error) {
     if (error.status === 401 || error.status === 403) blocked = true;
     notice(error.message || 'Connessione assente. Le modifiche restano sul telefono.', true);
   } finally { busy = false; render(); renderOffers(); if ($('#page-dialog').open) renderPageProducts(); }
+}
+function receiveSnapshot(snapshot){
+  state.base=snapshot.items;state.name=snapshot.name;
+  if(snapshot.receipt){if(state.pending.length)state.rejected=[...(state.rejected||[]),...state.pending];state.pending=[];state.closure={receipt:snapshot.receipt,pending:false};}
 }
 function renderOffers() {
   const todayOffers = activeOffers(catalog.offers ?? []);
@@ -188,6 +220,7 @@ function renderOffers() {
     if (offer.conditions) { const conditions = document.createElement('p'); conditions.textContent = offer.conditions; card.append(conditions); }
     const source = document.createElement('button'); source.className = 'source-button'; source.textContent = `Vedi sul volantino · pag. ${offer.page}`; source.onclick = () => showPage(offer.page); card.append(source);
     const button = document.createElement('button'); button.className = 'secondary'; button.textContent = isSelected(offer) ? '✓ Nella lista · rimuovi' : '+ Aggiungi alla lista'; button.setAttribute('aria-pressed',String(isSelected(offer))); button.onclick = () => toggleOffer(offer);
+    button.disabled=!!state?.closure;
     card.onclick = event => { if (!event.target.closest('button')) toggleOffer(offer); }; card.append(button);
     return card;
   }));
@@ -228,6 +261,7 @@ function renderPageProducts() {
     const label = document.createElement('label'); label.className = 'page-product';
     const input = document.createElement('input'); input.type = 'checkbox'; input.checked = isSelected(offer);
     input.onchange = () => toggleOffer(offer);
+    input.disabled=!!state?.closure;
     const text = document.createElement('span'); text.textContent = `${offer.brand} ${offer.name} · ${offer.size}`.trim();
     const price = document.createElement('strong'); price.textContent = offerPrice(offer);
     label.append(input,text,price); return label;
@@ -239,6 +273,7 @@ async function loadCatalog() {
   try {
     const response = await fetch('./data/offers.json', { cache: 'no-cache' });
     if (!response.ok) throw new Error(); catalog = await response.json();
+    try{const archive=await fetch('./data/archived-offers.json');if(archive.ok)archivedOffers=(await archive.json()).offers||[];}catch{}
     const categories = [...new Set((catalog.offers ?? []).map(o => o.category))].sort();
     for (const category of categories) { const option = document.createElement('option'); option.value = category; option.textContent = category; $('#offer-category').append(option); }
     renderOffers(); render();
@@ -270,9 +305,36 @@ $('#create-form').onsubmit = async event => {
   event.preventDefault(); const name = $('#list-name').value.trim(); if (!name) return;
   try {
     const next = { id: crypto.randomUUID(), token: createSecret() };
-    database.lists[next.id] = { name, base: [], pending: [], created: !configured, creating: configured, loaded: !configured, localOnly: !configured, token: next.token };
+    const localOnly=!configured||globalThis.sessionStorage?.getItem('organaizer:mode')==='local';
+    database.lists[next.id] = { name, base: [], pending: [], created: localOnly, creating: !localOnly, loaded: localOnly, localOnly, token: next.token, historyOwner:shoppingOwner(globalThis.sessionStorage) };
     setLink(next); await sync();
   } catch (error) { notice(error.message, true); }
+};
+$('#close-shopping').onclick=()=>{
+  const products=itemsNow(),purchased=products.filter(i=>i.checked),estimate=cartEstimate(purchased);
+  if(!purchased.length){toast('Spunta almeno un prodotto acquistato prima di chiudere la spesa.');return;}
+  $('#checkout-amount').value=estimate.total.toFixed(2);$('#checkout-date').value=romeDate();$('#checkout-date').max=romeDate();
+  $('#checkout-description').textContent=`${purchased.length} unità acquistate; ${products.length-purchased.length} non acquistate, conservate nel dettaglio ed escluse dalla stima.${estimate.unpriced?` ${estimate.unpriced} unità senza prezzo: inserisci il totale dello scontrino.`:''}`;
+  $('#checkout-error').hidden=true;$('#checkout-dialog').showModal();
+};
+$('#checkout-form').onsubmit=async event=>{
+  event.preventDefault();if(closing||!state||state.closure)return;closing=true;$('#confirm-checkout').disabled=true;
+  try{
+    if(blocked)throw Error('Ricarica la pagina prima di chiudere la spesa.');
+    const products=itemsNow(),receipt=createReceipt({id:link.id,name:state.name,items:products,amount:$('#checkout-amount').value,date:$('#checkout-date').value,photoFor});
+    const previous=state.closure;
+    state.closure={receipt,expected:shoppingFingerprint(products),pending:!state.localOnly&&configured};
+    if(!state.historyOwner)state.historyOwner=shoppingOwner(globalThis.sessionStorage);
+    try{persist();}catch(error){state.closure=previous;throw error;}
+    $('#checkout-dialog').close();render();renderOffers();await sync();toast(state.closure?'Spesa salvata nello storico.':'Controlla le modifiche prima di chiudere.');
+  }catch(error){$('#checkout-error').textContent=error.message;$('#checkout-error').hidden=false;}
+  finally{closing=false;$('#confirm-checkout').disabled=false;render();}
+};
+$('#new-shopping').onclick=()=>{
+  if(busy||closing||blocked){toast('Attendi la fine della sincronizzazione prima di creare una nuova lista.');return;}
+  const previous={link,state,active:database.active};
+  try{database.active=null;persist();link=null;state=null;location.hash='';render();$('#list-name').focus();}
+  catch(error){database.active=previous.active;link=previous.link;state=previous.state;notice(error.message,true);}
 };
 $('#add-form').onsubmit = event => { event.preventDefault(); const input = $('#product-name'); if (input.value.trim() && addItem(input.value, $('#quantity').value)) { input.value = ''; $('#quantity').value = ''; input.focus(); } };
 $('#clear-done').onclick = () => { const done = projectItems(state.base, state.pending).filter(i => i.checked); if (confirm(`Rimuovere ${done.length} prodotti acquistati?`)) enqueueMany(done.map(i => ({kind:'delete',item_id:i.id,data:{}}))); };

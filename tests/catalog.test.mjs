@@ -60,3 +60,14 @@ test('ogni prodotto ha un ritaglio locale e una zona selezionabile dentro la pag
     assert.equal(offer.local_page,catalog.flyers[0].local_pages[offer.page-1]);
   }
 });
+
+test('le foto delle offerte scadute restano consultabili senza rientrare nel catalogo attivo',async()=>{
+  const archive=JSON.parse(await readFile(new URL('../public/data/archived-offers.json',import.meta.url),'utf8'));
+  assert.equal(archive.offers.length,577);
+  assert.ok(archive.offers.every(o=>o.valid_until==='2026-11-12'));
+  assert.ok(catalog.offers.every(o=>o.flyer_url.includes('/20001-')));
+  for(const source of archive.sources)for(const file of source.files){
+    const bytes=await readFile(new URL('../public/'+source.folder.slice(2)+'/'+file.name,import.meta.url));
+    assert.equal(createHash('sha256').update(bytes).digest('hex'),file.sha256);
+  }
+});
