@@ -98,10 +98,14 @@ function render() {
 
 }
 function renderItems(container, items) {
-  container.replaceChildren(...groupItems(items).map(group => {
+  const previous = new Map(Array.from(container.children, row => [row.dataset.itemId, {rect:row.getBoundingClientRect?.(), checked:row.dataset.checked}]));
+  const focusedId = document.activeElement?.classList?.contains('check') ? document.activeElement.closest('.item')?.dataset.itemId : null;
+  const groups = groupItems(items).sort((a,b) => Number(a[0].checked) - Number(b[0].checked));
+  const reordered = groups.some(group => previous.has(group[0].id) && previous.get(group[0].id).checked !== String(group[0].checked));
+  container.replaceChildren(...groups.map(group => {
     const item = group[0];
     const li = document.createElement('li'); li.className = `item${item.checked ? ' checked' : ''}${item.checked && !expandedItems.has(item.id) ? ' collapsed' : ''}`;
-    li.dataset.itemId = item.id;
+    li.dataset.itemId = item.id; li.dataset.checked = String(item.checked);
     const check = document.createElement('button'); check.className = 'check'; check.textContent = item.checked ? '✓' : '';
     check.disabled=!!state.closure;
     check.setAttribute('aria-label', `${item.checked ? 'Da acquistare' : 'Segna acquistato'}: ${item.name}`);
@@ -136,6 +140,16 @@ function renderItems(container, items) {
     li.append(check);
     return li;
   }));
+  if (reordered && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+    for (const row of container.children) {
+      const before = previous.get(row.dataset.itemId)?.rect, after = row.getBoundingClientRect?.();
+      if (!before || !after || !row.animate || !after.width) continue;
+      const dx = before.left-after.left, dy = before.top-after.top;
+      if (Math.abs(dx)+Math.abs(dy) < 1) continue;
+      row.animate([{transform:`translate(${dx}px, ${dy}px)`,opacity:.78},{transform:'translate(0, 0)',opacity:1}], {duration:280,easing:'cubic-bezier(.2,.7,.2,1)'});
+    }
+  }
+  if (focusedId) Array.from(container.children).find(row => row.dataset.itemId === focusedId)?.querySelector('.check')?.focus({preventScroll:true});
 }
 function enqueue(kind, item_id, data) { return enqueueMany([{kind, item_id, data}]); }
 function enqueueMany(operations) {

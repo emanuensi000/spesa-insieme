@@ -156,3 +156,20 @@ test('chiusura con memoria piena lascia la lista aperta e tutti i prodotti intat
   assert.equal(run('!!state.closure'),false);assert.equal(run('itemsNow().length'),1);
   assert.equal(nodes.get('#checkout-error').hidden,false);assert.equal(nodes.get('#checkout-dialog').open,true);
 });
+
+
+test('i prodotti spuntati vanno in fondo e tornano tra quelli da acquistare togliendo la spunta',async()=>{
+  const {nodes,run}=await startApp();
+  run("addItem('Latte'); addItem('Pane'); addItem('Uova');");
+  const rows=()=>nodes.get('#items').children;
+  const names=()=>rows().map(row=>row.children.find(n=>n.className==='item-info').children[0].textContent);
+  const check=row=>row.children.find(n=>n.className==='check').onclick();
+  check(rows()[0]);
+  assert.deepEqual(names(),['Pane','Uova','Latte']);
+  assert.ok(rows()[2].className.includes('collapsed'));
+  check(rows()[0]);
+  assert.deepEqual(names(),['Uova','Latte','Pane']);
+  check(rows()[1]);
+  assert.deepEqual(names(),['Latte','Uova','Pane']);
+  assert.equal(run('itemsNow().length'),3);
+});
