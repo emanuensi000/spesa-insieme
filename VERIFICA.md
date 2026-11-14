@@ -1,5 +1,11 @@
 # Verifica della prima versione
 
+## Versione nel footer — 14 novembre 2026
+
+- Versione `0.2.1` e identificativo della build visibili nel footer della home e del modulo Spesa, senza richieste di rete aggiuntive.
+- La build legge la versione da `package.json`, la include nel calcolo dell’identificativo e sostituisce i segnaposto negli HTML generati. Footer e cache del service worker usano lo stesso identificativo.
+- Build riuscita; controllati entrambi gli HTML generati, assenza dei segnaposto, corrispondenza con la cache offline e allineamento delle versioni nel lockfile.
+
 ## Gesti del volantino su mobile — 14 novembre 2026
 
 - A immagine ingrandita il trascinamento permette di muoversi in entrambe le direzioni; lo swipe per cambiare pagina resta attivo soltanto senza zoom.

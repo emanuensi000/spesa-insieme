@@ -46,6 +46,8 @@ npm.cmd run build
 
 L'output è in `dist/`. Il sito funziona anche sotto il percorso di un repository, ad esempio `https://utente.github.io/organaizer/`.
 
+Il footer della home e del modulo Spesa mostra la versione di `package.json` e l’identificativo della build, generati durante la compilazione e disponibili anche offline. Per incrementare la versione prima di una pubblicazione usare `npm version patch --no-git-tag-version` (oppure `minor`/`major` per gli aggiornamenti corrispondenti). L’identificativo della build cambia automaticamente quando cambiano i contenuti dell’app.
+
 ## Collegare Supabase
 
 Per attivare Google, Facebook e telefono e capire la modalità ospite seguire [docs/LOGIN.md](docs/LOGIN.md): contiene gli URL esatti per Google/Meta e Supabase. Il codice è pronto; i provider richiedono le credenziali configurate nei rispettivi pannelli.

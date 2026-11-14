@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const output = new URL('../dist/', import.meta.url);
+const {version} = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
+if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) throw new Error('Versione applicazione non valida.');
 // Una nuova build deve eliminare anche i volantini rimossi dalle sorgenti.
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
@@ -58,7 +60,13 @@ function icon(size) {
 }
 for (const size of [192,512]) await writeFile(new URL(`icons/icon-${size}.png`,output),icon(size));
 const inputs = await Promise.all(['app.js','core.js','shopping-history.js','styles.css','index.html','shopping.html','organizer.js','organizer-core.js','organizer.css','navigation.css','auth.js','auth-client.js','login.js','manifest.webmanifest','docs/REQUISITI.md','docs/IMPLEMENTAZIONE.md','docs/LOGIN.md','docs/001_organaizer.sql','docs/002_shopping_history.sql','config.js','data/offers.json','data/archived-offers.json'].map(name => readFile(new URL(name, output))));
-const digest = createHash('sha256').update(Buffer.concat(inputs)).digest('hex').slice(0,12);
+const digest = createHash('sha256').update(version).update(Buffer.concat(inputs)).digest('hex').slice(0,12);
+// Il footer identifica la stessa build della cache offline, senza richieste di rete.
+for (const name of ['index.html','shopping.html']) {
+  const path = new URL(name, output);
+  const html = await readFile(path, 'utf8');
+  await writeFile(path, html.replaceAll('__APP_VERSION__', version).replaceAll('__BUILD_ID__', digest));
+}
 const worker = await readFile(new URL('sw.js',output),'utf8');
 const catalog = JSON.parse(await readFile(new URL('data/offers.json', output),'utf8'));
 const archivedPhotos=JSON.parse(await readFile(new URL('data/archived-offers.json',output),'utf8'));
