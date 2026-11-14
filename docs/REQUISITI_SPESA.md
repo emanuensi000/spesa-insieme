@@ -60,8 +60,10 @@ Requisiti ricavati dalla documentazione e dalle funzionalità presenti nel proge
 - Navigazione tramite scorrimento laterale, frecce e selezione diretta della pagina.
 - Indicazione di pagina corrente e totale.
 - Ingrandimento con due dita sui dispositivi compatibili.
+- A zoom attivo, trascinamento dell’immagine in orizzontale e verticale, anche dopo una pressione prolungata, senza cambiare pagina.
 - Collegamento di ogni offerta a un’area della pagina originale.
 - Tap per aggiungere; secondo tap per rimuovere tutte le quantità del prodotto.
+- Trascinamenti, pressioni prolungate e gesti con più dita non selezionano o deselezionano prodotti.
 - Evidenziazione dei prodotti selezionati.
 - Elenco dei prodotti sotto la pagina per facilitare la selezione delle aree ravvicinate o condivise.
 - Accesso al PDF scaricato e alla fonte ufficiale.

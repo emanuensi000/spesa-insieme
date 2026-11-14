@@ -1,5 +1,13 @@
 # Verifica della prima versione
 
+## Gesti del volantino su mobile — 14 novembre 2026
+
+- A immagine ingrandita il trascinamento permette di muoversi in entrambe le direzioni; lo swipe per cambiare pagina resta attivo soltanto senza zoom.
+- Solo un tap breve seleziona o deseleziona il prodotto. Movimenti oltre 10 pixel, pressioni oltre 350 ms, gesti con più dita e tocchi annullati bloccano il click successivo. Tastiera e click del mouse restano utilizzabili.
+- Test degli handler reali: tap anche con zoom, spostamento verticale/orizzontale/diagonale con ritorno al punto iniziale, pressione prolungata, pinch, annullamento, ripresa dei tap, tastiera e navigazione senza zoom.
+- Chromium con touchscreen simulato a 390×844: aggiunta/rimozione con tap, swipe tra pagine senza zoom e trascinamenti dopo una pressione di 600 ms a zoom 2×. Verificati spostamento orizzontale del viewport e scorrimento verticale dell’immagine nel dialogo, senza selezioni accidentali, cambi pagina durante il trascinamento o errori JavaScript.
+- `npm test`, `npm run build` e `git diff --check`: riusciti. Collaudo con lista locale isolata; resta da provare su dispositivi Android/iOS fisici.
+
 ## Chiusura della spesa e dashboard Profilo — 13 novembre 2026
 
 - Implementati conferma di data e totale scontrino, archivio immutabile per lista, nuova lista e dashboard del Profilo con riepiloghi, andamento di sei mesi, filtro mensile e dettaglio con foto.

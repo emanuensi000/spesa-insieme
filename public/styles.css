@@ -20,10 +20,11 @@
 .open-flyer{width:100%;margin-bottom:20px;justify-content:center}
 .page-navigation{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;z-index:3;background:#fff;padding:10px 0;border-bottom:1px solid var(--line);margin-bottom:12px}
 .page-navigation select{padding:10px;max-width:140px;font-size:13px}
-.page-canvas{position:relative;margin-bottom:24px;isolation:isolate;touch-action:pan-y pinch-zoom}
-.page-canvas>img{display:block;width:100%;height:auto}
+.page-canvas{position:relative;margin-bottom:24px;isolation:isolate;touch-action:pan-y pinch-zoom;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.page-canvas.is-zoomed{touch-action:manipulation}
+.page-canvas>img{display:block;width:100%;height:auto;-webkit-user-drag:none}
 #page-hotspots{position:absolute;inset:0;pointer-events:none}
-.product-hotspot{position:absolute;pointer-events:auto;background:transparent;border:1px solid #245b4533;border-radius:5px;color:transparent;padding:3px;font-size:20px;text-align:right;display:flex;justify-content:flex-end;align-items:flex-start;touch-action:pan-y pinch-zoom}
+.product-hotspot{position:absolute;pointer-events:auto;background:transparent;border:1px solid #245b4533;border-radius:5px;color:transparent;padding:3px;font-size:20px;text-align:right;display:flex;justify-content:flex-end;align-items:flex-start;touch-action:inherit}
 .product-hotspot:hover,.product-hotspot:focus-visible{background:#245b451c;border:2px solid var(--green);color:var(--green)}
 .product-hotspot.selected{background:#245b4529;border:3px solid var(--green);color:#fff;text-shadow:0 1px 4px #000;font-weight:900;box-shadow:inset 0 0 0 1px #fff}
 .page-product:has(input:checked){background:#e9eedf;border-color:var(--green)}

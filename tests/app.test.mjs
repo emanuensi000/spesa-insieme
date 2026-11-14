@@ -8,11 +8,12 @@ import * as shoppingHistory from '../public/shopping-history.js';
 
 // Exercise real event handlers and offline persistence with a minimal DOM adapter.
 class Element {
-  constructor(tag='div') { this.tagName=tag; this.children=[]; this.style={}; this.dataset={}; this.value=''; this.open=false; this.classList={toggle(){}}; }
+  constructor(tag='div') { this.tagName=tag; this.children=[]; this.style={}; this.dataset={}; this.value=''; this.open=false; this.listeners={}; this.classList={toggle(){}}; }
   append(...children) { this.children.push(...children); }
   replaceChildren(...children) { this.children=children; }
   setAttribute(name,value) { this[name]=value; }
-  addEventListener() {}
+  addEventListener(type,listener) { (this.listeners[type] ??= []).push(listener); }
+  dispatch(type,event) { for(const listener of this.listeners[type] ?? []) listener(event); }
   showModal() { this.open=true; }
   close() { this.open=false; }
   focus() {}
@@ -33,7 +34,7 @@ async function startApp({legacy=false, both=false, full=false}={}) {
   let failStorage=full;
   const context=vm.createContext({...core,...shoppingHistory,config:{},crypto:webcrypto,URLSearchParams,Intl,AbortSignal,
     document:{querySelector:selector=>nodes.get(selector),querySelectorAll:()=>[],createElement:tag=>new Element(tag),createTextNode:text=>({textContent:text}),addEventListener(){}},
-    navigator:{onLine:false},location:{hash:'',protocol:'http:',hostname:'test'},window:{addEventListener(){}},
+    navigator:{onLine:false},location:{hash:'',protocol:'http:',hostname:'test'},window:{addEventListener(){},visualViewport:{scale:1,addEventListener(){}}},
     localStorage:{getItem:key=>memory.get(key) ?? null,setItem:(key,value)=>{if(failStorage) throw Error('Full');memory.set(key,value);}},
     fetch:async path=>({ok:true,json:async()=>path.includes('archived-offers')?photoArchive:catalog}),setInterval(){},setTimeout(){},clearTimeout(){},confirm:()=>true
   });
@@ -76,6 +77,71 @@ test('tap sul volantino, quantità, acquisto, rimozione e riaggiunta mantengono 
   nodes.get('#next-page').onclick();
   assert.equal(nodes.get('#page-position').textContent,'2 / 20');
   assert.equal(nodes.get('#page-hotspots').children.length,42);
+});
+
+test('solo un tap breve seleziona il prodotto: trascinamenti, pressione lunga, pinch e annullamento non modificano la lista',async()=>{
+  const {nodes,run}=await startApp();
+  nodes.get('#open-flyer').onclick();
+  const canvas=nodes.get('#page-canvas');
+  const touch=(x,y)=>({clientX:x,clientY:y});
+  const send=(type,touches,timeStamp,changedTouches=touches)=>canvas.dispatch(type,{touches,changedTouches,timeStamp});
+  const click=(detail=1)=>{
+    let prevented=false;
+    canvas.dispatch('click',{detail,preventDefault(){prevented=true;},stopImmediatePropagation(){}});
+    if(!prevented) nodes.get('#page-hotspots').children[0].onclick();
+    return prevented;
+  };
+  const tap=()=>{
+    send('touchstart',[touch(100,100)],0);
+    send('touchend',[],100,[touch(103,102)]);
+    assert.equal(click(),false);
+  };
+  run('window.visualViewport.scale=2');
+  tap();assert.equal(run('itemsNow().length'),1);
+  // Un trascinamento deve restare tale anche tornando al punto di partenza.
+  for(const [dx,dy] of [[90,0],[0,90],[9,9],[-90,-90]]) {
+    send('touchstart',[touch(100,100)],0);
+    send('touchmove',[touch(100+dx,100+dy)],100);
+    send('touchend',[],200,[touch(100,100)]);
+    assert.equal(click(),true);
+    assert.equal(run('itemsNow().length'),1);
+    assert.equal(nodes.get('#page-position').textContent,'1 / 20');
+  }
+  send('touchstart',[touch(100,100)],0);
+  send('touchend',[],600,[touch(100,100)]);
+  assert.equal(click(),true);
+  // Pinch: il dito rimasto sullo schermo non avvia un nuovo tap.
+  send('touchstart',[touch(100,100)],0);
+  send('touchstart',[touch(100,100),touch(200,200)],10);
+  send('touchend',[touch(100,100)],50,[touch(200,200)]);
+  send('touchend',[],100,[touch(100,100)]);
+  assert.equal(click(),true);
+  send('touchstart',[touch(100,100)],0);
+  send('touchcancel',[],100);
+  assert.equal(click(),true);
+  assert.equal(run('itemsNow().length'),1);
+  tap();assert.equal(run('itemsNow().length'),0);
+  // La tastiera continua a funzionare anche dopo un gesto annullato.
+  send('touchcancel',[],100);
+  assert.equal(click(0),false);assert.equal(run('itemsNow().length'),1);
+});
+
+test('lo swipe cambia pagina solo senza zoom e non genera una selezione',async()=>{
+  const {nodes,run}=await startApp();
+  nodes.get('#open-flyer').onclick();
+  const canvas=nodes.get('#page-canvas');
+  const swipe=()=>{
+    canvas.dispatch('touchstart',{touches:[{clientX:200,clientY:100}],timeStamp:0});
+    canvas.dispatch('touchend',{touches:[],changedTouches:[{clientX:100,clientY:102}],timeStamp:150});
+  };
+  swipe();assert.equal(nodes.get('#page-position').textContent,'2 / 20');
+  let prevented=false;
+  canvas.dispatch('click',{detail:1,preventDefault(){prevented=true;},stopImmediatePropagation(){}});
+  assert.equal(prevented,true);assert.equal(run('itemsNow().length'),0);
+  run('window.visualViewport.scale=2');
+  swipe();assert.equal(nodes.get('#page-position').textContent,'2 / 20');
+  run('window.visualViewport.scale=1');
+  swipe();assert.equal(nodes.get('#page-position').textContent,'3 / 20');
 });
 
 test('la modifica di quantità viene annullata interamente se il salvataggio fallisce',async()=>{

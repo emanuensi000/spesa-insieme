@@ -391,11 +391,44 @@ $('#next-page').onclick = () => showPage(openPage+1);
 $('#page-jump').onchange = event => showPage(Number(event.target.value));
 $('#open-flyer').onclick = () => showPage(openPage || 1);
 $('#page-dialog').addEventListener('keydown', event => { if (!event.target.closest('input,select,textarea') && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) { event.preventDefault(); showPage(openPage + (event.key === 'ArrowLeft' ? -1 : 1)); } });
-let swipeStart = null, swipeMoved = false;
-$('#page-canvas').addEventListener('touchstart',event => { swipeStart = event.touches.length === 1 && (window.visualViewport?.scale ?? 1) <= 1 ? {x:event.touches[0].clientX,y:event.touches[0].clientY} : null; swipeMoved = false; },{passive:true});
-$('#page-canvas').addEventListener('touchmove',event => { if (swipeStart && event.touches.length === 1 && Math.abs(event.touches[0].clientX-swipeStart.x)>15) swipeMoved = true; else if(event.touches.length !== 1) swipeStart = null; },{passive:true});
-$('#page-canvas').addEventListener('touchend',event => { if (!swipeStart) return; const dx = event.changedTouches[0].clientX-swipeStart.x, dy = event.changedTouches[0].clientY-swipeStart.y; swipeStart=null; if (Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5) { swipeMoved=true; showPage(openPage+(dx<0?1:-1)); } },{passive:true});
-$('#page-canvas').addEventListener('click',event => { if(swipeMoved) { event.preventDefault(); event.stopImmediatePropagation(); swipeMoved=false; } },true);
+const pageCanvas = $('#page-canvas');
+let pageTouch = null, blockPageTap = false;
+const pageIsZoomed = () => (window.visualViewport?.scale ?? 1) > 1.01;
+// A zoom attivo entrambi gli assi sono affidati al browser. A scala normale
+// il gesto orizzontale resta disponibile per sfogliare le pagine.
+const updatePageZoom = () => pageCanvas.classList.toggle('is-zoomed', pageIsZoomed());
+window.visualViewport?.addEventListener('resize', updatePageZoom);
+updatePageZoom();
+pageCanvas.addEventListener('touchstart', event => {
+  if (event.touches.length !== 1) { pageTouch = null; blockPageTap = true; return; }
+  const touch = event.touches[0];
+  pageTouch = {x:touch.clientX, y:touch.clientY, time:event.timeStamp, canSwipe:!pageIsZoomed()};
+  blockPageTap = false;
+}, {passive:true});
+pageCanvas.addEventListener('touchmove', event => {
+  if (event.touches.length !== 1) { pageTouch = null; blockPageTap = true; return; }
+  if (!pageTouch) return;
+  const touch = event.touches[0];
+  if (Math.hypot(touch.clientX-pageTouch.x, touch.clientY-pageTouch.y) > 10) blockPageTap = true;
+  if (pageIsZoomed()) pageTouch.canSwipe = false;
+}, {passive:true});
+pageCanvas.addEventListener('touchend', event => {
+  if (!pageTouch) return;
+  const start = pageTouch; pageTouch = null;
+  const touch = event.changedTouches[0];
+  const dx = touch.clientX-start.x, dy = touch.clientY-start.y;
+  if (event.touches.length || event.timeStamp-start.time > 350 || Math.hypot(dx,dy) > 10) blockPageTap = true;
+  if (!event.touches.length && start.canSwipe && !pageIsZoomed() && Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5) {
+    blockPageTap = true; showPage(openPage+(dx<0?1:-1));
+  }
+}, {passive:true});
+pageCanvas.addEventListener('touchcancel', () => { pageTouch = null; blockPageTap = true; }, {passive:true});
+pageCanvas.addEventListener('contextmenu', event => { event.preventDefault(); blockPageTap = true; });
+pageCanvas.addEventListener('pointerdown', event => { if (event.pointerType === 'mouse') blockPageTap = false; });
+pageCanvas.addEventListener('click', event => {
+  // I click da tastiera e tecnologie assistive rimangono disponibili.
+  if (event.detail !== 0 && blockPageTap) { event.preventDefault(); event.stopImmediatePropagation(); }
+}, true);
 $('#share').onclick = () => { $('#share-url').value = location.href; $('#native-share').hidden = !navigator.share; $('#share-dialog').showModal(); };
 $('#copy-link').onclick = async () => { try { await navigator.clipboard.writeText(location.href); toast('Link copiato'); } catch { $('#share-url').select(); toast('Seleziona e copia il link'); } };
 $('#native-share').onclick = async () => { try { await navigator.share({ title: state.name, text: 'Organizziamo la spesa con OrganAIzer', url: location.href }); } catch (error) { if (error.name !== 'AbortError') toast('Invio non riuscito. Puoi copiare il link.'); } };
