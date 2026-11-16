@@ -1,6 +1,13 @@
 const VERSION = 'organaizer-v1-__BUILD_ID__';
 const SHELL = ['./', './index.html', './shopping.html', './organizer.js', './organizer-core.js', './shopping-history.js', './pwa-update.js', './auth.js', './auth-client.js', './login.js', './organizer.css', './navigation.css', './docs/REQUISITI.md', './docs/IMPLEMENTAZIONE.md', './docs/LOGIN.md', './docs/001_organaizer.sql', './docs/002_shopping_history.sql', './styles.css', './app.js', './core.js', './config.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './data/offers.json', './data/archived-offers.json', ...__FLYER_ASSETS__];
-self.addEventListener('install', event => { event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(SHELL))); });
+self.addEventListener('install', event => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(VERSION);
+    // I volantini sono salvati quando consultati: non devono bloccare un aggiornamento.
+    await cache.addAll(SHELL.filter(path => !path.startsWith('./flyers/') && !path.startsWith('./docs/')).map(path => new Request(path, {cache:'reload'})));
+    await self.skipWaiting();
+  })());
+});
 self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => (key.startsWith('organaizer-v1-') || key.startsWith('spesa-v1-')) && key !== VERSION).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', event => {
   const request = event.request, url = new URL(request.url);

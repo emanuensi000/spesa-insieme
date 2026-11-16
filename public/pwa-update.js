@@ -1,8 +1,9 @@
 if ('serviceWorker' in navigator) {
   let reloading = false;
-  const controlled = !!navigator.serviceWorker.controller;
+  let controlled = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (controlled && !reloading) { reloading = true; location.reload(); }
+    controlled = true;
   });
   navigator.serviceWorker.register('./sw.js', {updateViaCache: 'none'}).then(registration => {
     const activate = () => registration.waiting?.postMessage({type: 'SKIP_WAITING'});

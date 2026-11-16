@@ -59,7 +59,7 @@ function icon(size) {
   return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('IDAT',deflateSync(scan)),chunk('IEND',Buffer.alloc(0))]);
 }
 for (const size of [192,512]) await writeFile(new URL(`icons/icon-${size}.png`,output),icon(size));
-const inputs = await Promise.all(['app.js','core.js','shopping-history.js','styles.css','index.html','shopping.html','organizer.js','organizer-core.js','organizer.css','navigation.css','auth.js','auth-client.js','login.js','manifest.webmanifest','docs/REQUISITI.md','docs/IMPLEMENTAZIONE.md','docs/LOGIN.md','docs/001_organaizer.sql','docs/002_shopping_history.sql','config.js','data/offers.json','data/archived-offers.json'].map(name => readFile(new URL(name, output))));
+const inputs = await Promise.all(['sw.js','pwa-update.js','app.js','core.js','shopping-history.js','styles.css','index.html','shopping.html','organizer.js','organizer-core.js','organizer.css','navigation.css','auth.js','auth-client.js','login.js','manifest.webmanifest','docs/REQUISITI.md','docs/IMPLEMENTAZIONE.md','docs/LOGIN.md','docs/001_organaizer.sql','docs/002_shopping_history.sql','config.js','data/offers.json','data/archived-offers.json'].map(name => readFile(new URL(name, output))));
 const digest = createHash('sha256').update(version).update(Buffer.concat(inputs)).digest('hex').slice(0,12);
 // Il footer identifica la stessa build della cache offline, senza richieste di rete.
 for (const name of ['index.html','shopping.html']) {
