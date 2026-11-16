@@ -67,6 +67,16 @@ Il documento REQUISITI.md resta la visione complessiva. Questa versione fornisce
 
 ## Pubblicazione
 
+### Liste della spesa condivise (v0.2.2)
+
+Il modulo Spesa riceve il gruppo scelto nella Home tramite `?group=...`, verifica la sessione e legge le liste da `organizer_snapshot`. Il selettore consente di aprire, creare e rinominare più liste nello stesso gruppo. I prodotti di ogni lista restano indipendenti.
+
+La creazione salva prima la lista nel database e poi il riferimento nel gruppo. L'associazione in attesa viene conservata sul dispositivo con un identificativo stabile e ritentata dopo errori di rete o risposte perse, senza duplicati. Un errore nel recupero del gruppo non impedisce l'invio delle modifiche alla lista già aperta. Le vecchie liste accessibili tramite link possono essere associate usando «Condividi questa lista con il gruppo».
+
+L'aggiornamento avviene silenziosamente ogni 30 secondi mentre l'app è visibile, anche al ritorno online e alla riapertura della pagina. Le modifiche locali vengono inviate subito quando la rete è disponibile; le code offline delle altre liste dello stesso account vengono recuperate anche dopo aver cambiato lista. Il modulo Home aggiorna anch'esso le risorse ogni 30 secondi. La creazione di una nuova lista mantiene aperto il form durante gli aggiornamenti.
+
+Questa correzione usa le funzioni SQL esistenti: richiede lo schema base e la migrazione `001_organaizer.sql` già applicati; la chiusura e lo storico richiedono anche `002_shopping_history.sql`. Non introduce una nuova migrazione. I test verificano due membri, più liste, modifiche bidirezionali, isolamento e recupero di una pubblicazione interrotta usando le migrazioni reali in PostgreSQL locale (PGlite).
+
 Il workflow GitHub Pages esegue test JavaScript, test Python e build. La build include codice, requisiti, questo documento e SQL di migrazione. Il deployment statico non applica migrazioni né configura provider di autenticazione: questi due passaggi vanno verificati separatamente.
 
 Comandi: `npm test`, `python3 -m unittest discover -s tests -p 'test_*.py'`, `npm run build`.

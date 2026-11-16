@@ -194,11 +194,34 @@ test('chiusura salva totale scontrino e foto, blocca le modifiche e permette una
   assert.equal(app.snapshot().pending.length,operations);
   await nodes.get('#checkout-form').onsubmit({preventDefault(){}});
   assert.equal(app.snapshot().closure.receipt.amount_cents,70);
-  nodes.get('#new-shopping').onclick();assert.equal(run('link'),null);
+  nodes.get('#new-shopping').onclick();assert.equal(run('draftList'),true);
   assert.equal(nodes.get('#welcome').hidden,false);assert.equal(app.snapshot().closure.receipt.amount_cents,70);
   nodes.get('#list-name').value='Nuova spesa';await nodes.get('#create-form').onsubmit({preventDefault(){}});
   assert.equal(nodes.get('#offers').children[0].children.at(-1).disabled,false);
   assert.notEqual(run('link.id'),receipt.id);
+});
+
+test('più liste mantengono prodotti e coda separati e il form non sparisce durante un aggiornamento',async()=>{
+  const {nodes,run}=await startApp();
+  const first=run('link.id');
+  nodes.get('#product-name').value='Pane';nodes.get('#add-form').onsubmit({preventDefault(){}});
+  nodes.get('#another-list').onclick();
+  nodes.get('#list-name').value='Festa';
+  await run('refreshLists()');
+  assert.equal(nodes.get('#welcome').hidden,false);
+  assert.equal(nodes.get('#list-name').value,'Festa');
+  nodes.get('#cancel-create').onclick();
+  assert.equal(nodes.get('#workspace').hidden,false);
+  assert.equal(run('link.id'),first);
+  nodes.get('#another-list').onclick();
+  await nodes.get('#create-form').onsubmit({preventDefault(){}});
+  const second=run('link.id');assert.notEqual(first,second);
+  assert.equal(run('itemsNow().length'),0);
+  nodes.get('#product-name').value='Latte';nodes.get('#add-form').onsubmit({preventDefault(){}});
+  nodes.get('#shopping-lists').onchange({target:{value:first}});
+  assert.equal(run('itemsNow()[0].name'),'Pane');
+  nodes.get('#shopping-lists').onchange({target:{value:second}});
+  assert.equal(run('itemsNow()[0].name'),'Latte');
 });
 
 test('i prodotti della precedente edizione conservano la propria foto, anche nello storico',async()=>{

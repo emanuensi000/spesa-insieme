@@ -1,5 +1,5 @@
 const VERSION = 'organaizer-v1-__BUILD_ID__';
-const SHELL = ['./', './index.html', './shopping.html', './organizer.js', './organizer-core.js', './shopping-history.js', './pwa-update.js', './auth.js', './auth-client.js', './login.js', './organizer.css', './navigation.css', './docs/REQUISITI.md', './docs/IMPLEMENTAZIONE.md', './docs/LOGIN.md', './docs/001_organaizer.sql', './docs/002_shopping_history.sql', './styles.css', './app.js', './core.js', './config.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './data/offers.json', './data/archived-offers.json', ...__FLYER_ASSETS__];
+const SHELL = ['./', './index.html', './shopping.html', './organizer.js', './organizer-core.js', './shopping-history.js', './shopping-groups.js', './pwa-update.js', './auth.js', './auth-client.js', './login.js', './organizer.css', './navigation.css', './docs/REQUISITI.md', './docs/IMPLEMENTAZIONE.md', './docs/LOGIN.md', './docs/001_organaizer.sql', './docs/002_shopping_history.sql', './styles.css', './app.js', './core.js', './config.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './data/offers.json', './data/archived-offers.json', ...__FLYER_ASSETS__];
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(VERSION);

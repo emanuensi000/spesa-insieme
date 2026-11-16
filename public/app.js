@@ -1,5 +1,6 @@
 import config from './config.js';
 import {auth} from './auth.js';
+import {groupShoppingReferences,publishGroupList} from './shopping-groups.js';
 import { createSecret, parseLink, projectItems, activeOffers, availableOffers, romeDate, money, offerPrice, safeSourceUrl, safeLocalFlyer, groupItems, matchesOffer, cartEstimate } from './core.js';
 import {shoppingOwner, validPhoto, shoppingFingerprint, createReceipt} from './shopping-history.js';
 
@@ -48,7 +49,8 @@ function persist() {
   catch { throw new Error('Il telefono non riesce a salvare le modifiche. Libera spazio o abilita la memoria del browser.'); }
 }
 function setLink(next) {
-  link = next; database.active = next;
+  if(link?.id!==next.id)blocked=false;
+  draftList=false;link = next; database.active = next;
   state = database.lists[next.id];
   if (!state) database.lists[next.id] = state = { name: 'La spesa condivisa', base: [], pending: [], created: false, loaded: false, localOnly: !configured, token: next.token, historyOwner:shoppingOwner(globalThis.sessionStorage) };
   if (state.token !== next.token) throw new Error('Chiave diversa da quella salvata per questa lista. Apri il link in una finestra privata per verificarlo.');
@@ -56,32 +58,107 @@ function setLink(next) {
   location.hash = new URLSearchParams({ list: next.id, key: next.token }).toString();
   persist(); render(); renderOffers();
 }
-let sharedGroup = null;
-async function groupLists() {
-  if (sessionStorage.getItem('organaizer:mode') === 'local' || !configured || !await auth.user()) return;
-  const groups = await auth.rpc('organizer_groups');
-  const owner = shoppingOwner(sessionStorage);
-  const saved = JSON.parse(localStorage.getItem(owner) || '{}');
-  sharedGroup = groups.find(g => g.id === saved.active) || groups[0];
-  if (!sharedGroup) return;
-  const snapshot = await auth.rpc('organizer_snapshot', {p_group: sharedGroup.id});
-  for (const item of snapshot.items.filter(i => i.kind === 'shopping' && !i.deleted)) {
-    const ref = parseLink(new URL(item.data.url, location.href).hash);
-    if (!ref) continue;
-    if (!database.lists[ref.id]) database.lists[ref.id] = {name:item.data.title,base:[],pending:[],created:true,loaded:false,localOnly:false,token:ref.token,historyOwner:owner};
+let sharedGroup=null,groupRows=[],availableGroups=[],groupLoading=false,groupPromise=null,cyclePromise=null;
+let draftList=false,creating=false,groupReady=false,accountUser=null,explicitLink=false;
+let accountOwner=shoppingOwner(globalThis.sessionStorage);
+function listChoices(){
+  const choices=new Map(groupRows.map(ref=>[ref.id,{id:ref.id,name:ref.title}]));
+  for(const [id,list] of Object.entries(database.lists)){
+    if(sharedGroup){if(list.groupPublication?.groupId===sharedGroup.id||(!list.groupId&&list.historyOwner===accountOwner))choices.set(id,{id,name:list.name});}
+    else if(!accountUser&&(list.historyOwner||'organaizer:local')===accountOwner)choices.set(id,{id,name:list.name});
   }
-  persist();
-  const select = $('#shopping-lists'); select.replaceChildren();
-  for (const item of snapshot.items.filter(i => i.kind === 'shopping' && !i.deleted)) {
-    const ref = parseLink(new URL(item.data.url, location.href).hash);
-    if (!ref) continue;
-    const option = document.createElement('option'); option.value = ref.id; option.textContent = item.data.title; select.append(option);
-  }
-  select.value = link?.id || '';
-  if (!link && select.options.length) { const id=select.options[0].value; setLink({id,token:database.lists[id].token}); await sync(); }
+  if(link&&!choices.has(link.id))choices.set(link.id,{id:link.id,name:'Da link · '+state.name});
+  return [...choices.values()];
 }
-$('#shopping-lists').onchange = event => { if (busy) return; const id=event.target.value; setLink({id,token:database.lists[id].token}); void sync(); };
-$('#another-list').onclick = () => { $('#welcome').hidden=false; $('#list-name').focus(); };
+function renderListPicker(){
+  const select=$('#shopping-lists');select.replaceChildren();
+  const placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='Scegli una lista';select.append(placeholder);
+  for(const choice of listChoices()){const option=document.createElement('option');option.value=choice.id;option.textContent=choice.name;select.append(option);}
+  select.value=draftList?'':link?.id||'';select.disabled=busy||closing||groupLoading||creating;
+  $('#another-list').disabled=busy||closing||groupLoading||creating;
+  $('#create-submit').disabled=busy||closing||groupLoading||creating;
+  $('#cancel-create').hidden=!link;$('#shopping-group-label').hidden=!availableGroups.length;
+  $('#shopping-group').disabled=busy||closing||groupLoading||creating;
+  $('#share-with-group').hidden=!sharedGroup||!link||groupRows.some(ref=>ref.id===link.id)||!!state?.groupPublication;
+  $('#share-with-group').disabled=busy||closing||groupLoading||creating;
+  $('#rename-shopping').hidden=!sharedGroup||!link||!groupRows.some(ref=>ref.id===link.id)||!!state?.closure;
+  $('#rename-shopping').disabled=busy||closing||groupLoading||creating;
+}
+function clearActiveList(){link=null;state=null;database.active=null;blocked=false;const url=new URL(location.href);url.hash='';history.replaceState(null,'',url.pathname+url.search);persist();}
+async function groupLists(){
+  if(groupPromise)return groupPromise;
+  groupPromise=(async()=>{
+    if(!configured||globalThis.sessionStorage?.getItem('organaizer:mode')==='local'){groupReady=true;renderListPicker();return;}
+    groupLoading=true;renderListPicker();
+    try{
+      const user=await auth.user();accountUser=user;
+      if(!user){sharedGroup=null;groupRows=[];availableGroups=[];accountOwner='organaizer:local';groupReady=true;return;}
+      accountOwner='organaizer:user:'+user.id;sessionStorage.setItem('organaizer:shopping-owner',accountOwner);
+      const groups=await auth.rpc('organizer_groups');availableGroups=groups;
+      const saved=JSON.parse(localStorage.getItem(accountOwner)||'{}');
+      const requested=new URLSearchParams(location.search||'').get('group');
+      sharedGroup=groups.find(g=>g.id===requested)||groups.find(g=>g.id===sharedGroup?.id)||groups.find(g=>g.id===saved.active)||groups[0]||null;
+      const select=$('#shopping-group');select.replaceChildren();
+      for(const group of groups){const option=document.createElement('option');option.value=group.id;option.textContent=group.name;select.append(option);}
+      select.value=sharedGroup?.id||'';
+      const snapshot=sharedGroup?await auth.rpc('organizer_snapshot',{p_group:sharedGroup.id}):{items:[]};
+      groupRows=groupShoppingReferences(snapshot.items,location.href);
+      for(const ref of groupRows){
+        if(!database.lists[ref.id])database.lists[ref.id]={name:ref.title,base:[],pending:[],created:true,loaded:false,localOnly:false,token:ref.token,historyOwner:accountOwner};
+        const savedList=database.lists[ref.id];
+        if(savedList.token!==ref.token)continue;
+        savedList.groupId=sharedGroup.id;savedList.groupTitle=ref.title;savedList.historyOwner=accountOwner;
+        if(!savedList.groupPublication)savedList.name=ref.title;
+      }
+      groupReady=true;persist();
+      const pendingHere=!!state?.groupPublication&&state.groupPublication.groupId===sharedGroup?.id;
+      if(!busy&&!closing&&!draftList&&!explicitLink&&(!link||(!groupRows.some(ref=>ref.id===link.id)&&!pendingHere))){
+        if(groupRows.length)setLink({id:groupRows[0].id,token:groupRows[0].token});else if(link)clearActiveList();
+      }
+    }finally{groupLoading=false;render();}
+  })().finally(()=>{groupPromise=null;});
+  return groupPromise;
+}
+async function refreshLists(){
+  if(cyclePromise)return cyclePromise;
+  if(busy||closing||creating)return;
+  cyclePromise=(async()=>{
+    let discoveryError;
+    try{await groupLists();}catch(error){discoveryError=error;}
+    await sync();
+    for(const [id,list] of Object.entries(database.lists)){
+      if(id!==link?.id&&list.historyOwner===accountOwner&&(list.pending.length||list.groupPublication||list.closure?.pending||list.creating))await sync({id,token:list.token});
+    }
+    if(discoveryError)notice(discoveryError.message||'Non è stato possibile aggiornare le liste del gruppo.',true);
+  })().finally(()=>{cyclePromise=null;});
+  return cyclePromise;
+}
+$('#shopping-lists').onchange=event=>{if(busy||closing||groupLoading||creating){renderListPicker();return;}const id=event.target.value;if(!database.lists[id])return;explicitLink=!groupRows.some(ref=>ref.id===id);setLink({id,token:database.lists[id].token});void sync();};
+$('#shopping-group').onchange=event=>{
+  if(busy||closing||groupLoading||creating){renderListPicker();return;}
+  const chosen=event.target.value;if(!availableGroups.some(group=>group.id===chosen))return;
+  const url=new URL(location.href);url.searchParams.set('group',chosen);url.hash='';history.replaceState(null,'',url.pathname+url.search);
+  explicitLink=false;draftList=false;clearActiveList();void refreshLists();
+};
+function newList(){if(busy||closing||groupLoading||creating)return;draftList=true;render();$('#list-name').focus();}
+$('#another-list').onclick=newList;
+$('#cancel-create').onclick=()=>{draftList=false;render();};
+$('#rename-shopping').onclick=async()=>{
+  if(busy||groupLoading||closing||!sharedGroup)return;
+  const name=prompt('Nome della lista',state.name)?.trim();if(!name)return;if(name.length>80){toast('Il nome può avere al massimo 80 caratteri.');return;}
+  creating=true;renderListPicker();
+  try{const snapshot=await auth.rpc('organizer_snapshot',{p_group:sharedGroup.id}),ref=groupShoppingReferences(snapshot.items,location.href).find(ref=>ref.id===link.id);if(!ref)throw Error('La lista non è più presente nel gruppo.');await auth.rpc('organizer_save',{p_group:sharedGroup.id,p_id:ref.resourceId,p_kind:'shopping',p_data:{...ref.data,title:name},p_version:ref.version,p_deleted:false});await groupLists();toast('Nome aggiornato per il gruppo.');}catch(error){notice(error.message,true);}finally{creating=false;render();}
+};
+$('#share-with-group').onclick=async()=>{
+  if(busy||groupLoading||closing||!sharedGroup||!link||!confirm('Condividere questa lista con '+sharedGroup.name+'?'))return;
+  const previous=structuredClone(state);
+  try{
+    if(state.localOnly){const products=itemsNow();state.pending=products.flatMap(item=>[{op_id:crypto.randomUUID(),item_id:item.id,kind:'add',data:{name:item.name,quantity:item.quantity||'',note:item.note||'',price:item.price??null,created_at:item.created_at}},...(item.checked?[{op_id:crypto.randomUUID(),item_id:item.id,kind:'check',data:{checked:true}}]:[])]);state.base=[];state.localOnly=false;state.creating=true;state.created=false;}
+    state.groupPublication={groupId:sharedGroup.id,resourceId:crypto.randomUUID(),name:state.name,href:location.href};
+    try{persist();}catch(error){database.lists[link.id]=state=previous;throw error;}
+    explicitLink=false;render();await sync();await groupLists();
+  }catch(error){notice(error.message,true);render();}
+};
 async function rpc(name, args) {
   const headers = { 'Content-Type': 'application/json', apikey: config.supabasePublishableKey };
   // Le nuove publishable key non sono JWT; l'header Bearer serve solo per le anon key legacy.
@@ -98,7 +175,8 @@ async function rpc(name, args) {
   return response.status === 204 ? null : response.json();
 }
 function render() {
-  $('#welcome').hidden = Boolean(link); $('#workspace').hidden = !link;
+  renderListPicker();
+  $('#welcome').hidden = Boolean(link)&&!draftList; $('#workspace').hidden = !link||draftList;
   if (!link) return;
   $('#list-title').textContent = state.name;
   $('#share').disabled = !configured || state.localOnly || !state.created || !state.loaded;
@@ -221,52 +299,58 @@ function addItem(name, quantity = '', offer = null) {
   const note = offer ? `Offerta dal ${date(offer.valid_from)} al ${date(offer.valid_until)} · pag. ${offer.page}${offer.discount_percent ? ` · sconto ${offer.discount_percent}%` : ''}${offer.conditions ? ` · ${offer.conditions}` : ''}` : '';
   return enqueue('add', crypto.randomUUID(), { name: title.trim().slice(0,160), quantity: quantity.trim(), note: note.slice(0,500), price: offer?.price ?? null, created_at: new Date().toISOString() });
 }
-async function sync() {
-  if (!state || state.localOnly || !configured || busy || !navigator.onLine || blocked) return;
-  busy = true;
+async function sync(target=link) {
+  const list=target&&database.lists[target.id];
+  if (!list || list.localOnly || !configured || busy || !navigator.onLine || (blocked&&target.id===link?.id)) return;
+  busy = true;renderListPicker();
+  let sharingError='';
   try {
-    const credentials = { p_list_id: link.id, p_token: link.token };
-    if (!state.created && state.creating) {
-      await rpc('create_shared_list', { ...credentials, p_name: state.name });
-      state.created = true; state.loaded = true; delete state.creating; persist();
+    const credentials = { p_list_id: target.id, p_token: target.token };
+    if (!list.created && list.creating) {
+      await rpc('create_shared_list', { ...credentials, p_name: list.name });
+      list.created = true; list.loaded = true; delete list.creating; persist();
+    }
+    if(list.groupPublication){
+      try{await publishGroupList({list,id:target.id,token:target.token,publish:args=>auth.rpc('organizer_save',args),snapshot:groupId=>auth.rpc('organizer_snapshot',{p_group:groupId}),persist});}
+      catch(error){sharingError='La lista è salvata, ma la condivisione con il gruppo non è riuscita. Verrà ritentata: '+error.message;}
     }
     // Acquisisce prima i permessi; non invia modifiche ad un link non verificato.
-    if (!state.loaded) {
+    if (!list.loaded) {
       const snapshot = await rpc('read_shared_list', credentials);
-      receiveSnapshot(snapshot); state.created = true; state.loaded = true; persist();
+      receiveSnapshot(snapshot,list); list.created = true; list.loaded = true; persist();
     }
     let count = 0;
-    while (state.pending.length && count++ < 50) {
-      const operation = state.pending[0];
+    while (list.pending.length && count++ < 50) {
+      const operation = list.pending[0];
       let snapshot;
       try { snapshot = await rpc('apply_list_operation', { ...credentials, p_operation: operation }); }
-      catch(error){const latest=await rpc('read_shared_list',credentials).catch(()=>null);if(latest?.receipt){receiveSnapshot(latest);persist();notice('La spesa è stata chiusa da un partecipante. Le modifiche non accettate restano conservate sul dispositivo.',true);return;}throw error;}
-      const previousBase = state.base;
-      state.base = snapshot.items; state.pending.shift();
-      try { persist(); } catch (error) { state.base = previousBase; state.pending.unshift(operation); throw error; }
+      catch(error){const latest=await rpc('read_shared_list',credentials).catch(()=>null);if(latest?.receipt){receiveSnapshot(latest,list);persist();notice('La spesa è stata chiusa da un partecipante. Le modifiche non accettate restano conservate sul dispositivo.',true);return;}throw error;}
+      const previousBase = list.base;
+      list.base = snapshot.items; list.pending.shift();
+      try { persist(); } catch (error) { list.base = previousBase; list.pending.unshift(operation); throw error; }
     }
     const snapshot = await rpc('read_shared_list', credentials);
-    receiveSnapshot(snapshot); persist(); notice('');
-    if(state.closure?.pending){
-      const closure=state.closure;
+    receiveSnapshot(snapshot,list); persist(); notice(sharingError,!!sharingError);
+    if(list.closure?.pending){
+      const closure=list.closure;
       try{
         const closed=await rpc('close_shared_list',{...credentials,p_expected:closure.expected,p_amount:closure.receipt.amount_cents,p_date:closure.receipt.date,p_photos:Object.fromEntries(closure.receipt.items.filter(i=>i.photo).map(i=>[i.id,i.photo]))});
-        receiveSnapshot(closed);persist();
+        receiveSnapshot(closed,list);persist();
       }catch(error){
         const latest=await rpc('read_shared_list',credentials).catch(()=>null);
-        if(latest?.receipt){receiveSnapshot(latest);persist();}
-        else if(error.code==='40001'||error.status===409){delete state.closure;if(latest)receiveSnapshot(latest);persist();notice('La lista è cambiata su un altro dispositivo. Controlla i prodotti e conferma di nuovo la chiusura.',true);}
+        if(latest?.receipt){receiveSnapshot(latest,list);persist();}
+        else if(error.code==='40001'||error.status===409){delete list.closure;if(latest)receiveSnapshot(latest,list);persist();notice('La lista è cambiata su un altro dispositivo. Controlla i prodotti e conferma di nuovo la chiusura.',true);}
         else notice(error.status===404?'Chiusura e storico salvati su questo dispositivo. La sincronizzazione della chiusura richiede l’attivazione del database aggiornato.':'Chiusura salvata sul dispositivo; la sincronizzazione verrà ritentata al ritorno della connessione.',true);
       }
     }
   } catch (error) {
-    if (error.status === 401 || error.status === 403) blocked = true;
+    if ((error.status === 401 || error.status === 403)&&target.id===link?.id) blocked = true;
     notice(error.message || 'Connessione assente. Le modifiche restano sul telefono.', true);
   } finally { busy = false; render(); renderOffers(); if ($('#page-dialog').open) renderPageProducts(); }
 }
-function receiveSnapshot(snapshot){
-  state.base=snapshot.items;state.name=snapshot.name;
-  if(snapshot.receipt){if(state.pending.length)state.rejected=[...(state.rejected||[]),...state.pending];state.pending=[];state.closure={receipt:snapshot.receipt,pending:false};}
+function receiveSnapshot(snapshot,list=state){
+  list.base=snapshot.items;list.name=list.groupTitle||snapshot.name;
+  if(snapshot.receipt){if(list.pending.length)list.rejected=[...(list.rejected||[]),...list.pending];list.pending=[];list.closure={receipt:snapshot.receipt,pending:false};}
 }
 function renderOffers() {
   const todayOffers = activeOffers(catalog.offers ?? []);
@@ -368,18 +452,18 @@ async function loadCatalog() {
   } catch { $('#catalog-status').textContent = 'Impossibile caricare le offerte. Riprova quando torna la connessione.'; $('#flyer-note').textContent = 'Il volantino è disponibile sul sito ufficiale.'; }
 }
 
-$('#create-form').onsubmit = async event => {
-  event.preventDefault(); const name = $('#list-name').value.trim(); if (!name) return;
-  try {
-    const next = { id: crypto.randomUUID(), token: createSecret() };
-    const localOnly=!configured||globalThis.sessionStorage?.getItem('organaizer:mode')==='local';
-    database.lists[next.id] = { name, base: [], pending: [], created: localOnly, creating: !localOnly, loaded: localOnly, localOnly, token: next.token, historyOwner:shoppingOwner(globalThis.sessionStorage) };
-    setLink(next); await sync();
-    if (sharedGroup && state.created) {
-      await auth.rpc('organizer_save', {p_group:sharedGroup.id,p_id:next.id,p_kind:'shopping',p_data:{title:name,status:'open',url:'./shopping.html#'+new URLSearchParams({list:next.id,key:next.token})},p_version:0,p_deleted:false});
-      await groupLists();
-    }
-  } catch (error) { notice(error.message, true); }
+$('#create-form').onsubmit=async event=>{
+  event.preventDefault();const name=$('#list-name').value.trim();if(!name||creating||busy||closing||groupLoading)return;
+  creating=true;renderListPicker();
+  try{
+    await groupLists();
+    if(accountUser&&!sharedGroup)throw Error('Crea un gruppo dalla Home prima di aggiungere una lista condivisa.');
+    if(configured&&!groupReady)throw Error('Non è stato possibile verificare il gruppo. Riprova.');
+    const next={id:crypto.randomUUID(),token:createSecret()},localOnly=!configured||globalThis.sessionStorage?.getItem('organaizer:mode')==='local';
+    const publication=sharedGroup?{groupId:sharedGroup.id,resourceId:crypto.randomUUID(),name,href:location.href}:null;
+    database.lists[next.id]={name,base:[],pending:[],created:localOnly,creating:!localOnly,loaded:localOnly,localOnly,token:next.token,historyOwner:accountOwner,...(publication?{groupId:sharedGroup.id,groupPublication:publication}:{})};
+    explicitLink=false;setLink(next);await sync();await groupLists();
+  }catch(error){notice(error.message,true);}finally{creating=false;render();}
 };
 $('#close-shopping').onclick=()=>{
   const products=itemsNow(),purchased=products.filter(i=>i.checked),estimate=cartEstimate(purchased);
@@ -401,12 +485,7 @@ $('#checkout-form').onsubmit=async event=>{
   }catch(error){$('#checkout-error').textContent=error.message;$('#checkout-error').hidden=false;}
   finally{closing=false;$('#confirm-checkout').disabled=false;render();}
 };
-$('#new-shopping').onclick=()=>{
-  if(busy||closing||blocked){toast('Attendi la fine della sincronizzazione prima di creare una nuova lista.');return;}
-  const previous={link,state,active:database.active};
-  try{database.active=null;persist();link=null;state=null;location.hash='';render();$('#list-name').focus();}
-  catch(error){database.active=previous.active;link=previous.link;state=previous.state;notice(error.message,true);}
-};
+$('#new-shopping').onclick=newList;
 $('#add-form').onsubmit = event => { event.preventDefault(); const input = $('#product-name'); if (input.value.trim() && addItem(input.value, $('#quantity').value)) { input.value = ''; $('#quantity').value = ''; input.focus(); } };
 $('#clear-done').onclick = () => { const done = projectItems(state.base, state.pending).filter(i => i.checked); if (confirm(`Rimuovere ${done.length} prodotti acquistati?`)) enqueueMany(done.map(i => ({kind:'delete',item_id:i.id,data:{}}))); };
 for (const tab of document.querySelectorAll('[data-tab]')) tab.onclick = () => {
@@ -467,8 +546,8 @@ $('#help').onclick = () => $('#info-dialog').showModal();
 for (const close of document.querySelectorAll('dialog .close')) close.onclick = () => close.closest('dialog').close();
 window.addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; $('#install').hidden = false; });
 $('#install').onclick = async () => { if (installPrompt) { await installPrompt.prompt(); installPrompt = null; $('#install').hidden = true; } };
-window.addEventListener('online', () => { render(); void sync(); }); window.addEventListener('offline', render);
-document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderOffers(); void sync(); } });
+window.addEventListener('online', () => { render(); void refreshLists(); }); window.addEventListener('offline', render);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { renderOffers(); void refreshLists(); } });
 // Ogni scheda ha un solo writer della propria coda. Evita che due schede si sovrascrivano.
 window.addEventListener('storage', event => { if (event.key === cacheKey || event.key === legacyCacheKey) { notice('La lista è stata aggiornata in un’altra scheda. Ricarica questa pagina per continuare.', true); blocked = true; render(); } });
 window.addEventListener('hashchange', () => { try { const next = parseLink(location.hash); if (next && (next.id !== link?.id || next.token !== link?.token)) location.reload(); } catch (error) { notice(error.message, true); } });
@@ -484,16 +563,14 @@ try {
     }
   }
   database = JSON.parse(stored || 'null') || database;
-  const next = parseLink(location.hash) || database.active;
+  const fromLink=parseLink(location.hash);explicitLink=!!fromLink;
+  const next = fromLink || database.active;
   if (next) setLink(next); else render();
   if (!configured) notice('Anteprima locale: la lista resta su questo telefono. Per la condivisione occorre collegare Supabase.');
-  void sync();
 } catch (error) { notice(error.message, true); $('#welcome').hidden = false; }
 void loadCatalog();
-setInterval(() => { if (!document.hidden) { void sync(); if (!busy) void groupLists().catch(() => {}); } }, 5000);
+setInterval(() => { if (!document.hidden&&!closing) void refreshLists(); }, 30000);
 
 import './pwa-update.js';
 
-void groupLists().catch(error => notice(error.message, true));
-
-setInterval(() => { if (!document.hidden && !busy) void groupLists().catch(() => {}); }, 10000);
+void refreshLists();
