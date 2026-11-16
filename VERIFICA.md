@@ -1,5 +1,15 @@
 # Verifica della prima versione
 
+## Integrazione OrganAIzer 0.3.0 — 16 novembre 2026
+
+- Confrontato lo ZIP `OrganAIzer_v0.3.0_GitHub_READY.zip` con il commit `417ddf2`: conservati integralmente modulo Spesa, sincronizzazione silenziosa a 30 secondi, più liste per gruppo, code offline, configurazione pubblica e migrazioni SQL. Nessun archivio personale incluso nel commit.
+- Integrati backup/ripristino locale, documentazione e versionamento 0.3.0. Rafforzata la validazione di formato/versione, proprietà pericolose, profondità, date, campi, quote e rimborsi; interrotto il ripristino se cambia la sessione. Corretto il pulsante di importazione aprendo direttamente le Impostazioni.
+- Service worker con risorse statiche esplicitamente ammesse e cache coerente per build. Navigazioni, query, richieste autenticate, risposte private/no-store e redirect esclusi dalla memorizzazione. Fallback offline distinto per Home e Spesa.
+- 65 test JavaScript superati, inclusi tutti i test SQL PGlite; 7 test Python superati e build di produzione riuscita. Aggiornato il vecchio test cache che si aspettava ancora la memorizzazione delle navigazioni.
+- Chromium mobile con service worker reale: importazione confermata e annullata, dati invalidi senza sostituzione, export con metadati, ingresso diretto nelle Impostazioni, URL con query esclusi dalla cache, riapertura offline della Home e creazione/modifica/ricaricamento di una lista locale offline. Nessun errore JavaScript o overflow orizzontale.
+- Verifica remota non distruttiva con la sola chiave pubblica: Google attivo; funzioni dei gruppi esistenti e protette contro l'accesso anonimo; lettura lista con token errato rifiutata. `close_shared_list` ancora assente dalla cache API (`PGRST202`): applicare manualmente `supabase/migrations/002_shopping_history.sql` nel SQL Editor. Nessuna configurazione remota o migrazione eseguita da questa sessione.
+- Le prove browser condivise usano account e PostgreSQL locale di test; non attestano un login OAuth reale o l'installazione su telefoni fisici.
+
 ## Versione nel footer — 14 novembre 2026
 
 - Versione `0.2.1` e identificativo della build visibili nel footer della home e del modulo Spesa, senza richieste di rete aggiuntive.

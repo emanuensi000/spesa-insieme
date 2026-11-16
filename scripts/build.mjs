@@ -12,7 +12,7 @@ await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 await cp(new URL('../public/', import.meta.url), output, { recursive: true });
 await mkdir(new URL('docs/', output), {recursive:true});
-for (const [source,target] of [['REQUISITI.md','REQUISITI.md'],['docs/IMPLEMENTAZIONE.md','IMPLEMENTAZIONE.md'],['docs/LOGIN.md','LOGIN.md'],['supabase/migrations/001_organaizer.sql','001_organaizer.sql'],['supabase/migrations/002_shopping_history.sql','002_shopping_history.sql']]) await cp(new URL('../'+source,import.meta.url),new URL('docs/'+target,output));
+for (const [source,target] of [['RELEASE_NOTES.md','RELEASE_NOTES.md'],['DEPLOY_GITHUB.md','DEPLOY_GITHUB.md'],['REQUISITI.md','REQUISITI.md'],['docs/IMPLEMENTAZIONE.md','IMPLEMENTAZIONE.md'],['docs/LOGIN.md','LOGIN.md'],['supabase/migrations/001_organaizer.sql','001_organaizer.sql'],['supabase/migrations/002_shopping_history.sql','002_shopping_history.sql']]) await cp(new URL('../'+source,import.meta.url),new URL('docs/'+target,output));
 const implementationPath=new URL('docs/IMPLEMENTAZIONE.md',output);
 await writeFile(implementationPath,(await readFile(implementationPath,'utf8')).replace('../supabase/migrations/001_organaizer.sql','./001_organaizer.sql').replace('../supabase/migrations/002_shopping_history.sql','./002_shopping_history.sql'));
 const requirementsPath=new URL('docs/REQUISITI.md',output);
@@ -59,7 +59,7 @@ function icon(size) {
   return Buffer.concat([Buffer.from([137,80,78,71,13,10,26,10]),chunk('IHDR',header),chunk('IDAT',deflateSync(scan)),chunk('IEND',Buffer.alloc(0))]);
 }
 for (const size of [192,512]) await writeFile(new URL(`icons/icon-${size}.png`,output),icon(size));
-const inputs = await Promise.all(['sw.js','pwa-update.js','app.js','core.js','shopping-history.js','shopping-groups.js','styles.css','index.html','shopping.html','organizer.js','organizer-core.js','organizer.css','navigation.css','auth.js','auth-client.js','login.js','manifest.webmanifest','docs/REQUISITI.md','docs/IMPLEMENTAZIONE.md','docs/LOGIN.md','docs/001_organaizer.sql','docs/002_shopping_history.sql','config.js','data/offers.json','data/archived-offers.json'].map(name => readFile(new URL(name, output))));
+const inputs = await Promise.all(['sw.js','pwa-update.js','app.js','core.js','shopping-history.js','shopping-groups.js','styles.css','index.html','shopping.html','organizer.js','organizer-core.js','backup.js','organizer.css','navigation.css','auth.js','auth-client.js','login.js','manifest.webmanifest','docs/RELEASE_NOTES.md','docs/DEPLOY_GITHUB.md','docs/REQUISITI.md','docs/IMPLEMENTAZIONE.md','docs/LOGIN.md','docs/001_organaizer.sql','docs/002_shopping_history.sql','config.js','data/offers.json','data/archived-offers.json'].map(name => readFile(new URL(name, output))));
 const digest = createHash('sha256').update(version).update(Buffer.concat(inputs)).digest('hex').slice(0,12);
 // Il footer identifica la stessa build della cache offline, senza richieste di rete.
 for (const name of ['index.html','shopping.html']) {

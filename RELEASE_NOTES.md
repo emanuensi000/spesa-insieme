@@ -1,0 +1,16 @@
+# OrganAIzer — cronologia delle versioni
+
+## 0.3.0 — 16 novembre 2026
+
+- Ripristino di backup JSON **solo per la modalità locale**, con controllo di formato, dimensioni, gruppi, identificativi, elementi e limiti; conferma obbligatoria prima di sostituire i dati.
+- Esportazione locale ora identificata da formato, versione dello schema e data di esportazione; continua a includere la vista dello storico delle spese, ma **il ripristino NON reimporta lo storico degli scontrini**.
+- Service worker: cache limitata alle risorse statiche allowlist; URL di invito, parametri OAuth, navigazioni personalizzate e risposte dinamiche non vengono salvati nella cache. Navigazione offline sulla shell locale.
+- Test automatici per backup, rifiuto dati malevoli e normalizzazione dei dati locali.
+- Aggiornamento versionamento coerente con la build e istruzioni di pubblicazione e limiti operativi.
+- Integrazione revisionata: controlli di versione, proprietà pericolose, date e quote nei backup; ripristino interrotto in caso di cambio account; cache statica coerente per build, esclusione di risposte autenticate, private, no-store e redirect.
+- Conservate integralmente sincronizzazione silenziosa a 30 secondi, più liste per gruppo e recupero delle code offline della 0.2.2.
+
+## 0.2.2 — base ricevuta
+
+- Gestione gruppi, accesso, attività, turni, appuntamenti, pagamenti condivisi, modulo Spesa, riepiloghi, offline e sincronizzazione Supabase predisposte.
+- Il funzionamento remoto dipende dalle migrazioni e dai provider Supabase attivati; vedere README e documenti di attivazione.

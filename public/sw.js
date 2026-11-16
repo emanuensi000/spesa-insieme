@@ -1,35 +1,40 @@
 const VERSION = 'organaizer-v1-__BUILD_ID__';
-const SHELL = ['./', './index.html', './shopping.html', './organizer.js', './organizer-core.js', './shopping-history.js', './shopping-groups.js', './pwa-update.js', './auth.js', './auth-client.js', './login.js', './organizer.css', './navigation.css', './docs/REQUISITI.md', './docs/IMPLEMENTAZIONE.md', './docs/LOGIN.md', './docs/001_organaizer.sql', './docs/002_shopping_history.sql', './styles.css', './app.js', './core.js', './config.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './data/offers.json', './data/archived-offers.json', ...__FLYER_ASSETS__];
-self.addEventListener('install', event => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(VERSION);
-    // I volantini sono salvati quando consultati: non devono bloccare un aggiornamento.
-    await cache.addAll(SHELL.filter(path => !path.startsWith('./flyers/') && !path.startsWith('./docs/')).map(path => new Request(path, {cache:'reload'})));
-    await self.skipWaiting();
-  })());
+const SHELL = ['./', './index.html', './shopping.html', './organizer.js', './organizer-core.js', './backup.js', './shopping-history.js', './shopping-groups.js', './pwa-update.js', './auth.js', './auth-client.js', './login.js', './organizer.css', './navigation.css', './docs/RELEASE_NOTES.md', './docs/DEPLOY_GITHUB.md', './docs/REQUISITI.md', './docs/IMPLEMENTAZIONE.md', './docs/LOGIN.md', './docs/001_organaizer.sql', './docs/002_shopping_history.sql', './styles.css', './app.js', './core.js', './config.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './data/offers.json', './data/archived-offers.json', ...__FLYER_ASSETS__];
+const scope=new URL('./',self.location.href);
+const staticPaths=new Set(SHELL.map(path=>new URL(path,scope).pathname));
+self.addEventListener('install',event=>{
+ event.waitUntil((async()=>{
+  const cache=await caches.open(VERSION);
+  // Large flyers are cached on demand; app shell must be ready offline.
+  await cache.addAll(SHELL.filter(p=>!p.startsWith('./flyers/')&&!p.startsWith('./docs/')).map(p=>new Request(new URL(p,scope),{cache:'reload'})));
+  await self.skipWaiting();
+ })());
 });
-self.addEventListener('activate', event => { event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => (key.startsWith('organaizer-v1-') || key.startsWith('spesa-v1-')) && key !== VERSION).map(key => caches.delete(key)))).then(() => self.clients.claim())); });
-self.addEventListener('fetch', event => {
-  const request = event.request, url = new URL(request.url);
-  // Nessuna lista, token o risposta del database viene memorizzata dal service worker.
-  if (request.method !== 'GET' || url.origin !== self.location.origin || !url.pathname.startsWith(new URL('./', self.location).pathname)) return;
-  if(url.searchParams.has('code')||url.searchParams.has('error')){
-    event.respondWith(fetch(request).catch(()=>caches.open(VERSION).then(cache=>cache.match('./index.html'))));
-    return;
-  }
-  event.respondWith((async () => {
-    const cache = await caches.open(VERSION);
-    try {
-      const response = await fetch(request);
-      if (response.ok && response.type === 'basic') await cache.put(request, response.clone());
-      return response;
-    } catch {
-      const cached = await cache.match(request);
-      if (cached) return cached;
-      if (request.mode === 'navigate') return (await cache.match('./index.html')) || Response.error();
-      return Response.error();
-    }
-  })());
+self.addEventListener('activate',event=>{
+ event.waitUntil((async()=>{
+  const keys=await caches.keys();
+  await Promise.all(keys.filter(k=>(k.startsWith('organaizer-v1-')||k.startsWith('spesa-v1-'))&&k!==VERSION).map(k=>caches.delete(k)));
+  await self.clients.claim();
+ })());
 });
-
-self.addEventListener('message', event => { if (event.data?.type === 'SKIP_WAITING') self.skipWaiting(); });
+self.addEventListener('fetch',event=>{
+ const request=event.request,url=new URL(request.url);
+ if(request.method!=='GET'||url.origin!==scope.origin||!url.pathname.startsWith(scope.pathname)||request.headers?.has('authorization'))return;
+ // Never cache invitation links, OAuth callback URLs, non-allowlisted resources, or personalized responses.
+ if(request.mode==='navigate'){
+  event.respondWith(fetch(request,{cache:'no-store'}).catch(async()=>{
+   const cache=await caches.open(VERSION);
+   const page=url.pathname.endsWith('/shopping.html')?'./shopping.html':'./index.html';
+   return await cache.match(new URL(page,scope))||Response.error();
+  }));return;
+ }
+ if(!staticPaths.has(url.pathname)||url.search)return;
+ event.respondWith((async()=>{
+  const cache=await caches.open(VERSION);
+  const cached=await cache.match(new URL(url.pathname,scope));
+  // Ogni cache conserva una build coerente; l'aggiornamento passa dal nuovo worker.
+  if(cached)return cached;
+  try{const response=await fetch(request);if(response.ok&&response.type==='basic'&&!response.redirected&&!/(?:^|,)\s*(?:no-store|private)\b/i.test(response.headers.get('cache-control')||''))await cache.put(new URL(url.pathname,scope),response.clone());return response;}catch{return Response.error();}
+ })());
+});
+self.addEventListener('message',event=>{if(event.data?.type==='SKIP_WAITING')self.skipWaiting();});
