@@ -1,4 +1,5 @@
 import config from './config.js';
+import {auth} from './auth.js';
 import { createSecret, parseLink, projectItems, activeOffers, availableOffers, romeDate, money, offerPrice, safeSourceUrl, safeLocalFlyer, groupItems, matchesOffer, cartEstimate } from './core.js';
 import {shoppingOwner, validPhoto, shoppingFingerprint, createReceipt} from './shopping-history.js';
 
@@ -55,6 +56,32 @@ function setLink(next) {
   location.hash = new URLSearchParams({ list: next.id, key: next.token }).toString();
   persist(); render(); renderOffers();
 }
+let sharedGroup = null;
+async function groupLists() {
+  if (sessionStorage.getItem('organaizer:mode') === 'local' || !configured || !await auth.user()) return;
+  const groups = await auth.rpc('organizer_groups');
+  const owner = shoppingOwner(sessionStorage);
+  const saved = JSON.parse(localStorage.getItem(owner) || '{}');
+  sharedGroup = groups.find(g => g.id === saved.active) || groups[0];
+  if (!sharedGroup) return;
+  const snapshot = await auth.rpc('organizer_snapshot', {p_group: sharedGroup.id});
+  for (const item of snapshot.items.filter(i => i.kind === 'shopping' && !i.deleted)) {
+    const ref = parseLink(new URL(item.data.url, location.href).hash);
+    if (!ref) continue;
+    if (!database.lists[ref.id]) database.lists[ref.id] = {name:item.data.title,base:[],pending:[],created:true,loaded:false,localOnly:false,token:ref.token,historyOwner:owner};
+  }
+  persist();
+  const select = $('#shopping-lists'); select.replaceChildren();
+  for (const item of snapshot.items.filter(i => i.kind === 'shopping' && !i.deleted)) {
+    const ref = parseLink(new URL(item.data.url, location.href).hash);
+    if (!ref) continue;
+    const option = document.createElement('option'); option.value = ref.id; option.textContent = item.data.title; select.append(option);
+  }
+  select.value = link?.id || '';
+  if (!link && select.options.length) { const id=select.options[0].value; setLink({id,token:database.lists[id].token}); await sync(); }
+}
+$('#shopping-lists').onchange = event => { if (busy) return; const id=event.target.value; setLink({id,token:database.lists[id].token}); void sync(); };
+$('#another-list').onclick = () => { $('#welcome').hidden=false; $('#list-name').focus(); };
 async function rpc(name, args) {
   const headers = { 'Content-Type': 'application/json', apikey: config.supabasePublishableKey };
   // Le nuove publishable key non sono JWT; l'header Bearer serve solo per le anon key legacy.
@@ -348,6 +375,10 @@ $('#create-form').onsubmit = async event => {
     const localOnly=!configured||globalThis.sessionStorage?.getItem('organaizer:mode')==='local';
     database.lists[next.id] = { name, base: [], pending: [], created: localOnly, creating: !localOnly, loaded: localOnly, localOnly, token: next.token, historyOwner:shoppingOwner(globalThis.sessionStorage) };
     setLink(next); await sync();
+    if (sharedGroup && state.created) {
+      await auth.rpc('organizer_save', {p_group:sharedGroup.id,p_id:next.id,p_kind:'shopping',p_data:{title:name,status:'open',url:'./shopping.html#'+new URLSearchParams({list:next.id,key:next.token})},p_version:0,p_deleted:false});
+      await groupLists();
+    }
   } catch (error) { notice(error.message, true); }
 };
 $('#close-shopping').onclick=()=>{
@@ -459,10 +490,10 @@ try {
   void sync();
 } catch (error) { notice(error.message, true); $('#welcome').hidden = false; }
 void loadCatalog();
-setInterval(() => { if (!document.hidden) void sync(); }, 30000);
-if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) navigator.serviceWorker.register('./sw.js').then(registration => {
-  const offerUpdate = () => { if (registration.waiting && navigator.serviceWorker.controller) { $('#update-app').hidden = false; $('#update-app').onclick = () => registration.waiting?.postMessage({type:'SKIP_WAITING'}); } };
-  offerUpdate(); registration.addEventListener('updatefound',() => registration.installing?.addEventListener('statechange',offerUpdate));
-  document.addEventListener('visibilitychange',() => { if (!document.hidden) void registration.update().catch(()=>{}); });
-  navigator.serviceWorker.addEventListener('controllerchange',() => { if (navigator.serviceWorker.controller && !$('#update-app').hidden) location.reload(); });
-}).catch(() => toast('Installazione offline non disponibile su questo browser.'));
+setInterval(() => { if (!document.hidden) { void sync(); if (!busy) void groupLists().catch(() => {}); } }, 5000);
+
+import './pwa-update.js';
+
+void groupLists().catch(error => notice(error.message, true));
+
+setInterval(() => { if (!document.hidden && !busy) void groupLists().catch(() => {}); }, 10000);
