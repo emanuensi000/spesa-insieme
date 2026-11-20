@@ -1,5 +1,10 @@
 # OrganAIzer — cronologia delle versioni
 
+## 0.3.3 — 20 novembre 2026
+
+- Rimosse le azioni Indietro sotto il logo nella Spesa e nei moduli.
+- Nuovo chevron senza asta a sinistra del logo, con area di tocco da 44 px e nome accessibile. Nei moduli, Profilo e Impostazioni riporta alla Home.
+
 ## 0.3.2 — 20 novembre 2026
 
 - Liste della spesa: menu a tendina sostituito da pulsanti a pillola scorrevoli orizzontalmente, con lista attiva evidenziata, frecce da tastiera e selezione persistente.
