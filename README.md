@@ -2,6 +2,8 @@
 
 **Release 0.3.0 (16 novembre 2026).** Guida rapida alla pubblicazione: [DEPLOY_GITHUB.md](DEPLOY_GITHUB.md); cronologia cumulativa: [RELEASE_NOTES.md](RELEASE_NOTES.md). Il backup può ora essere ripristinato dalla pagina Impostazioni in **modalità locale**, dopo conferma e convalidazione del file (escluso il ripristino dello storico scontrini).
 
+Checklist di prodotto: [1.000 requisiti spuntabili](docs/REQUISITI_1000.md), divisi in funzionalità, UX/UI e robustezza. Verifiche e copertura effettiva: [piano test, regressioni e collaudo grafico](docs/PIANO_TEST_APP.md). La checklist comprende anche sviluppi futuri; il piano distingue i test già automatici dai collaudi browser ancora manuali.
+
 OrganAIzer è una PWA in italiano pensata per organizzare impegni, attività e spese di famiglie e gruppi. La nuova visione e la roadmap sono in [REQUISITI.md](REQUISITI.md).
 
 **Stato implementato:** nuova schermata di accesso, home a quattro card, barra flottante Home / Profilo / Impostazioni, modalità locale, attività ricorrenti, agenda, spese con quote/rimborsi e collegamento alla Spesa. Il backend additivo e i flussi di login sono nel repository; la disponibilità condivisa richiede l’applicazione della migrazione e l’abilitazione dei provider nel progetto Supabase. Vedere [funzioni e attivazione](docs/IMPLEMENTAZIONE.md) per stato e limiti.
