@@ -1,6 +1,6 @@
 {
   "name": "organaizer",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.16",
-    "@playwright/test": "^1.65.1"
+    "@playwright/test": "^1.65.1",
+    "sharp": "^0.35.5"
   }
 }

@@ -1,5 +1,12 @@
 # OrganAIzer — cronologia delle versioni
 
+## 0.3.4 — 20 novembre 2026
+
+- Header condiviso tra Home, moduli, Profilo, Impostazioni e Spesa: stessi ingombri, allineamenti, spaziatura, tipografia e controlli.
+- Nuovo marchio OrganAIzer con monogramma e spunta; lo stesso SVG è usato nel logo e nella favicon.
+- Icone PWA 192/512, variante maskable e icona Apple 180 generate dallo stesso SVG, incluse nella versione della build e nella cache offline.
+- Freccia Indietro nella stessa posizione a sinistra del logo; spazio riservato anche nella Home per evitare spostamenti del marchio.
+
 ## 0.3.3 — 20 novembre 2026
 
 - Rimosse le azioni Indietro sotto il logo nella Spesa e nei moduli.
