@@ -2,3 +2,27 @@
 .app-version{display:block;margin-top:5px;font-size:11px;line-height:1.5;color:var(--muted);overflow-wrap:anywhere}
 
 .app-header{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid #d8ddcf;margin-bottom:24px}.wordmark{display:flex;align-items:center;color:#334f3d;text-decoration:none;font-size:27px;font-weight:700;gap:2px}.brand-symbol{margin-right:10px}.brand-symbol>span{font-size:18px}.ai,.wordmark-dot{color:#9f6640}.edition{display:none}.card-hint,.eyebrow{display:none}.shopping-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0}#estimate-note{display:none}
+
+/* Navigazione da tastiera condivisa dalle due pagine. */
+html { scroll-padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #245b45;
+  outline-offset: 4px;
+  scroll-margin-block: 24px calc(120px + env(safe-area-inset-bottom));
+}
+.skip-link { position: fixed; top: 10px; left: 10px; z-index: 1000;
+  transform: translateY(-200%); padding: 14px 20px; border-radius: 10px;
+  background: #fff; color: #183d2d; font-weight: 700; }
+.skip-link:focus { transform: translateY(0); }
+#main-content:focus { outline: none; }
+@media (pointer: coarse) {
+  .icon-button, .close, .close-dialog, .status-button, .resource-actions button,
+  .date-nav .icon-button, .item-meta button, .item-toggle, .check {
+    min-width: 44px; min-height: 44px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important; transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important; }
+}

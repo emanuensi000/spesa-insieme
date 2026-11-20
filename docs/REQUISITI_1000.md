@@ -4,7 +4,7 @@ Data: 20 novembre 2026. Base esaminata: versione 0.3.0, commit `ac2a76f`.
 
 Questa checklist raccoglie **requisiti della base attuale e sviluppi futuri**, non attesta che 1.000 funzioni siano già implementate. Anche funzioni già presenti restano da accettare nel contesto della release esaminata. Non sostituisce [lo stato di implementazione](IMPLEMENTAZIONE.md), [le verifiche documentate](../VERIFICA.md) o [la visione di prodotto](../REQUISITI.md).
 
-Tutte le caselle iniziali sono intenzionalmente vuote. Una casella vuota significa **non ancora accettato con evidenza associata**, non necessariamente assente dal codice. Una casella spuntata deve indicare nei verbali o nel ticket collegato: commit, ambiente, caso di test ed esito. Un test locale con dati simulati non prova il funzionamento dei provider reali o dei permessi del database remoto.
+Tutte le caselle iniziali sono intenzionalmente vuote. Le accettazioni successive sono documentate in [ACCETTAZIONE_0.3.1.md](ACCETTAZIONE_0.3.1.md). Una casella vuota significa **non ancora accettato con evidenza associata**, non necessariamente assente dal codice. Una casella spuntata deve indicare nei verbali o nel ticket collegato: commit, ambiente, caso di test ed esito. Un test locale con dati simulati non prova il funzionamento dei provider reali o dei permessi del database remoto.
 
 Ogni riga è un requisito distinto con identificativo stabile. Gli ID non vanno rinumerati quando cambia lo stato. Per aggiungere requisiti oltre questo catalogo usare un documento successivo, così questo file mantiene esattamente 1.000 caselle. Requisiti relativi a servizi esterni, costi, notifiche, nuovi provider, migrazioni o trasferimenti dati non ne autorizzano automaticamente l'attivazione.
 
@@ -820,8 +820,8 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **UX-242** — Rendere tutti i collegamenti raggiungibili tramite tastiera.
 - [ ] **UX-243** — Rendere tutti i campi di input raggiungibili tramite tastiera.
 - [ ] **UX-244** — Mantenere un ordine di tabulazione coerente con l'ordine visivo.
-- [ ] **UX-245** — Mostrare un indicatore di focus visibile sui controlli.
-- [ ] **UX-246** — Non rimuovere il focus visibile per esigenze decorative.
+- [x] **UX-245** — Mostrare un indicatore di focus visibile sui controlli.
+- [x] **UX-246** — Non rimuovere il focus visibile per esigenze decorative.
 - [ ] **UX-247** — Consentire l'attivazione dei pulsanti con Invio o Spazio.
 - [ ] **UX-248** — Consentire l'apertura delle offerte senza usare il mouse.
 - [ ] **UX-249** — Consentire la selezione di un prodotto dal riepilogo testuale della pagina.
@@ -839,13 +839,13 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 
 ### Lettori di schermo e semantica (UX-261–UX-280)
 
-- [ ] **UX-261** — Impostare la lingua italiana nel documento HTML corrente.
-- [ ] **UX-262** — Assegnare un titolo documento riconoscibile a ogni pagina principale.
+- [x] **UX-261** — Impostare la lingua italiana nel documento HTML corrente.
+- [x] **UX-262** — Assegnare un titolo documento riconoscibile a ogni pagina principale.
 - [ ] **UX-263** — Usare un'intestazione principale che descriva la schermata.
 - [ ] **UX-264** — Mantenere coerente la gerarchia semantica delle intestazioni.
 - [ ] **UX-265** — Associare etichette accessibili ai pulsanti costituiti da sole icone.
-- [ ] **UX-266** — Associare un nome accessibile alla spunta di ogni prodotto.
-- [ ] **UX-267** — Comunicare lo stato acquistato mediante attributi semantici.
+- [x] **UX-266** — Associare un nome accessibile alla spunta di ogni prodotto.
+- [x] **UX-267** — Comunicare lo stato acquistato mediante attributi semantici.
 - [ ] **UX-268** — Comunicare lo stato espanso dei dettagli del prodotto.
 - [ ] **UX-269** — Comunicare la destinazione corrente della navigazione principale.
 - [ ] **UX-270** — Associare i messaggi di errore ai relativi campi.
@@ -854,7 +854,7 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **UX-273** — Fornire testo alternativo alle foto prodotto informative.
 - [ ] **UX-274** — Escludere dall'albero accessibile le icone puramente decorative.
 - [ ] **UX-275** — Fornire un nome accessibile al visualizzatore del volantino.
-- [ ] **UX-276** — Rendere individuabili le regioni principali della pagina.
+- [x] **UX-276** — Rendere individuabili le regioni principali della pagina.
 - [ ] **UX-277** — Descrivere i valori del grafico storico anche in forma testuale.
 - [ ] **UX-278** — Mantenere le informazioni importanti disponibili quando le immagini non caricano.
 - [ ] **UX-279** — Non inserire azioni indispensabili soltanto nei suggerimenti al passaggio del mouse.
@@ -870,7 +870,7 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **UX-286** — Non attivare un prodotto dopo una pressione lunga usata per scorrere.
 - [ ] **UX-287** — Consentire un'alternativa ai gesti per ogni comando essenziale.
 - [ ] **UX-288** — Non usare il solo swipe per rendere raggiungibile una pagina.
-- [ ] **UX-289** — Rispettare la preferenza di movimento ridotto nelle animazioni.
+- [x] **UX-289** — Rispettare la preferenza di movimento ridotto nelle animazioni.
 - [ ] **UX-290** — Non usare lampeggiamenti per segnalare il salvataggio.
 - [ ] **UX-291** — Limitare l'animazione di riordino al movimento dell'elemento interessato.
 - [ ] **UX-292** — Non animare la scala del testo durante lo spostamento dei prodotti.
@@ -878,7 +878,7 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **UX-294** — Mantenere raggiungibile il comando di invio con tastiera virtuale aperta.
 - [ ] **UX-295** — Non inviare il form per un tocco sul comando Annulla.
 - [ ] **UX-296** — Consentire la selezione del testo nelle note lunghe.
-- [ ] **UX-297** — Non disabilitare lo zoom dell'intera pagina nel viewport.
+- [x] **UX-297** — Non disabilitare lo zoom dell'intera pagina nel viewport.
 - [ ] **UX-298** — Evitare azioni distruttive al solo trascinamento accidentale.
 - [ ] **UX-299** — Verificare la chiusura dei dialoghi con pulsante Indietro Android dove supportato.
 - [ ] **UX-300** — Mantenere l'interfaccia utilizzabile con scorrimento inerziale del telefono.
@@ -1200,10 +1200,10 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **ROB-272** — Testare la conservazione delle foto dopo il cambio edizione del catalogo.
 - [ ] **ROB-273** — Testare il rifiuto dei backup malevoli prima del ripristino.
 - [ ] **ROB-274** — Testare l'esclusione di callback e dati dinamici dalla cache.
-- [ ] **ROB-275** — Conservare scenari browser ripetibili per i principali flussi utente.
-- [ ] **ROB-276** — Integrare in CI i test browser prima di considerarli controlli automatici obbligatori.
+- [x] **ROB-275** — Conservare scenari browser ripetibili per i principali flussi utente.
+- [x] **ROB-276** — Integrare in CI i test browser prima di considerarli controlli automatici obbligatori.
 - [ ] **ROB-277** — Conservare baseline grafiche revisionate prima di usare confronti screenshot.
-- [ ] **ROB-278** — Conservare evidenze di errore dei test browser falliti.
+- [x] **ROB-278** — Conservare evidenze di errore dei test browser falliti.
 - [ ] **ROB-279** — Aggiungere una prova di regressione ripetibile per ogni bug critico corretto.
 - [ ] **ROB-280** — Collegare i test di accettazione agli identificativi dei requisiti verificati.
 

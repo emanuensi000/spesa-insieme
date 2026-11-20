@@ -1,5 +1,14 @@
 # OrganAIzer — cronologia delle versioni
 
+## 0.3.1 — 20 novembre 2026
+
+- Collegamento «Vai al contenuto principale» su entrambe le pagine e regioni principali nominate.
+- Titolo specifico per la Spesa, intestazione principale e nomi accessibili per tutti i dialoghi.
+- Focus visibile condiviso, margine di scorrimento per la barra fissa e controlli touch secondari da almeno 44 px.
+- Preferenza di movimento ridotto applicata anche alle animazioni CSS e agli pseudo-elementi.
+- Suite Playwright portabile: 12 esecuzioni desktop/mobile, con controlli prima del deploy e tracce/screenshot conservati in caso di errore.
+- Accettazione di 12 requisiti documentata in `docs/ACCETTAZIONE_0.3.1.md`; copertura parziale degli altri flussi esplicitata.
+
 ## 0.3.0 — 16 novembre 2026
 
 - Ripristino di backup JSON **solo per la modalità locale**, con controllo di formato, dimensioni, gruppi, identificativi, elementi e limiti; conferma obbligatoria prima di sostituire i dati.

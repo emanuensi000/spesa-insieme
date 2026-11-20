@@ -2,6 +2,18 @@
 
 Data: 20 novembre 2026. Base esaminata: 0.3.0, commit `ac2a76f`. Catalogo associato: [1.000 requisiti](REQUISITI_1000.md).
 
+## Aggiornamento 0.3.1
+
+La versione 0.3.1 aggiunge Playwright come dipendenza di sviluppo e `npm run test:e2e`.
+Installazione browser: `npx playwright install --with-deps chromium`. Su ambienti con home non scrivibile usare `PLAYWRIGHT_BROWSERS_PATH` in una directory scrivibile, sia per l'installazione sia per i test.
+Il workflow Pages esegue anche questa suite prima della build finale e conserva `test-results/` per 7 giorni in caso di errore. Sono 6 scenari eseguiti su Chromium desktop e Pixel 7 emulato (12 esecuzioni), non prove su telefoni fisici. Provider e database sono esclusi tramite configurazione simulata; service worker bloccato in questa suite browser, verificato dalla suite dedicata.
+
+Evidenze e limiti: [ACCETTAZIONE_0.3.1.md](ACCETTAZIONE_0.3.1.md).
+
+## Inventario storico della base 0.3.0
+
+Le sezioni seguenti descrivono la base prima della 0.3.1; le indicazioni di assenza di Playwright e test browser in CI sono superate dall'aggiornamento sopra.
+
 ## Cosa viene eseguito davvero
 
 Il workflow [pages.yml](../.github/workflows/pages.yml) parte con un push su `main` oppure con avvio manuale. Esegue `npm ci`, `npm test`, la suite Python e la build. Pubblica su GitHub Pages soltanto dopo il successo del job di build. In CI usa Node.js 22 e Python 3.12. Le dipendenze di test sono in [package.json](../package.json) e nel lockfile.

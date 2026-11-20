@@ -1,6 +1,6 @@
 {
   "name": "organaizer",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,12 +8,14 @@
     "build": "node scripts/build.mjs",
     "test": "node --test tests/*.test.mjs",
     "offers:discover": "python scripts/offers.py discover",
-    "offers:import": "python scripts/offers.py import"
+    "offers:import": "python scripts/offers.py import",
+    "test:e2e": "playwright test"
   },
   "engines": {
     "node": ">=22"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.16"
+    "@electric-sql/pglite": "^0.5.16",
+    "@playwright/test": "^1.65.1"
   }
 }
