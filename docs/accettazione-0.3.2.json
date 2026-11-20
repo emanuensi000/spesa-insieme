@@ -1,0 +1,644 @@
+{
+  "version": "0.3.2",
+  "originalAccepted": 102,
+  "additionalAccepted": 1,
+  "requirements": [
+    {
+      "id": "FUN-126",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-127",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-128",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-132",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-133",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-159",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-181",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-182",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-183",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-184",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-185",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-186",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-187",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-286",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-295",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-296",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-297",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-306",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-307",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-308",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-311",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-313",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-336",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-346",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-348",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-349",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-353",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-354",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-355",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-356",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-358",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-362",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-363",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-364",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-365",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-366",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-367",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "FUN-372",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-373",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-374",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-375",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-376",
+      "tests": [
+        "tests/requirements.test.mjs",
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-377",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-380",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "FUN-401",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "ROB-041",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-042",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-046",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-047",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-146",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-147",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-148",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-149",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-150",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-151",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-152",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-153",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-154",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-155",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-156",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-161",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-162",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-163",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-164",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-165",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-166",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-167",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-168",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-169",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-170",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-171",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-172",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-173",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-174",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-175",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-176",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-177",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-178",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-179",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "ROB-180",
+      "tests": [
+        "tests/browser/requirements.spec.mjs"
+      ]
+    },
+    {
+      "id": "ROB-181",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-182",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-187",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-188",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-189",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-190",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-191",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-192",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-193",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-194",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-195",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-200",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-252",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-253",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-261",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-262",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-263",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-264",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-265",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-266",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-267",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-268",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    },
+    {
+      "id": "ROB-280",
+      "tests": [
+        "tests/requirements.test.mjs"
+      ]
+    }
+  ]
+}

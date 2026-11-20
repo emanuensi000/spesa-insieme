@@ -156,3 +156,7 @@ Verifiche del 12 novembre 2026:
 - Il login OAuth/SMS con veri provider non è stato provato: le impostazioni pubbliche Supabase indicano Google, Facebook e telefono disabilitati. Non sono state applicate migrazioni al database remoto né modificate configurazioni di provider.
 
 Le prove Chromium usano un database di test separato, non attestano l’attivazione delle nuove RPC nel progetto remoto. Installazione e safe area vanno provate anche su dispositivi Android/iOS fisici.
+
+## 0.3.2 — blocco requisiti e slider liste
+
+Evidenze, ambiente, limiti e matrice ID → prova in [ACCETTAZIONE_0.3.2.md](docs/ACCETTAZIONE_0.3.2.md). Suite dedicata: 85 casi. Suite browser: 54 esecuzioni desktop/mobile. Nuovi comportamenti: slider liste, anteprima backup, reset preferenze, validazione rafforzata, gruppo attivo locale corretto e avviso prezzi visibile. Nessuna scrittura su dati remoti o migrazione SQL.

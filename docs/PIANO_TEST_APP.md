@@ -2,6 +2,12 @@
 
 Data: 20 novembre 2026. Base esaminata: 0.3.0, commit `ac2a76f`. Catalogo associato: [1.000 requisiti](REQUISITI_1000.md).
 
+## Aggiornamento 0.3.2
+
+La suite include 150 casi JavaScript totali, di cui 85 casi dedicati in `tests/requirements.test.mjs` e 21 nuovi scenari browser in `tests/browser/requirements.spec.mjs` (42 esecuzioni). Con i precedenti 6 scenari browser il totale è 54 esecuzioni. La matrice [ACCETTAZIONE_0.3.2.md](ACCETTAZIONE_0.3.2.md) e il manifest [accettazione-0.3.2.json](accettazione-0.3.2.json) associano gli ID ai sorgenti di prova. ROB-280 verifica automaticamente conteggio, unicità, esistenza dei casi e corrispondenza della checklist: 102 ulteriori requisiti originari più il nuovo slider FUN-401.
+
+Nuove prove: selezione liste e tastiera, overflow responsive, stato attivo dopo reload, anteprima e annullamento backup, cambio sessione durante lettura, ripristino completo, reset preferenze, sette ricorrenze, filtri Home, statistiche, carrello e filtri catalogo. Le fixture sono sintetiche e i provider remoti non vengono contattati. Le caselle spuntate non attestano certificazioni o collaudi su telefoni fisici.
+
 ## Aggiornamento 0.3.1
 
 La versione 0.3.1 aggiunge Playwright come dipendenza di sviluppo e `npm run test:e2e`.
@@ -146,7 +152,7 @@ Sorgente: [core.test.mjs](../tests/core.test.mjs). Esecuzione: `node --test test
 - **AUT-049** — fonti esterne o protocolli eseguibili sono rifiutati.
 - **AUT-050** — si possono scegliere anche le offerte future senza confonderle con quelle valide oggi.
 - **AUT-051** — uno sconto senza prezzo non diventa un prodotto a zero euro.
-- **AUT-052** — la stima conta tutte le unità, distingue acquistati e prezzi mancanti senza errori sui centesimi.
+- **AUT-054** — la stima conta tutte le unità, distingue acquistati e prezzi mancanti senza errori sui centesimi.
 - **AUT-053** — la selezione distingue pagina 1 e 10, edizioni e prezzi diversi.
 
 ### database.test.mjs

@@ -4,7 +4,7 @@ Data: 20 novembre 2026. Base esaminata: versione 0.3.0, commit `ac2a76f`.
 
 Questa checklist raccoglie **requisiti della base attuale e sviluppi futuri**, non attesta che 1.000 funzioni siano già implementate. Anche funzioni già presenti restano da accettare nel contesto della release esaminata. Non sostituisce [lo stato di implementazione](IMPLEMENTAZIONE.md), [le verifiche documentate](../VERIFICA.md) o [la visione di prodotto](../REQUISITI.md).
 
-Tutte le caselle iniziali sono intenzionalmente vuote. Le accettazioni successive sono documentate in [ACCETTAZIONE_0.3.1.md](ACCETTAZIONE_0.3.1.md). Una casella vuota significa **non ancora accettato con evidenza associata**, non necessariamente assente dal codice. Una casella spuntata deve indicare nei verbali o nel ticket collegato: commit, ambiente, caso di test ed esito. Un test locale con dati simulati non prova il funzionamento dei provider reali o dei permessi del database remoto.
+Tutte le caselle iniziali sono intenzionalmente vuote. Le accettazioni successive sono documentate in [ACCETTAZIONE_0.3.1.md](ACCETTAZIONE_0.3.1.md) e [ACCETTAZIONE_0.3.2.md](ACCETTAZIONE_0.3.2.md). Il nuovo requisito slider è in [REQUISITI_SUCCESSIVI.md](REQUISITI_SUCCESSIVI.md). Una casella vuota significa **non ancora accettato con evidenza associata**, non necessariamente assente dal codice. Una casella spuntata deve indicare nei verbali o nel ticket collegato: commit, ambiente, caso di test ed esito. Un test locale con dati simulati non prova il funzionamento dei provider reali o dei permessi del database remoto.
 
 Ogni riga è un requisito distinto con identificativo stabile. Gli ID non vanno rinumerati quando cambia lo stato. Per aggiungere requisiti oltre questo catalogo usare un documento successivo, così questo file mantiene esattamente 1.000 caselle. Requisiti relativi a servizi esterni, costi, notifiche, nuovi provider, migrazioni o trasferimenti dati non ne autorizzano automaticamente l'attivazione.
 
@@ -221,14 +221,14 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **FUN-123** — Mostrare la card Attività e turni nella Home.
 - [ ] **FUN-124** — Mostrare la card Agenda e salute nella Home.
 - [ ] **FUN-125** — Aprire il modulo selezionato dalla relativa card.
-- [ ] **FUN-126** — Filtrare i riepiloghi della Home sul giorno corrente.
-- [ ] **FUN-127** — Filtrare i riepiloghi sulla settimana selezionata.
-- [ ] **FUN-128** — Filtrare i riepiloghi sul mese selezionato.
+- [x] **FUN-126** — Filtrare i riepiloghi della Home sul giorno corrente.
+- [x] **FUN-127** — Filtrare i riepiloghi sulla settimana selezionata.
+- [x] **FUN-128** — Filtrare i riepiloghi sul mese selezionato.
 - [ ] **FUN-129** — Passare al periodo precedente mantenendo il tipo di filtro.
 - [ ] **FUN-130** — Passare al periodo successivo mantenendo il tipo di filtro.
 - [ ] **FUN-131** — Ritornare al periodo corrente con un'azione dedicata.
-- [ ] **FUN-132** — Includere gli elementi non programmati nei riepiloghi appropriati.
-- [ ] **FUN-133** — Mantenere visibili gli elementi arretrati non completati.
+- [x] **FUN-132** — Includere gli elementi non programmati nei riepiloghi appropriati.
+- [x] **FUN-133** — Mantenere visibili gli elementi arretrati non completati.
 - [ ] **FUN-134** — Consentire di includere i completati nei riepiloghi.
 - [ ] **FUN-135** — Applicare il filtro temporale in modo coerente alle quattro card.
 - [ ] **FUN-136** — Mostrare il totale dei pagamenti aperti nel periodo.
@@ -257,7 +257,7 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **FUN-156** — Avviare l'invito al gruppo dalla sezione Profilo.
 - [ ] **FUN-157** — Consentire di scegliere una lingua tra quelle effettivamente tradotte.
 - [ ] **FUN-158** — Consentire di scegliere il formato di visualizzazione delle date.
-- [ ] **FUN-159** — Consentire il ripristino delle preferenze predefinite.
+- [x] **FUN-159** — Consentire il ripristino delle preferenze predefinite.
 - [ ] **FUN-160** — Mantenere le preferenze di account separate da quelle locali.
 
 ### Attività e turni (FUN-161–FUN-180)
@@ -285,13 +285,13 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 
 ### Ricorrenze e turnazioni (FUN-181–FUN-200)
 
-- [ ] **FUN-181** — Impostare una ricorrenza giornaliera per un'attività.
-- [ ] **FUN-182** — Impostare una ricorrenza settimanale per un'attività.
-- [ ] **FUN-183** — Impostare una ricorrenza mensile per un'attività.
-- [ ] **FUN-184** — Impostare una ricorrenza bimestrale per un'attività.
-- [ ] **FUN-185** — Impostare una ricorrenza trimestrale per un'attività.
-- [ ] **FUN-186** — Impostare una ricorrenza annuale per un'attività.
-- [ ] **FUN-187** — Rimuovere la ricorrenza da un'attività.
+- [x] **FUN-181** — Impostare una ricorrenza giornaliera per un'attività.
+- [x] **FUN-182** — Impostare una ricorrenza settimanale per un'attività.
+- [x] **FUN-183** — Impostare una ricorrenza mensile per un'attività.
+- [x] **FUN-184** — Impostare una ricorrenza bimestrale per un'attività.
+- [x] **FUN-185** — Impostare una ricorrenza trimestrale per un'attività.
+- [x] **FUN-186** — Impostare una ricorrenza annuale per un'attività.
+- [x] **FUN-187** — Rimuovere la ricorrenza da un'attività.
 - [ ] **FUN-188** — Generare la successiva occorrenza al completamento di quella corrente.
 - [ ] **FUN-189** — Conservare il titolo nella successiva occorrenza.
 - [ ] **FUN-190** — Conservare le note nella successiva occorrenza.
@@ -405,7 +405,7 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **FUN-283** — Associare note a un prodotto della lista.
 - [ ] **FUN-284** — Associare un prezzo unitario quando conosciuto.
 - [ ] **FUN-285** — Aggiungere un'offerta del catalogo alla lista attiva.
-- [ ] **FUN-286** — Raggruppare le unità equivalenti dello stesso prodotto.
+- [x] **FUN-286** — Raggruppare le unità equivalenti dello stesso prodotto.
 - [ ] **FUN-287** — Aumentare le unità con il controllo più.
 - [ ] **FUN-288** — Diminuire le unità con il controllo meno.
 - [ ] **FUN-289** — Impostare direttamente un numero intero di unità.
@@ -414,9 +414,9 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **FUN-292** — Rimuovere tutte le unità di un prodotto raggruppato.
 - [ ] **FUN-293** — Rimuovere collettivamente i prodotti già acquistati dopo conferma.
 - [ ] **FUN-294** — Mostrare il prezzo totale delle unità raggruppate.
-- [ ] **FUN-295** — Mostrare la stima totale del carrello.
-- [ ] **FUN-296** — Distinguere nella stima acquistati e prodotti ancora da acquistare.
-- [ ] **FUN-297** — Segnalare i prodotti senza prezzo esclusi dalla stima.
+- [x] **FUN-295** — Mostrare la stima totale del carrello.
+- [x] **FUN-296** — Distinguere nella stima acquistati e prodotti ancora da acquistare.
+- [x] **FUN-297** — Segnalare i prodotti senza prezzo esclusi dalla stima.
 - [ ] **FUN-298** — Consentire l'espansione dei dettagli di un prodotto acquistato.
 - [ ] **FUN-299** — Mostrare la foto del prodotto quando esiste una sorgente valida.
 - [ ] **FUN-300** — Consentire la modifica del nome di un prodotto manuale esistente.
@@ -428,14 +428,14 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **FUN-303** — Cercare un'offerta per marca.
 - [ ] **FUN-304** — Filtrare le offerte per reparto.
 - [ ] **FUN-305** — Filtrare le offerte per pagina del volantino.
-- [ ] **FUN-306** — Mostrare soltanto le offerte valide oggi su richiesta.
-- [ ] **FUN-307** — Mostrare insieme le offerte in corso e quelle future su richiesta.
-- [ ] **FUN-308** — Includere le offerte scadute soltanto con un filtro esplicito.
+- [x] **FUN-306** — Mostrare soltanto le offerte valide oggi su richiesta.
+- [x] **FUN-307** — Mostrare insieme le offerte in corso e quelle future su richiesta.
+- [x] **FUN-308** — Includere le offerte scadute soltanto con un filtro esplicito.
 - [ ] **FUN-309** — Mostrare la data iniziale di un'offerta futura.
 - [ ] **FUN-310** — Mostrare la scadenza dell'offerta.
-- [ ] **FUN-311** — Mostrare il prezzo per unità di misura quando presente.
+- [x] **FUN-311** — Mostrare il prezzo per unità di misura quando presente.
 - [ ] **FUN-312** — Mostrare le condizioni Fidelity associate al prezzo.
-- [ ] **FUN-313** — Mostrare uno sconto percentuale senza inventare il prezzo finale.
+- [x] **FUN-313** — Mostrare uno sconto percentuale senza inventare il prezzo finale.
 - [ ] **FUN-314** — Caricare ulteriori risultati con il comando dedicato.
 - [ ] **FUN-315** — Aprire la pagina originale associata all'offerta.
 - [ ] **FUN-316** — Segnalare le offerte già selezionate nella lista corrente.
@@ -461,7 +461,7 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **FUN-333** — Mostrare il numero della pagina corrente e il totale.
 - [ ] **FUN-334** — Aprire il PDF locale del volantino.
 - [ ] **FUN-335** — Aprire il sito ufficiale della fonte.
-- [ ] **FUN-336** — Conservare il ritaglio fotografico del prodotto già salvato.
+- [x] **FUN-336** — Conservare il ritaglio fotografico del prodotto già salvato.
 - [ ] **FUN-337** — Consultare una pagina già scaricata senza connessione.
 - [ ] **FUN-338** — Consentire la selezione di prodotti in più pagine consecutive.
 - [ ] **FUN-339** — Mostrare le promozioni con rinvio alla pagina delle condizioni.
@@ -474,44 +474,44 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **FUN-343** — Consentire la correzione del totale secondo lo scontrino reale.
 - [ ] **FUN-344** — Consentire la scelta della data di acquisto.
 - [ ] **FUN-345** — Mostrare quanti prodotti acquistati entreranno nello scontrino.
-- [ ] **FUN-346** — Conservare nel dettaglio anche i prodotti non acquistati.
+- [x] **FUN-346** — Conservare nel dettaglio anche i prodotti non acquistati.
 - [ ] **FUN-347** — Confermare la chiusura prima di archiviare la lista.
-- [ ] **FUN-348** — Conservare quantità e prezzi nello scontrino storico.
-- [ ] **FUN-349** — Conservare le foto dei prodotti nello scontrino storico.
+- [x] **FUN-348** — Conservare quantità e prezzi nello scontrino storico.
+- [x] **FUN-349** — Conservare le foto dei prodotti nello scontrino storico.
 - [ ] **FUN-350** — Mostrare lo storico delle spese nel Profilo.
 - [ ] **FUN-351** — Filtrare gli scontrini per mese.
 - [ ] **FUN-352** — Mostrare tutti gli scontrini con un filtro dedicato.
-- [ ] **FUN-353** — Mostrare il totale pagato nel periodo selezionato.
-- [ ] **FUN-354** — Mostrare il numero di spese concluse nel periodo.
-- [ ] **FUN-355** — Mostrare la media per spesa nel periodo selezionato.
-- [ ] **FUN-356** — Mostrare l'andamento dei sei mesi previsti dal riepilogo.
+- [x] **FUN-353** — Mostrare il totale pagato nel periodo selezionato.
+- [x] **FUN-354** — Mostrare il numero di spese concluse nel periodo.
+- [x] **FUN-355** — Mostrare la media per spesa nel periodo selezionato.
+- [x] **FUN-356** — Mostrare l'andamento dei sei mesi previsti dal riepilogo.
 - [ ] **FUN-357** — Aprire il dettaglio completo di uno scontrino.
-- [ ] **FUN-358** — Distinguere il totale pagato dalla stima dei prezzi annotati.
+- [x] **FUN-358** — Distinguere il totale pagato dalla stima dei prezzi annotati.
 - [ ] **FUN-359** — Segnalare una chiusura locale ancora da sincronizzare.
 - [ ] **FUN-360** — Consentire l'esportazione dello storico scontrini come dato consultabile.
 
 ### Backup, esportazione e ripristino (FUN-361–FUN-380)
 
 - [ ] **FUN-361** — Esportare i dati locali in un file JSON scaricabile.
-- [ ] **FUN-362** — Includere formato e versione dello schema nel backup esportato.
-- [ ] **FUN-363** — Includere la data di esportazione nel backup.
-- [ ] **FUN-364** — Includere i gruppi locali nel backup.
-- [ ] **FUN-365** — Includere le attività locali nel backup.
-- [ ] **FUN-366** — Includere il profilo locale nel backup.
-- [ ] **FUN-367** — Includere le preferenze locali nel backup.
+- [x] **FUN-362** — Includere formato e versione dello schema nel backup esportato.
+- [x] **FUN-363** — Includere la data di esportazione nel backup.
+- [x] **FUN-364** — Includere i gruppi locali nel backup.
+- [x] **FUN-365** — Includere le attività locali nel backup.
+- [x] **FUN-366** — Includere il profilo locale nel backup.
+- [x] **FUN-367** — Includere le preferenze locali nel backup.
 - [ ] **FUN-368** — Includere una vista consultabile dello storico della spesa nell'export.
 - [ ] **FUN-369** — Selezionare un file di backup dalle Impostazioni locali.
 - [ ] **FUN-370** — Mostrare una conferma prima della sostituzione dei dati locali.
 - [ ] **FUN-371** — Consentire l'annullamento del ripristino dopo la selezione del file.
-- [ ] **FUN-372** — Ripristinare i gruppi di un backup valido.
-- [ ] **FUN-373** — Ripristinare le risorse locali di un backup valido.
-- [ ] **FUN-374** — Ripristinare il nome del profilo da un backup valido.
-- [ ] **FUN-375** — Ripristinare le preferenze supportate del backup.
-- [ ] **FUN-376** — Selezionare un gruppo valido dopo il ripristino.
-- [ ] **FUN-377** — Esplicitare che lo storico scontrini non è ripristinato nella versione attuale.
+- [x] **FUN-372** — Ripristinare i gruppi di un backup valido.
+- [x] **FUN-373** — Ripristinare le risorse locali di un backup valido.
+- [x] **FUN-374** — Ripristinare il nome del profilo da un backup valido.
+- [x] **FUN-375** — Ripristinare le preferenze supportate del backup.
+- [x] **FUN-376** — Selezionare un gruppo valido dopo il ripristino.
+- [x] **FUN-377** — Esplicitare che lo storico scontrini non è ripristinato nella versione attuale.
 - [ ] **FUN-378** — Mostrare l'esito positivo del ripristino completato.
 - [ ] **FUN-379** — Consentire l'esportazione dei dati condivisi autorizzati dell'account.
-- [ ] **FUN-380** — Consentire un'anteprima dei gruppi che verranno sostituiti dal backup.
+- [x] **FUN-380** — Consentire un'anteprima dei gruppi che verranno sostituiti dal backup.
 
 ### Promemoria, spazi tematici e integrazioni (FUN-381–FUN-400)
 
@@ -933,13 +933,13 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 
 ### Token, link e inviti (ROB-041–ROB-060)
 
-- [ ] **ROB-041** — Generare token di condivisione con una sorgente crittografica casuale.
-- [ ] **ROB-042** — Usare token lista con almeno 256 bit di entropia.
+- [x] **ROB-041** — Generare token di condivisione con una sorgente crittografica casuale.
+- [x] **ROB-042** — Usare token lista con almeno 256 bit di entropia.
 - [ ] **ROB-043** — Conservare nel database soltanto l'hash del token lista.
 - [ ] **ROB-044** — Verificare l'hash del token prima di leggere i prodotti.
 - [ ] **ROB-045** — Verificare l'hash del token prima di applicare un'operazione.
-- [ ] **ROB-046** — Rifiutare identificativi lista non conformi al formato previsto.
-- [ ] **ROB-047** — Rifiutare token incompleti o con caratteri non ammessi.
+- [x] **ROB-046** — Rifiutare identificativi lista non conformi al formato previsto.
+- [x] **ROB-047** — Rifiutare token incompleti o con caratteri non ammessi.
 - [ ] **ROB-048** — Conservare i token privati nel frammento dei collegamenti condivisi.
 - [ ] **ROB-049** — Non trasmettere il frammento all'hosting statico tramite richieste HTTP.
 - [ ] **ROB-050** — Impostare una politica di referrer che non esponga collegamenti riservati.
@@ -1053,17 +1053,17 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **ROB-143** — Precaricare soltanto le risorse essenziali per l'avvio offline.
 - [ ] **ROB-144** — Scaricare le pagine pesanti dei volantini quando vengono consultate.
 - [ ] **ROB-145** — Non bloccare l'installazione della shell per un volantino non disponibile.
-- [ ] **ROB-146** — Limitare la cache ai percorsi statici esplicitamente ammessi.
-- [ ] **ROB-147** — Non memorizzare navigazioni personalizzate nella cache.
-- [ ] **ROB-148** — Non memorizzare URL con query potenzialmente riservate.
-- [ ] **ROB-149** — Non intercettare richieste verso l'origine Supabase come risorse statiche.
-- [ ] **ROB-150** — Non memorizzare richieste che includono autorizzazione.
-- [ ] **ROB-151** — Non memorizzare risposte dichiarate private.
-- [ ] **ROB-152** — Non memorizzare risposte dichiarate no-store.
-- [ ] **ROB-153** — Non memorizzare redirect come contenuto statico atteso.
-- [ ] **ROB-154** — Non mescolare script di build diverse nella stessa cache attiva.
-- [ ] **ROB-155** — Usare la shell Home come ripiego per la navigazione Home offline.
-- [ ] **ROB-156** — Usare la shell Spesa come ripiego per la navigazione Spesa offline.
+- [x] **ROB-146** — Limitare la cache ai percorsi statici esplicitamente ammessi.
+- [x] **ROB-147** — Non memorizzare navigazioni personalizzate nella cache.
+- [x] **ROB-148** — Non memorizzare URL con query potenzialmente riservate.
+- [x] **ROB-149** — Non intercettare richieste verso l'origine Supabase come risorse statiche.
+- [x] **ROB-150** — Non memorizzare richieste che includono autorizzazione.
+- [x] **ROB-151** — Non memorizzare risposte dichiarate private.
+- [x] **ROB-152** — Non memorizzare risposte dichiarate no-store.
+- [x] **ROB-153** — Non memorizzare redirect come contenuto statico atteso.
+- [x] **ROB-154** — Non mescolare script di build diverse nella stessa cache attiva.
+- [x] **ROB-155** — Usare la shell Home come ripiego per la navigazione Home offline.
+- [x] **ROB-156** — Usare la shell Spesa come ripiego per la navigazione Spesa offline.
 - [ ] **ROB-157** — Eliminare le vecchie cache dell'app dopo l'attivazione della nuova versione.
 - [ ] **ROB-158** — Non eliminare cache appartenenti ad altre applicazioni della stessa origine.
 - [ ] **ROB-159** — Evitare un ciclo infinito di reload durante il cambio di worker.
@@ -1071,49 +1071,49 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 
 ### Validazione e sicurezza dei backup (ROB-161–ROB-180)
 
-- [ ] **ROB-161** — Rifiutare un file di importazione superiore a 2 MB.
-- [ ] **ROB-162** — Rifiutare un file che non contiene JSON leggibile.
-- [ ] **ROB-163** — Rifiutare un backup con formato dichiarato non supportato.
-- [ ] **ROB-164** — Rifiutare un backup con versione dello schema non supportata.
-- [ ] **ROB-165** — Accettare gli export storici previsti dalla compatibilità dichiarata.
-- [ ] **ROB-166** — Rifiutare proprietà pericolose anche dentro oggetti annidati.
-- [ ] **ROB-167** — Rifiutare strutture con profondità superiore al limite stabilito.
-- [ ] **ROB-168** — Rifiutare gruppi con identificativi duplicati nel backup.
-- [ ] **ROB-169** — Rifiutare risorse associate a gruppi non dichiarati nel backup.
-- [ ] **ROB-170** — Rifiutare un gruppo privo del relativo snapshot.
-- [ ] **ROB-171** — Rifiutare identificativi risorsa duplicati nello stesso snapshot.
-- [ ] **ROB-172** — Rifiutare campi testuali con valori di tipo non testuale.
-- [ ] **ROB-173** — Rifiutare date formalmente scritte ma inesistenti nel calendario.
-- [ ] **ROB-174** — Rifiutare quote con importi negativi o non interi.
-- [ ] **ROB-175** — Rifiutare rimborsi con strutture non supportate.
-- [ ] **ROB-176** — Rifiutare appuntamenti riservati in un backup da ripristinare localmente.
-- [ ] **ROB-177** — Normalizzare i membri ripristinati secondo il modello locale.
-- [ ] **ROB-178** — Non ripristinare autorizzazioni remote dichiarate dal file importato.
-- [ ] **ROB-179** — Interrompere il ripristino se cambia la sessione durante la lettura del file.
-- [ ] **ROB-180** — Non alterare i dati correnti se l'utente annulla la conferma finale.
+- [x] **ROB-161** — Rifiutare un file di importazione superiore a 2 MB.
+- [x] **ROB-162** — Rifiutare un file che non contiene JSON leggibile.
+- [x] **ROB-163** — Rifiutare un backup con formato dichiarato non supportato.
+- [x] **ROB-164** — Rifiutare un backup con versione dello schema non supportata.
+- [x] **ROB-165** — Accettare gli export storici previsti dalla compatibilità dichiarata.
+- [x] **ROB-166** — Rifiutare proprietà pericolose anche dentro oggetti annidati.
+- [x] **ROB-167** — Rifiutare strutture con profondità superiore al limite stabilito.
+- [x] **ROB-168** — Rifiutare gruppi con identificativi duplicati nel backup.
+- [x] **ROB-169** — Rifiutare risorse associate a gruppi non dichiarati nel backup.
+- [x] **ROB-170** — Rifiutare un gruppo privo del relativo snapshot.
+- [x] **ROB-171** — Rifiutare identificativi risorsa duplicati nello stesso snapshot.
+- [x] **ROB-172** — Rifiutare campi testuali con valori di tipo non testuale.
+- [x] **ROB-173** — Rifiutare date formalmente scritte ma inesistenti nel calendario.
+- [x] **ROB-174** — Rifiutare quote con importi negativi o non interi.
+- [x] **ROB-175** — Rifiutare rimborsi con strutture non supportate.
+- [x] **ROB-176** — Rifiutare appuntamenti riservati in un backup da ripristinare localmente.
+- [x] **ROB-177** — Normalizzare i membri ripristinati secondo il modello locale.
+- [x] **ROB-178** — Non ripristinare autorizzazioni remote dichiarate dal file importato.
+- [x] **ROB-179** — Interrompere il ripristino se cambia la sessione durante la lettura del file.
+- [x] **ROB-180** — Non alterare i dati correnti se l'utente annulla la conferma finale.
 
 ### Validazione degli input e risorse esterne (ROB-181–ROB-200)
 
-- [ ] **ROB-181** — Rifiutare titoli vuoti dopo la rimozione degli spazi marginali.
-- [ ] **ROB-182** — Rifiutare titoli oltre la lunghezza ammessa per la risorsa.
+- [x] **ROB-181** — Rifiutare titoli vuoti dopo la rimozione degli spazi marginali.
+- [x] **ROB-182** — Rifiutare titoli oltre la lunghezza ammessa per la risorsa.
 - [ ] **ROB-183** — Rifiutare nomi prodotto oltre la lunghezza ammessa.
 - [ ] **ROB-184** — Rifiutare quantità numeriche inferiori al minimo consentito.
 - [ ] **ROB-185** — Rifiutare quantità numeriche superiori al massimo consentito.
 - [ ] **ROB-186** — Rifiutare quantità frazionarie quando il controllo ammette solo unità intere.
-- [ ] **ROB-187** — Rifiutare importi monetari negativi nei form che non prevedono storni.
-- [ ] **ROB-188** — Rifiutare importi con più di due cifre decimali.
-- [ ] **ROB-189** — Calcolare gli importi monetari in centesimi interi.
-- [ ] **ROB-190** — Verificare che la somma delle quote corrisponda al totale.
-- [ ] **ROB-191** — Rifiutare schemi URL eseguibili nei riferimenti esterni.
-- [ ] **ROB-192** — Accettare soltanto origini consentite per le fonti del catalogo.
-- [ ] **ROB-193** — Accettare soltanto percorsi locali previsti per le immagini del volantino.
-- [ ] **ROB-194** — Rifiutare ritagli immagine che superano i bordi della pagina.
-- [ ] **ROB-195** — Rifiutare dimensioni di ritaglio nulle o negative.
+- [x] **ROB-187** — Rifiutare importi monetari negativi nei form che non prevedono storni.
+- [x] **ROB-188** — Rifiutare importi con più di due cifre decimali.
+- [x] **ROB-189** — Calcolare gli importi monetari in centesimi interi.
+- [x] **ROB-190** — Verificare che la somma delle quote corrisponda al totale.
+- [x] **ROB-191** — Rifiutare schemi URL eseguibili nei riferimenti esterni.
+- [x] **ROB-192** — Accettare soltanto origini consentite per le fonti del catalogo.
+- [x] **ROB-193** — Accettare soltanto percorsi locali previsti per le immagini del volantino.
+- [x] **ROB-194** — Rifiutare ritagli immagine che superano i bordi della pagina.
+- [x] **ROB-195** — Rifiutare dimensioni di ritaglio nulle o negative.
 - [ ] **ROB-196** — Mostrare i nomi contenenti HTML come testo senza eseguirli.
 - [ ] **ROB-197** — Evitare inserimenti HTML non sanitizzati nelle note degli utenti.
 - [ ] **ROB-198** — Rifiutare CSV con riferimenti a pagine inesistenti.
 - [ ] **ROB-199** — Rifiutare CSV incompleti senza pubblicare un catalogo parziale.
-- [ ] **ROB-200** — Non inventare un prezzo zero quando la fonte riporta solo uno sconto.
+- [x] **ROB-200** — Non inventare un prezzo zero quando la fonte riporta solo uno sconto.
 
 ### Schema SQL e migrazioni (ROB-201–ROB-220)
 
@@ -1174,8 +1174,8 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **ROB-249** — Segnalare il raggiungimento del limite di operazioni offline.
 - [ ] **ROB-250** — Limitare il numero dei prodotti per lista secondo il vincolo server.
 - [ ] **ROB-251** — Segnalare quando occorre creare una nuova lista per raggiunto limite.
-- [ ] **ROB-252** — Limitare il numero di gruppi accettati nel ripristino backup.
-- [ ] **ROB-253** — Limitare il numero di risorse accettate nel ripristino backup.
+- [x] **ROB-252** — Limitare il numero di gruppi accettati nel ripristino backup.
+- [x] **ROB-253** — Limitare il numero di risorse accettate nel ripristino backup.
 - [ ] **ROB-254** — Non bloccare l'interazione durante il solo caricamento di immagini secondarie.
 - [ ] **ROB-255** — Definire un dispositivo e un catalogo di riferimento per le misure prestazionali.
 - [ ] **ROB-256** — Misurare il tempo di apertura della Home sulla configurazione di riferimento.
@@ -1186,14 +1186,14 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 
 ### Test, regressioni e integrazione continua (ROB-261–ROB-280)
 
-- [ ] **ROB-261** — Eseguire la suite JavaScript prima della pubblicazione automatica.
-- [ ] **ROB-262** — Eseguire la suite Python prima della pubblicazione automatica.
-- [ ] **ROB-263** — Eseguire una build di produzione prima del deploy.
-- [ ] **ROB-264** — Bloccare il job di deploy se il job di build fallisce.
-- [ ] **ROB-265** — Installare le dipendenze CI dal lockfile versionato.
-- [ ] **ROB-266** — Verificare l'allineamento della versione tra manifest di pacchetto e lockfile.
-- [ ] **ROB-267** — Testare le funzioni pure senza richiedere credenziali remote.
-- [ ] **ROB-268** — Testare le RPC SQL su PostgreSQL locale con ruoli realistici.
+- [x] **ROB-261** — Eseguire la suite JavaScript prima della pubblicazione automatica.
+- [x] **ROB-262** — Eseguire la suite Python prima della pubblicazione automatica.
+- [x] **ROB-263** — Eseguire una build di produzione prima del deploy.
+- [x] **ROB-264** — Bloccare il job di deploy se il job di build fallisce.
+- [x] **ROB-265** — Installare le dipendenze CI dal lockfile versionato.
+- [x] **ROB-266** — Verificare l'allineamento della versione tra manifest di pacchetto e lockfile.
+- [x] **ROB-267** — Testare le funzioni pure senza richiedere credenziali remote.
+- [x] **ROB-268** — Testare le RPC SQL su PostgreSQL locale con ruoli realistici.
 - [ ] **ROB-269** — Testare l'isolamento tra due membri e un utente estraneo.
 - [ ] **ROB-270** — Testare le operazioni idempotenti con una risposta persa.
 - [ ] **ROB-271** — Testare il recupero delle code dopo un periodo offline.
@@ -1205,7 +1205,7 @@ Piano di verifica e inventario dei test esistenti: [PIANO_TEST_APP.md](PIANO_TES
 - [ ] **ROB-277** — Conservare baseline grafiche revisionate prima di usare confronti screenshot.
 - [x] **ROB-278** — Conservare evidenze di errore dei test browser falliti.
 - [ ] **ROB-279** — Aggiungere una prova di regressione ripetibile per ogni bug critico corretto.
-- [ ] **ROB-280** — Collegare i test di accettazione agli identificativi dei requisiti verificati.
+- [x] **ROB-280** — Collegare i test di accettazione agli identificativi dei requisiti verificati.
 
 ### Rilasci, osservabilità e gestione dei dati (ROB-281–ROB-300)
 

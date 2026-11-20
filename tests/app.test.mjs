@@ -218,9 +218,14 @@ test('più liste mantengono prodotti e coda separati e il form non sparisce dura
   const second=run('link.id');assert.notEqual(first,second);
   assert.equal(run('itemsNow().length'),0);
   nodes.get('#product-name').value='Latte';nodes.get('#add-form').onsubmit({preventDefault(){}});
-  nodes.get('#shopping-lists').onchange({target:{value:first}});
+  const firstChip=nodes.get('#shopping-lists').children.find(b=>b.dataset.listId===first);
+  run('busy=true;renderListPicker()');
+  assert.equal(nodes.get('#shopping-lists').children.find(b=>b.dataset.listId===first),firstChip);
+  assert.equal(firstChip['aria-disabled'],'true');firstChip.onclick();assert.equal(run('link.id'),second);
+  run('busy=false;renderListPicker()');assert.equal(firstChip['aria-disabled'],'false');
+  nodes.get('#shopping-lists').children.find(b=>b.dataset.listId===first).onclick();
   assert.equal(run('itemsNow()[0].name'),'Pane');
-  nodes.get('#shopping-lists').onchange({target:{value:second}});
+  nodes.get('#shopping-lists').children.find(b=>b.dataset.listId===second).onclick();
   assert.equal(run('itemsNow()[0].name'),'Latte');
 });
 

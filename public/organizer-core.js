@@ -29,9 +29,10 @@ export function expenseBalance(items) {
 }
 export function validateItem(kind,data) {
  if(!['task','expense','event','shopping','project'].includes(kind))throw Error('Tipo non valido');
- if(!data.title?.trim()||data.title.length>160)throw Error('Inserisci un titolo di massimo 160 caratteri.');
- if(data.date&&!/^\d{4}-\d{2}-\d{2}$/.test(data.date))throw Error('Data non valida');
+ if(!data||typeof data.title!=='string'||!data.title.trim()||data.title.length>160)throw Error('Inserisci un titolo di massimo 160 caratteri.');
+ if(data.date&&(!/^\d{4}-\d{2}-\d{2}$/.test(data.date)||!Number.isFinite(Date.parse(data.date+'T12:00:00Z'))||new Date(data.date+'T12:00:00Z').toISOString().slice(0,10)!==data.date))throw Error('Data non valida');
  if(kind==='expense'&&(!Number.isSafeInteger(data.amount)||data.amount<0))throw Error('Importo non valido');
+ for(const key of ['shares','refunds'])if(data[key]!==undefined&&(!Array.isArray(data[key])||data[key].some(q=>!q||typeof q.person!=='string'||!q.person.trim()||!Number.isSafeInteger(q.cents)||q.cents<0)))throw Error('Quote o rimborsi non validi');
  if(kind==='expense'&&data.shares?.length&&data.shares.reduce((s,q)=>s+q.cents,0)!==data.amount)throw Error('Le quote non corrispondono al totale');
  if(data.sensitive&&kind!=='event')throw Error('Visibilità riservata prevista per gli appuntamenti');
  return {...data,title:data.title.trim()};

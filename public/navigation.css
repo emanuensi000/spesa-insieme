@@ -4,6 +4,7 @@
 .app-header{display:flex;align-items:center;justify-content:space-between;padding:20px 0;border-bottom:1px solid #d8ddcf;margin-bottom:24px}.wordmark{display:flex;align-items:center;color:#334f3d;text-decoration:none;font-size:27px;font-weight:700;gap:2px}.brand-symbol{margin-right:10px}.brand-symbol>span{font-size:18px}.ai,.wordmark-dot{color:#9f6640}.edition{display:none}.card-hint,.eyebrow{display:none}.shopping-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:16px 0}#estimate-note{display:none}
 
 /* Navigazione da tastiera condivisa dalle due pagine. */
+#estimate-note { display:block; line-height:1.5; margin-top:8px; }
 html { scroll-padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
 :where(button, a, input, select, textarea, [tabindex]):focus-visible {
   outline: 3px solid #245b45;

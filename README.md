@@ -182,3 +182,7 @@ Documentazione: [GitHub Pages](https://docs.github.com/en/pages/getting-started-
 ## Rinomina OrganAIzer
 
 Nome visibile, manifest, pacchetto, condivisione e cache usano OrganAIzer. L’identità relativa `id`, `scope` e `start_url` della PWA resta stabile. Al primo avvio sullo stesso dominio e percorso, le liste precedenti vengono copiate nella nuova chiave locale senza eliminare la copia originaria; una chiave nuova già presente ha precedenza. La vecchia chiave resta solo per compatibilità. Cambiare dominio o percorso richiederà una migrazione dedicata: il browser non trasferisce automaticamente memoria locale, installazione e service worker. Lo schema privato del modulo Spesa resta invariato perché identifica il modulo e contiene dati già in uso.
+
+### Accettazione 0.3.2
+
+102 ulteriori requisiti del catalogo verificati, più lo slider liste FUN-401. [Verbale e matrice](docs/ACCETTAZIONE_0.3.2.md) · [Nuovi requisiti](docs/REQUISITI_SUCCESSIVI.md). Il verbale distingue implementazioni nuove e verifiche dell'esistente.

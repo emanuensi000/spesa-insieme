@@ -51,3 +51,8 @@ export function validateLocalBackup(value){
  return {groups,snapshots,pending:[],profile:{name},prefs,active:ids.has(value.active)?value.active:(groups[0]?.id||null)};
 }
 export function makeLocalBackup(value){return {...value,format:'organaizer-local-backup',schemaVersion:1,exportedAt:new Date().toISOString()};}
+export async function readBackupFile(file){
+ if(file.size>2_000_000)throw Error('Backup troppo grande (massimo 2 MB).');
+ let raw;try{raw=JSON.parse(await file.text());}catch{throw Error('Il file non contiene un JSON leggibile.');}
+ return validateLocalBackup(raw);
+}

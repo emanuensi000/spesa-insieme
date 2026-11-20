@@ -1,5 +1,15 @@
 # OrganAIzer — cronologia delle versioni
 
+## 0.3.2 — 20 novembre 2026
+
+- Liste della spesa: menu a tendina sostituito da pulsanti a pillola scorrevoli orizzontalmente, con lista attiva evidenziata, frecce da tastiera e selezione persistente.
+- Ripristino backup: anteprima dei gruppi attuali e in arrivo, conteggi e conferma esplicita; annullamento senza sostituire dati, protezione dai cambi sessione e rollback su errore mantenuti.
+- Preferenze: nuovo comando per tornare ai valori predefiniti.
+- Corretto il salvataggio del gruppo attivo alla prima apertura locale e reso visibile l'avviso dei prodotti senza prezzo nella stima.
+- Rafforzati i controlli comuni per titoli, date reali di calendario, quote e rimborsi.
+- 102 ulteriori requisiti originari accettati con prove, più FUN-401 aggiunto su richiesta. La maggioranza era già implementata: il verbale distingue le nuove modifiche dal collaudo dell'esistente.
+- 150 casi JavaScript totali, di cui 85 casi dedicati ai requisiti e 54 esecuzioni browser desktop/mobile. Nessun nuovo servizio esterno o migrazione del database.
+
 ## 0.3.1 — 20 novembre 2026
 
 - Collegamento «Vai al contenuto principale» su entrambe le pagine e regioni principali nominate.
